@@ -14,29 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.metrics;
+package org.hawkular.client;
 
-import java.util.List;
+public abstract class BaseClient<T> {
+    private T restAPI;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+    public BaseClient(String endpointUrl, String username, String password,
+            RestFactory<T> restFactory) throws Exception {
+        restAPI = (T) restFactory.createAPI(endpointUrl, username, password);
+    }
 
-import org.hawkular.metrics.core.api.Tenant;
-
-@Path("/tenants")
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
-public interface MetricsRestApi {
-
-    @GET
-    @Path ("/")
-    List<Tenant> findTenants();
-
-    @POST
-    @Path ("/")
-    void createTenant(Tenant tenant);
+    public T restApi() {
+        return this.restAPI;
+    }
 }

@@ -16,44 +16,31 @@
  */
 package org.hawkular.client.metrics;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
-import org.hawkular.client.MetricsClientInterface;
+import org.hawkular.client.BaseClient;
+import org.hawkular.client.MetricsClient;
 import org.hawkular.client.RestFactory;
 import org.hawkular.metrics.core.api.Tenant;
 
 /**
- * This is the entry point for Hawkular-Metrics client
+ * Hawkular-Metrics client implementation
  * @author vnguyen
  *
  */
-public class MetricsClient implements MetricsClientInterface {
-    private URI endpointURI;
-    private MetricsRestApi restAPI;
+public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements MetricsClient {
 
-    public MetricsClient(String endpointUrl, String username, String password) {
-        this(endpointUrl, username, password, new RestFactory());
-    }
-
-    public MetricsClient(String endpointUrl, String username, String password,
-            RestFactory restFactory) {
-        try {
-            endpointURI = new URI(endpointUrl);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-        restAPI = restFactory.createAPI(endpointURI, username, password);
+    public MetricsClientImpl(String endpointUrl, String username, String password) throws Exception {
+        super(endpointUrl, username, password, new RestFactory<MetricsRestApi>(MetricsRestApi.class));
     }
 
     @Override
     public List<Tenant> findTenants() {
-        return restAPI.findTenants();
+        return restApi().findTenants();
     }
 
     @Override
     public void createTenant(Tenant tenant) {
-        restAPI.createTenant(tenant);
+        restApi().createTenant(tenant);
     }
 }

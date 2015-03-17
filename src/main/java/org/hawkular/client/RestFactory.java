@@ -22,7 +22,6 @@ import java.net.URISyntaxException;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.hawkular.client.metrics.MetricsRestApi;
 import org.jboss.resteasy.client.jaxrs.ProxyBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
@@ -30,19 +29,21 @@ import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
-public class RestFactory {
+public class RestFactory <T> {
 
     private final ClassLoader classLoader;
+    private Class<T> apiClassType;
 
-    public RestFactory() {
+    public RestFactory(Class<T> clz) {
         classLoader = null;
+        apiClassType = clz;
     }
 
     public RestFactory(ClassLoader classLoader) {
         this.classLoader = classLoader;
     }
 
-    public MetricsRestApi createAPI(URI uri, String userName, String password) {
+    public T createAPI(URI uri, String userName, String password) {
         DefaultHttpClient httpClient = new DefaultHttpClient();
         httpClient.getCredentialsProvider().setCredentials(new AuthScope(uri.getHost(), uri.getPort()),
                 new UsernamePasswordCredentials(userName, password));
@@ -51,14 +52,14 @@ public class RestFactory {
         ResteasyClient client = new ResteasyClientBuilder().httpEngine(engine).build();
         client.register(JacksonJaxbJsonProvider.class);
         client.register(JacksonObjectMapperProvider.class);
-        ProxyBuilder<MetricsRestApi> proxyBuilder = client.target(uri).proxyBuilder(MetricsRestApi.class);
+        ProxyBuilder<T> proxyBuilder = (ProxyBuilder<T>) client.target(uri).proxyBuilder(apiClassType.getClass());
         if (classLoader != null) {
             proxyBuilder = proxyBuilder.classloader(classLoader);
         }
         return proxyBuilder.build();
     }
 
-    public MetricsRestApi createAPI(String url, String userName, String password) throws URISyntaxException {
+    public T createAPI(String url, String userName, String password) throws URISyntaxException {
         URI uri = new URI(url);
         return createAPI(uri, userName, password);
     }

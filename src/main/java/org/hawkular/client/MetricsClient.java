@@ -20,7 +20,7 @@ import java.util.List;
 
 import org.hawkular.metrics.core.api.Tenant;
 
-public interface MetricsClientInterface {
+public interface MetricsClient {
 
     List<Tenant> findTenants();
 

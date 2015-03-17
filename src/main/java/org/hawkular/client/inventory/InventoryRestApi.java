@@ -14,29 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.metrics;
+package org.hawkular.client.inventory;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.hawkular.metrics.core.api.Tenant;
+import org.hawkular.inventory.api.Resource;
 
-@Path("/tenants")
+@Path("/inventory")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public interface MetricsRestApi {
+public interface InventoryRestApi {
 
     @GET
-    @Path ("/")
-    List<Tenant> findTenants();
-
-    @POST
-    @Path ("/")
-    void createTenant(Tenant tenant);
+    @Path("/{tenantId}/resources")
+    Collection<Resource> getResourcesByType(@PathParam("tenantId") String tenantId, @QueryParam("type") String type);
 }
