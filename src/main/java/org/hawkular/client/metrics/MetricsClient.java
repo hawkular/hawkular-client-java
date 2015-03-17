@@ -56,13 +56,4 @@ public class MetricsClient implements MetricsClientInterface {
     public void createTenant(Tenant tenant) {
         restAPI.createTenant(tenant);
     }
-
-    public static void main(String[] args) {
-        MetricsClient client = new MetricsClient("http://209.132.178.218:18080/hawkular-metrics/", "", "");
-        Tenant tenant = new Tenant();
-        tenant.setId("foobar");
-        client.createTenant(tenant);
-        System.out.println(client.findTenants());
-    }
-
 }
