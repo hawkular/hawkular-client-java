@@ -16,16 +16,23 @@
  */
 package org.hawkular.client;
 
+import java.net.URI;
+import java.util.Objects;
+
 import org.hawkular.client.inventory.InventoryClientImpl;
 import org.hawkular.client.metrics.MetricsClientImpl;
+
+import com.google.common.base.MoreObjects;
 
 public class HawkularClient {
     private MetricsClient metricsClient;
     private InventoryClient inventoryClient;
+    private URI endpointUri;
 
-    public HawkularClient(String endpointUrl, String username, String password) throws Exception {
-        metricsClient = new MetricsClientImpl(endpointUrl, username, password);
-        inventoryClient = new InventoryClientImpl(endpointUrl, username, password);
+    public HawkularClient(URI endpointUri, String username, String password) throws Exception {
+        this.endpointUri = endpointUri;
+        metricsClient = new MetricsClientImpl(endpointUri, username, password);
+        inventoryClient = new InventoryClientImpl(endpointUri, username, password);
     }
 
     public MetricsClient metrics() {
@@ -34,5 +41,14 @@ public class HawkularClient {
 
     public InventoryClient inventory() {
         return inventoryClient;
+    }
+
+    public int hashcode() {
+        return Objects.hash(endpointUri.hashCode());
+    }
+    public String toString() {
+        return MoreObjects.toStringHelper(this).
+                add("endpoint", endpointUri)
+                .toString();
     }
 }

@@ -16,12 +16,14 @@
  */
 package org.hawkular.client;
 
+import java.net.URI;
+
 public abstract class BaseClient<T> {
     private T restAPI;
 
-    public BaseClient(String endpointUrl, String username, String password,
+    public BaseClient(URI endpointUri, String username, String password,
             RestFactory<T> restFactory) throws Exception {
-        restAPI = (T) restFactory.createAPI(endpointUrl, username, password);
+        restAPI = (T) restFactory.createAPI(endpointUri, username, password);
     }
 
     public T restApi() {

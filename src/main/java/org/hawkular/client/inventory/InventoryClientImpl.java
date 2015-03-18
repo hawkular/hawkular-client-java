@@ -16,6 +16,7 @@
  */
 package org.hawkular.client.inventory;
 
+import java.net.URI;
 import java.util.Collection;
 
 import org.hawkular.client.BaseClient;
@@ -25,9 +26,9 @@ import org.hawkular.inventory.api.Resource;
 
 public class InventoryClientImpl extends BaseClient<InventoryRestApi>implements InventoryClient {
 
-    public InventoryClientImpl(String endpointUrl, String username,
+    public InventoryClientImpl(URI endpointUri, String username,
             String password) throws Exception {
-        super(endpointUrl, username, password, new RestFactory<InventoryRestApi>(InventoryRestApi.class));
+        super(endpointUri, username, password, new RestFactory<InventoryRestApi>(InventoryRestApi.class));
     }
 
     @Override

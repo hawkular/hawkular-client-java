@@ -27,7 +27,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.hawkular.metrics.core.api.Tenant;
 
-@Path("/tenants")
+@Path("/hawkular-metrics/tenants")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface MetricsRestApi {
