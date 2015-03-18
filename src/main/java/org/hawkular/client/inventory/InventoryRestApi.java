@@ -41,48 +41,48 @@ public interface InventoryRestApi {
     @GET
     @Path("/")
     //TODO: Should return 'StringWrapper', which is currently not available with 'inventory-api'
-    public String ping();
+    String ping();
 
     @POST
     @Path("/{tenantId}/resources")
     //TODO: Should return 'IdWrapper', which is currently not available with 'inventory-api'
-    public String addResource(@PathParam("tenantId") String tenantId,
+    String addResource(@PathParam("tenantId") String tenantId,
             Resource definition);
 
     @GET
     @Path("/{tenantId}/resources")
-    public Collection<Resource> getResourcesByType(@PathParam("tenantId") String tenantId,
-            @QueryParam("type") String type);    
+    Collection<Resource> getResourcesByType(@PathParam("tenantId") String tenantId,
+            @QueryParam("type") String type);
 
     @GET
     @Path("/{tenantId}/resources/{uid}")
-    public Resource getResource(@PathParam("tenantId") String tenantId, @PathParam
+    Resource getResource(@PathParam("tenantId") String tenantId, @PathParam
             ("uid") String uid);
 
     @DELETE
     @Path("/{tenantId}/resources/{uid}")
-    public boolean deleteResource(@PathParam("tenantId") String tenantId, @PathParam
+    boolean deleteResource(@PathParam("tenantId") String tenantId, @PathParam
             ("uid") String uid);
 
     @POST
     @Path("/{tenantId}/resources/{resourceId}/metrics")
-    public boolean addMetricToResource(@PathParam("tenantId") String tenantId,
+    boolean addMetricToResource(@PathParam("tenantId") String tenantId,
             @PathParam("resourceId") String resourceId,
             Collection<MetricDefinition> payload);
 
     @GET
     @Path("/{tenantId}/resources/{resourceId}/metrics")
-    public Collection<MetricDefinition> listMetricsOfResource(@PathParam("tenantId") String tenantId,
+    Collection<MetricDefinition> listMetricsOfResource(@PathParam("tenantId") String tenantId,
             @PathParam("resourceId") String resourceId);
 
     @GET
     @Path("/{tenantId}/resources/{resourceId}/metrics/{metricId}")
-    public MetricDefinition getMetricOfResource(@PathParam("tenantId") String tenantId,
+    MetricDefinition getMetricOfResource(@PathParam("tenantId") String tenantId,
             @PathParam("resourceId") String resourceId,
             @PathParam("metricId") String metricId);
     @PUT
     @Path("/{tenantId}/resources/{resourceId}/metrics/{metricId}")
-    public boolean updateMetricOfResource(@PathParam("tenantId") String tenantId,
+    boolean updateMetricOfResource(@PathParam("tenantId") String tenantId,
             @PathParam("resourceId") String resourceId,
             MetricDefinition payload);
 }
