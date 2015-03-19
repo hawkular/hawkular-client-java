@@ -17,7 +17,9 @@
 package org.hawkular.client.test;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hawkular.client.HawkularClient;
 import org.testng.Reporter;
 
@@ -26,15 +28,24 @@ public class BaseTest {
     private final HawkularClient client;
 
     public BaseTest() throws Exception {
-        String endpoint = System.getProperty("hawkular.endpoint");
-        if (endpoint == null) {
-            throw new RuntimeException("-Dhawkular.endpoint not defined");
-        }
-        Reporter.log(endpoint);
-        URI endpointUri = new URI(endpoint);
-        client = new HawkularClient(endpointUri, "", "");
+        URI endpoint = getEndpointFromEnv();
+        Reporter.log(endpoint.toString());
+        client = new HawkularClient(endpoint, "", "");
     }
 
+    private static URI getEndpointFromEnv() throws URISyntaxException {
+        String endpoint = System.getenv("HAWKULAR_ENDPOINT");
+        if (StringUtils.trimToNull(endpoint) == null) {
+            Reporter.log("HAWKULAR_ENDPOINT env not defined. Defaulting to 'localhost'");
+            endpoint = "http://localhost:8080";
+        }
+        return new URI(endpoint);
+    }
+
+    /**
+     * Return the main Hawkular client
+     * @return HawkularClient
+     */
     public HawkularClient client() {
         return client;
     }
