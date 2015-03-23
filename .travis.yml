@@ -1,3 +1,19 @@
 language: java
 jdk:
 - oraclejdk8
+notifications:
+  irc:
+    channels:
+    - chat.freenode.net#hawkular
+    on_success: change
+env:
+  global:
+  - secure: P1sgq46dmYBOb/pvHGO2ACO/Zum5wbXebLJ6kLV+Ss97y0B+KWKGCrc9Hh9TG28mdzPMCHbJOFynfneet8irpEIL97PbSb2HFeKhiHJTeB4d0y60uaa6Y6Lmo+YCniubvw+FaeoXBYjImg2nDXslvKDTu6I0JKQ1pk8Fkqx45Sw=
+  - secure: BTZcYkskQR5SleCK8enISTeSK/xR8rzvht/jEsYG5Ar7T/xa2USY2jaiIWzmd1t4hWkrSoubRCHuKt4oGi/fll75r9kPDLql9R1zaMmhEiKDsaEHZhuL6Ds8SVIgwdcpXN4IwiFfVOOxSTdpWcsNNbiQvCgtEIh0oqSk+jJArzI=
+install:
+- mvn -version -B
+script:
+- mvn -s .travis.maven.settings.xml verify -Dwildfly.logging.console.level=DEBUG -B
+  | grep -vF "[INFO] Downloading:" | grep -vF "[INFO] Downloaded:"; test ${PIPESTATUS[0]} -eq 0
+after_success:
+- test "${TRAVIS_BRANCH}" = "master" && test "${TRAVIS_PULL_REQUEST}" = "false" && mvn  -s .travis.maven.settings.xml deploy -DskipTests
