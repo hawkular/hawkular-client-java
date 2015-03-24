@@ -17,23 +17,13 @@
 package org.hawkular.client.inventory;
 
 import java.net.URI;
-import java.util.Collection;
-
 import org.hawkular.client.BaseClient;
-import org.hawkular.client.InventoryClient;
 import org.hawkular.client.RestFactory;
-import org.hawkular.inventory.api.Resource;
 
-public class InventoryClientImpl extends BaseClient<InventoryRestApi>implements InventoryClient {
+public class InventoryClientImpl extends BaseClient<InventoryRestApi>{
 
     public InventoryClientImpl(URI endpointUri, String username,
             String password) throws Exception {
         super(endpointUri, username, password, new RestFactory<InventoryRestApi>(InventoryRestApi.class));
     }
-
-    @Override
-    public Collection<Resource> getResourcesByType(String tenantId, String type) {
-        return null;
-    }
-
 }
