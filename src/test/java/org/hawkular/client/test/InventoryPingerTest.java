@@ -14,13 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client;
+package org.hawkular.client.test;
 
-import java.util.Collection;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
-import org.hawkular.inventory.api.Resource;
+public class InventoryPingerTest extends BaseTest {
 
-public interface InventoryClient {
-    Collection<Resource> getResourcesByType(String tenantId, String type);
-    String pinger();
+    public InventoryPingerTest() throws Exception {
+        super();
+    }
+
+    @Test
+    public void pingerTest() throws Exception {
+        Assert.assertEquals(client().inventory().pinger(), "Hello World");
+    }
 }

@@ -14,13 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client;
+package org.hawkular.client.inventory;
+/**
+ * Wrapper around simple strings, as Json Marshalling of "primitive" objects does not just work
+ *
+ * @author Heiko W. Rupp
+ */
+public class StringWrapper {
+    private String value;
 
-import java.util.Collection;
+    public StringWrapper() {
+    }
 
-import org.hawkular.inventory.api.Resource;
+    public StringWrapper(String value) {
+        this.value = value;
+    }
 
-public interface InventoryClient {
-    Collection<Resource> getResourcesByType(String tenantId, String type);
-    String pinger();
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String toString(){
+        return value;
+    }
 }

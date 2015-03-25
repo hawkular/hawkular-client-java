@@ -25,8 +25,6 @@ import org.hawkular.metrics.core.api.Tenant;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
 
-
-@Test
 public class TenantTest extends BaseTest {
 
     public TenantTest() throws Exception {

@@ -14,13 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client;
+package org.hawkular.client.inventory;
+/**
+ * Simple wrapper for Ids
+ * @author Heiko Rupp
+ */
+public class IdWrapper {
 
-import java.util.Collection;
+    String id;
 
-import org.hawkular.inventory.api.Resource;
+    public IdWrapper() {
+    }
 
-public interface InventoryClient {
-    Collection<Resource> getResourcesByType(String tenantId, String type);
-    String pinger();
+    public IdWrapper(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

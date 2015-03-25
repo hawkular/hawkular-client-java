@@ -36,4 +36,10 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>implements 
         return null;
     }
 
+    @Override
+    public String pinger() {
+        StringWrapper obj = restApi().ping();
+        return (obj != null && obj.getValue() != null) ? obj.getValue() : "";
+    }
+
 }
