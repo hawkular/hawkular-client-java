@@ -30,8 +30,8 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
-  <name>Hawkular-Metrics Java Client</name>
-  <description>Java Client for Hawkular-Metrics</description>
+  <name>Hawkular Java Client</name>
+  <description>Java Client for Hawkular</description>
   <organization>
     <name>Red Hat, Inc.</name>
     <url>http://redhat.com/</url>

@@ -16,11 +16,13 @@
  */
 package org.hawkular.client;
 
-import java.util.Collection;
-
+import org.hawkular.client.inventory.IdWrapper;
 import org.hawkular.inventory.api.Resource;
 
 public interface InventoryClient {
-    Collection<Resource> getResourcesByType(String tenantId, String type);
     String pinger();
+
+    IdWrapper addResource(String tenantId, Resource resource);
+
+    Resource getResource(String tenantId, String type);
 }

@@ -31,7 +31,7 @@ public class TenantTest extends BaseTest {
         super();
     }
 
-    @Test
+    @Test(priority=5)
     public void createTenants() throws Exception {
         List<Tenant> tenantsBefore = client().metrics().findTenants();
         Reporter.log("Before: " + tenantsBefore.toString());

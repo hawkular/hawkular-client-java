@@ -17,7 +17,6 @@
 package org.hawkular.client.inventory;
 
 import java.net.URI;
-import java.util.Collection;
 
 import org.hawkular.client.BaseClient;
 import org.hawkular.client.InventoryClient;
@@ -32,14 +31,20 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>implements 
     }
 
     @Override
-    public Collection<Resource> getResourcesByType(String tenantId, String type) {
-        return null;
-    }
-
-    @Override
     public String pinger() {
         StringWrapper obj = restApi().ping();
         return (obj != null && obj.getValue() != null) ? obj.getValue() : "";
+    }
+
+    @Override
+    public Resource getResource(String tenantId, String type) {
+        return restApi().getResource(tenantId, type);
+    }
+
+    @Override
+    public IdWrapper addResource(String tenantId, Resource resource) {
+        IdWrapper id = restApi().addResource(tenantId, resource);
+        return id;
     }
 
 }
