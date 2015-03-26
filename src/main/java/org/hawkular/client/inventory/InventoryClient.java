@@ -40,8 +40,8 @@ import org.hawkular.inventory.api.model.Tenant;
 public interface InventoryClient {
 
     //PingHandler/Ping
-    String pinger();
-    String ping();
+    String pingHello();
+    String pingTime();
 
     //Tenant
     List<Tenant> getTenants();
