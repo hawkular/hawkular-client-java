@@ -14,15 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client;
 
-import org.hawkular.client.inventory.IdWrapper;
-import org.hawkular.inventory.api.Resource;
+package org.hawkular.client.inventory.model;
 
-public interface InventoryClient {
-    String pinger();
+/**
+ * @author Lukas Krejci
+ * @since 1.0
+ */
+public class MetricJSON {
 
-    IdWrapper addResource(String tenantId, Resource resource);
+    private String id;
+    private String metricTypeId;
 
-    Resource getResource(String tenantId, String type);
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getMetricTypeId() {
+        return metricTypeId;
+    }
+
+    public void setMetricTypeId(String metricTypeId) {
+        this.metricTypeId = metricTypeId;
+    }
 }

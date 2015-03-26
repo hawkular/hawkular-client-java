@@ -14,27 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.inventory;
+package org.hawkular.client.inventory.model;
+
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Simple wrapper for Ids
- * @author Heiko Rupp
+ * @author Lukas Krejci
+ * @since 1.0
  */
-public class IdWrapper {
+public class MetricUpdateJSON {
+    private String metricTypeId;
+    private Map<String, Object> properties;
 
-    String id;
-
-    public IdWrapper() {
+    public String getMetricTypeId() {
+        return metricTypeId;
     }
 
-    public IdWrapper(String id) {
-        this.id = id;
+    public void setMetricTypeId(String metricTypeId) {
+        this.metricTypeId = metricTypeId;
     }
 
-    public String getId() {
-        return id;
+    public Map<String, Object> getProperties() {
+        if (properties == null) {
+            properties = new HashMap<>(0);
+        }
+        return properties;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
     }
 }

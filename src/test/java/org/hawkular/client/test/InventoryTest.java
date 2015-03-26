@@ -17,15 +17,17 @@
 package org.hawkular.client.test;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.hawkular.client.inventory.IdWrapper;
-import org.hawkular.inventory.api.Resource;
-import org.hawkular.inventory.api.ResourceType;
+import org.hawkular.inventory.api.model.Resource;
+import org.hawkular.inventory.api.model.ResourceType;
 import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
 
 public class InventoryTest extends BaseTest{
     private static final String TENANT_ID = "tenant_"+ RandomStringUtils.randomAlphabetic(8);
+    private static final String ENVIRONMENT_ID = "environment_"+ RandomStringUtils.randomAlphabetic(8);
+    private static final String RESOURCE_TYPE_ID = "resource_type_"+ RandomStringUtils.randomAlphabetic(8);
+    private static final String RESOURCE_ID = "resource_"+ RandomStringUtils.randomAlphabetic(8);
     private final Resource expectedResource;
 
     public InventoryTest() throws Exception {
@@ -34,22 +36,19 @@ public class InventoryTest extends BaseTest{
     }
 
     private Resource generateTestResource() {
-        Resource resource = new Resource();
-        resource.setId("res_" + RandomStringUtils.randomAlphabetic(8));
-        resource.addParameter("url", "http://hawkular.org/");
-        resource.setType(ResourceType.URL);
+        ResourceType resourceType = new ResourceType(TENANT_ID, RESOURCE_TYPE_ID, "V:1.0");
+        Resource resource = new Resource(TENANT_ID, ENVIRONMENT_ID, RESOURCE_ID, resourceType);
         return resource;
     }
 
     @Test(priority=10)
     public void addResource() throws Exception {
-        IdWrapper actualId =client().inventory().addResource(TENANT_ID, expectedResource);
-        Assert.assertEquals(actualId.getId(), expectedResource.getId());
+        Assert.assertTrue(client().inventory().addResource(expectedResource));
     }
 
     @Test(priority=10, dependsOnMethods={"addResource"})
     public void getResource() throws Exception {
-        Resource actualResource = client().inventory().getResource(TENANT_ID, expectedResource.getId());
+        Resource actualResource = client().inventory().getResource(TENANT_ID, ENVIRONMENT_ID, expectedResource.getId());
         Reporter.log(actualResource.toString());
         Assert.assertEquals(actualResource, expectedResource);
     }

@@ -14,19 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.test;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+package org.hawkular.client.inventory.model;
 
-public class InventoryPingerTest extends BaseTest {
+/**
+ * @author Lukas Krejci
+ * @since 1.0
+ */
+public class MetricTypeJSON {
+    private String id;
+    private String unit;
 
-    public InventoryPingerTest() throws Exception {
-        super();
+    public String getId() {
+        return id;
     }
 
-    @Test(priority=1)
-    public void pingerTest() throws Exception {
-        Assert.assertEquals(client().inventory().pinger(), "Hawkular Inventory");
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 }

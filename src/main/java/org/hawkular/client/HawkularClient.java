@@ -19,6 +19,7 @@ package org.hawkular.client;
 import java.net.URI;
 import java.util.Objects;
 
+import org.hawkular.client.inventory.InventoryClient;
 import org.hawkular.client.inventory.InventoryClientImpl;
 import org.hawkular.client.metrics.MetricsClientImpl;
 
