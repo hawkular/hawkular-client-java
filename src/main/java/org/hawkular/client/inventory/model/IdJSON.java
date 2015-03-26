@@ -14,31 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.inventory;
+package org.hawkular.client.inventory.model;
+
 /**
- * Wrapper around simple strings, as Json Marshalling of "primitive" objects does not just work
- *
- * @author Heiko W. Rupp
+ * Simple wrapper for Ids
+ * @author Heiko Rupp
  */
-public class StringWrapper {
-    private String value;
+public class IdJSON {
 
-    public StringWrapper() {
+    String id;
+
+    public IdJSON() {
     }
 
-    public StringWrapper(String value) {
-        this.value = value;
+    public IdJSON(String id) {
+        this.id = id;
     }
 
-    public String getValue() {
-        return value;
+    public String getId() {
+        return id;
     }
 
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String toString(){
-        return value;
+    public void setId(String id) {
+        this.id = id;
     }
 }

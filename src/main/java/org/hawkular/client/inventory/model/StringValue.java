@@ -14,19 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.test;
+package org.hawkular.client.inventory.model;
+/**
+ * Encapsulate a simple string value
+ * @author Heiko W. Rupp
+ */
+public class StringValue {
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+    String value;
 
-public class InventoryPingerTest extends BaseTest {
-
-    public InventoryPingerTest() throws Exception {
-        super();
+    public StringValue() {
     }
 
-    @Test(priority=1)
-    public void pingerTest() throws Exception {
-        Assert.assertEquals(client().inventory().pinger(), "Hawkular Inventory");
+    public StringValue(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 }

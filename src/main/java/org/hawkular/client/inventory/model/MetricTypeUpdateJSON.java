@@ -14,19 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.test;
+package org.hawkular.client.inventory.model;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import java.util.HashMap;
+import java.util.Map;
 
-public class InventoryPingerTest extends BaseTest {
+/**
+ * @author Lukas Krejci
+ * @since 1.0
+ */
+public class MetricTypeUpdateJSON {
+    private String unit;
+    private Map<String, Object> properties;
 
-    public InventoryPingerTest() throws Exception {
-        super();
+    public Map<String, Object> getProperties() {
+        if (properties == null) {
+            properties = new HashMap<>(0);
+        }
+        return properties;
     }
 
-    @Test(priority=1)
-    public void pingerTest() throws Exception {
-        Assert.assertEquals(client().inventory().pinger(), "Hawkular Inventory");
+    public void setProperties(Map<String, Object> properties) {
+        this.properties = properties;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
     }
 }

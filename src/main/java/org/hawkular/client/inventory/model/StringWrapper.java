@@ -14,19 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.test;
+package org.hawkular.client.inventory.model;
+/**
+ * Wrapper around simple strings, as Json Marshalling of "primitive" objects does not just work
+ *
+ * @author Heiko W. Rupp
+ */
+public class StringWrapper {
+    private String value;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-public class InventoryPingerTest extends BaseTest {
-
-    public InventoryPingerTest() throws Exception {
-        super();
+    public StringWrapper() {
     }
 
-    @Test(priority=1)
-    public void pingerTest() throws Exception {
-        Assert.assertEquals(client().inventory().pinger(), "Hawkular Inventory");
+    public StringWrapper(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String toString(){
+        return value;
     }
 }

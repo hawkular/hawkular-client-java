@@ -14,19 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.test;
+package org.hawkular.client.inventory.model;
+/**
+ * Return information what failed in the REST-call.
+ * @author Michael Burman
+ */
+public class ApiError {
+    private final String errorMsg;
+    private final Object details;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-public class InventoryPingerTest extends BaseTest {
-
-    public InventoryPingerTest() throws Exception {
-        super();
+    public ApiError(String errorMsg) {
+        this(errorMsg, null);
     }
 
-    @Test(priority=1)
-    public void pingerTest() throws Exception {
-        Assert.assertEquals(client().inventory().pinger(), "Hawkular Inventory");
+    public ApiError(String errorMsg, Object details) {
+        this.errorMsg = errorMsg;
+        this.details = details;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public Object getDetails() {
+        return details;
     }
 }

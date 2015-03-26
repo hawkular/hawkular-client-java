@@ -46,7 +46,7 @@
 
   <properties>
     <hawkular.metrics.version>0.3.1-SNAPSHOT</hawkular.metrics.version>
-    <hawkular.inventory.version>1.0.0-SNAPSHOT</hawkular.inventory.version>
+    <hawkular.inventory.version>0.0.1-SNAPSHOT</hawkular.inventory.version>
     <resteasy.version>3.0.8.Final</resteasy.version>
   </properties>
 
