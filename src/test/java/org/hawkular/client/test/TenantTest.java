@@ -25,15 +25,13 @@ import org.hawkular.metrics.core.api.Tenant;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
 
-
-@Test
 public class TenantTest extends BaseTest {
 
     public TenantTest() throws Exception {
         super();
     }
 
-    @Test
+    @Test(priority=5)
     public void createTenants() throws Exception {
         List<Tenant> tenantsBefore = client().metrics().findTenants();
         Reporter.log("Before: " + tenantsBefore.toString());

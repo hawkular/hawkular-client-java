@@ -25,9 +25,12 @@ import org.testng.Reporter;
 
 public class BaseTest {
 
-    private final HawkularClient client;
+    private HawkularClient client;
 
     public BaseTest() throws Exception {
+        init();
+    }
+    public void init() throws Exception {
         URI endpoint = getEndpointFromEnv();
         Reporter.log(endpoint.toString());
         client = new HawkularClient(endpoint, "", "");
