@@ -14,26 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.inventory;
+package org.hawkular.client;
 
-import java.net.URI;
 import java.util.Collection;
 
-import org.hawkular.client.BaseClient;
-import org.hawkular.client.InventoryClient;
-import org.hawkular.client.RestFactory;
 import org.hawkular.inventory.api.Resource;
 
-public class InventoryClientImpl extends BaseClient<InventoryRestApi>implements InventoryClient {
-
-    public InventoryClientImpl(URI endpointUri, String username,
-            String password) throws Exception {
-        super(endpointUri, username, password, new RestFactory<InventoryRestApi>(InventoryRestApi.class));
-    }
-
-    @Override
-    public Collection<Resource> getResourcesByType(String tenantId, String type) {
-        return null;
-    }
+public interface InventoryClient {
+    Collection<Resource> getResourcesByType(String tenantId, String type);
 
 }

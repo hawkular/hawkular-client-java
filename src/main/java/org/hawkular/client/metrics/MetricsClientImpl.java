@@ -17,17 +17,33 @@
 package org.hawkular.client.metrics;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hawkular.client.BaseClient;
+import org.hawkular.client.MetricsClient;
 import org.hawkular.client.RestFactory;
+import org.hawkular.metrics.core.api.Tenant;
 
 /**
  * Hawkular-Metrics client implementation
  * @author vnguyen
  *
  */
-public class MetricsClientImpl extends BaseClient<MetricsRestApi>{
+public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements MetricsClient {
 
     public MetricsClientImpl(URI endpointUri, String username, String password) throws Exception {
         super(endpointUri, username, password, new RestFactory<MetricsRestApi>(MetricsRestApi.class));
+    }
+
+    @Override
+    public List<Tenant> findTenants() {
+        List<Tenant> list = restApi().findTenants();
+        return list == null ? new ArrayList<Tenant>() : list;
+    }
+
+    @Override
+    public void createTenant(Tenant tenant) {
+        restApi().createTenant(tenant);
     }
 }

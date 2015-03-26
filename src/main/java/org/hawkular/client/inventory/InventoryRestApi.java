@@ -40,11 +40,13 @@ public interface InventoryRestApi {
 
     @GET
     @Path("/")
-    StringWrapper ping();
+    //TODO: Should return 'StringWrapper', which is currently not available with 'inventory-api'
+    String ping();
 
     @POST
     @Path("/{tenantId}/resources")
-    IdWrapper addResource(@PathParam("tenantId") String tenantId,
+    //TODO: Should return 'IdWrapper', which is currently not available with 'inventory-api'
+    String addResource(@PathParam("tenantId") String tenantId,
             Resource definition);
 
     @GET

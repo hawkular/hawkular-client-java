@@ -20,29 +20,27 @@ import java.net.URI;
 import java.util.Objects;
 
 import org.hawkular.client.inventory.InventoryClientImpl;
-import org.hawkular.client.inventory.InventoryRestApi;
 import org.hawkular.client.metrics.MetricsClientImpl;
-import org.hawkular.client.metrics.MetricsRestApi;
 
 import com.google.common.base.MoreObjects;
 
 public class HawkularClient {
-    private MetricsRestApi metricsRestApi;
-    private InventoryRestApi inventoryRestApi;
+    private MetricsClient metricsClient;
+    private InventoryClient inventoryClient;
     private URI endpointUri;
 
     public HawkularClient(URI endpointUri, String username, String password) throws Exception {
         this.endpointUri = endpointUri;
-        metricsRestApi = new MetricsClientImpl(endpointUri, username, password).restApi();
-        inventoryRestApi = new InventoryClientImpl(endpointUri, username, password).restApi();
+        metricsClient = new MetricsClientImpl(endpointUri, username, password);
+        inventoryClient = new InventoryClientImpl(endpointUri, username, password);
     }
 
-    public MetricsRestApi metrics() {
-        return metricsRestApi;
+    public MetricsClient metrics() {
+        return metricsClient;
     }
 
-    public InventoryRestApi inventory() {
-        return inventoryRestApi;
+    public InventoryClient inventory() {
+        return inventoryClient;
     }
 
     public int hashcode() {
