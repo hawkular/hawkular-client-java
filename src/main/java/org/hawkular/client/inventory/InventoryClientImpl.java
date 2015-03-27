@@ -34,7 +34,6 @@ import org.hawkular.client.inventory.model.MetricUpdateJSON;
 import org.hawkular.client.inventory.model.ResourceJSON;
 import org.hawkular.client.inventory.model.ResourceTypeJSON;
 import org.hawkular.client.inventory.model.StringValue;
-import org.hawkular.client.inventory.model.StringWrapper;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Metric;
 import org.hawkular.inventory.api.model.MetricType;
@@ -55,15 +54,16 @@ implements InventoryClient, InventoryJSONConverter {
         super(endpointUri, username, password, new RestFactory<InventoryRestApi>(InventoryRestApi.class));
     }
 
+
     @Override
-    public String pinger() {
-        StringWrapper obj = restApi().pinger();
+    public String pingTime() {
+        StringValue obj = restApi().pingTime();
         return (obj != null && obj.getValue() != null) ? obj.getValue() : "";
     }
 
     @Override
-    public String ping() {
-        StringValue obj = restApi().ping();
+    public String pingHello() {
+        StringValue obj = restApi().pingHello();
         return (obj != null && obj.getValue() != null) ? obj.getValue() : "";
     }
 
@@ -435,5 +435,4 @@ implements InventoryClient, InventoryJSONConverter {
         resourceJSON.setType(resourceTypeJSON);
         return resourceJSON;
     }
-
 }

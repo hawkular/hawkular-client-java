@@ -40,7 +40,6 @@ import org.hawkular.client.inventory.model.MetricUpdateJSON;
 import org.hawkular.client.inventory.model.ResourceJSON;
 import org.hawkular.client.inventory.model.ResourceTypeJSON;
 import org.hawkular.client.inventory.model.StringValue;
-import org.hawkular.client.inventory.model.StringWrapper;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Metric;
 import org.hawkular.inventory.api.model.MetricType;
@@ -58,12 +57,12 @@ import org.hawkular.inventory.api.model.Tenant;
 public interface InventoryRestApi {    //PingHandler
     @GET
     @Path("/ping")
-    StringValue ping();
+    StringValue pingTime();
 
     //Ping
     @GET
     @Path("/")
-    StringWrapper pinger();
+    StringValue pingHello();
 
     //Tenant
     @GET

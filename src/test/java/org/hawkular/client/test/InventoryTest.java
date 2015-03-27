@@ -43,7 +43,8 @@ public class InventoryTest extends BaseTest{
 
     @Test(priority=10)
     public void addResource() throws Exception {
-        Assert.assertTrue(client().inventory().addResource(expectedResource));
+        boolean status = client().inventory().addResource(expectedResource);
+        Assert.assertTrue(status);
     }
 
     @Test(priority=10, dependsOnMethods={"addResource"})
