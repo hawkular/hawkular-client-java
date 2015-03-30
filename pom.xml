@@ -122,6 +122,11 @@
 
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/InventoryTest.java</exclude>
+          </excludes>
+        </configuration>
       </plugin>
 
     </plugins>
