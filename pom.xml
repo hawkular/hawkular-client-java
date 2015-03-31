@@ -138,7 +138,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <excludes>
-           <exclude>${excluded.tests}</exclude>
+            <exclude>${excluded.tests}</exclude>
           </excludes>
         </configuration>
       </plugin>

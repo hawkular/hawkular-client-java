@@ -56,8 +56,11 @@ public interface MetricsRestApi {
 
     @GET
     @Path ("/{tenantId}/metrics/numeric/{id}/data")
-    List<NumericData> getNumericMetricData(     @PathParam("tenantId") String tenantId, @PathParam("id") String metricId,
-                                                @QueryParam("start") long startTime, @QueryParam("end") long endTime);
+    List<NumericData> getNumericMetricData(@PathParam("tenantId") String tenantId,
+                                           @PathParam("id") String metricId,
+                                           @QueryParam("start") long startTime,
+                                           @QueryParam("end") long endTime
+                                           );
 
     @GET
     @Path("/{tenantId}/metrics/numeric/{id}/tags")
@@ -65,6 +68,7 @@ public interface MetricsRestApi {
 
     @GET
     @Path("/{tenantId}/metrics/numeric/{id}/tags")
-    NumericMetric getNumericMetricTags(@PathParam ("tenantId") String tenantId, @PathParam("id") String metricId);
+    NumericMetric getNumericMetricTags(@PathParam ("tenantId") String tenantId,
+                                       @PathParam("id") String metricId);
 
 }

@@ -74,7 +74,8 @@ public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements Met
     @Override
     public List<NumericData> getNumericMetricData(String tenantId,
             String metricId, long startTime, long endTime) {
-        logger.debug("getNumericMetricData(): tenant={}, metric={}, start={}, end={}",tenantId, metricId, startTime, endTime);
+        logger.debug("getNumericMetricData(): tenant={}, metric={}, start={}, end={}",
+                        tenantId, metricId, startTime, endTime);
         return restApi().getNumericMetricData(tenantId, metricId, startTime, endTime);
     }
 
