@@ -13,7 +13,7 @@ env:
 install:
 - mvn -version -B
 script:
-- mvn -s .travis.maven.settings.xml verify -Dwildfly.logging.console.level=DEBUG -B
+- mvn -s .travis.maven.settings.xml verify -Dwildfly.logging.console.level=DEBUG -B -Pci
   | grep -vF "[INFO] Downloading:" | grep -vF "[INFO] Downloaded:"; test ${PIPESTATUS[0]} -eq 0
 after_success:
 - test "${TRAVIS_BRANCH}" = "master" && test "${TRAVIS_PULL_REQUEST}" = "false" && mvn  -s .travis.maven.settings.xml deploy -DskipTests
