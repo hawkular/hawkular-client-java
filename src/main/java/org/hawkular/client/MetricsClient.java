@@ -38,7 +38,12 @@ public interface MetricsClient {
     void addNumericMetricData(String tenantId, String metricId, List<NumericData> data);
 
     /**
-     * Retrieve numeric data from a metric
+     * Retrieve numeric metric data within a specific time stamp range
+     */
+    List<NumericData> getNumericMetricData(String tenantId, String metricId, long startTime, long endTime);
+
+    /**
+     * Retrieve most recent numeric metric data. See implementation for default time range.
      */
     List<NumericData> getNumericMetricData(String tenantId, String metricId);
 }

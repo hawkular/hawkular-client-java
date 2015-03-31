@@ -48,6 +48,7 @@
     <hawkular.metrics.version>0.3.1-SNAPSHOT</hawkular.metrics.version>
     <hawkular.inventory.version>0.0.1-SNAPSHOT</hawkular.inventory.version>
     <resteasy.version>3.0.8.Final</resteasy.version>
+    <excluded.tests>nothing-to-exclude</excluded.tests>
   </properties>
 
   <dependencies>
@@ -122,18 +123,25 @@
     </dependency>
   </dependencies>
 
+  <profiles>
+    <profile>
+      <id>ci</id>
+      <properties>
+        <excluded.tests>**/InventoryTest.java</excluded.tests>
+      </properties>
+    </profile>
+  </profiles>
   <build>
     <plugins>
-
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <excludes>
-            <exclude>**/InventoryTest.java</exclude>
+           <exclude>${excluded.tests}</exclude>
           </excludes>
         </configuration>
       </plugin>
-
     </plugins>
   </build>
 </project>

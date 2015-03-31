@@ -17,6 +17,7 @@
 package org.hawkular.client.metrics;
 
 import java.net.URI;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements MetricsClient {
+    private static final Duration EIGHT_HOURS = Duration.ofHours(8);
     private static final Logger logger = LoggerFactory.getLogger(MetricsClientImpl.class);
 
     public MetricsClientImpl(URI endpointUri, String username, String password) throws Exception {
@@ -71,7 +73,18 @@ public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements Met
 
     @Override
     public List<NumericData> getNumericMetricData(String tenantId,
-            String metricId) {
-        return restApi().getNumericMetricData(tenantId, metricId);
+            String metricId, long startTime, long endTime) {
+        logger.debug("getNumericMetricData(): tenant={}, metric={}, start={}, end={}",tenantId, metricId, startTime, endTime);
+        return restApi().getNumericMetricData(tenantId, metricId, startTime, endTime);
     }
+
+    @Override
+    public List<NumericData> getNumericMetricData(String tenantId,
+            String metricId) {
+        logger.debug("getNumericMetricData(): tenant={}, metric={}",tenantId, metricId);
+        long now = System.currentTimeMillis();
+        long sometime = now - EIGHT_HOURS.toMillis();
+        return this.getNumericMetricData(tenantId, metricId, sometime, now);
+    }
+
 }

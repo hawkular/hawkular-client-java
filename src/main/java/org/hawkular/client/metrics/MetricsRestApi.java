@@ -24,6 +24,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.hawkular.metrics.core.api.NumericData;
@@ -55,9 +56,15 @@ public interface MetricsRestApi {
 
     @GET
     @Path ("/{tenantId}/metrics/numeric/{id}/data")
-    List<NumericData> getNumericMetricData(@PathParam("tenantId") String tenantId, @PathParam("id") String metricId);
+    List<NumericData> getNumericMetricData(     @PathParam("tenantId") String tenantId, @PathParam("id") String metricId,
+                                                @QueryParam("start") long startTime, @QueryParam("end") long endTime);
+
+    @GET
+    @Path("/{tenantId}/metrics/numeric/{id}/tags")
+    List<NumericData> getNumericMetricData(String tenantId, String metricId);
 
     @GET
     @Path("/{tenantId}/metrics/numeric/{id}/tags")
     NumericMetric getNumericMetricTags(@PathParam ("tenantId") String tenantId, @PathParam("id") String metricId);
+
 }

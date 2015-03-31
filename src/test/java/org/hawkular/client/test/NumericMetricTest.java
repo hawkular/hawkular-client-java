@@ -37,7 +37,7 @@ public class NumericMetricTest extends BaseTest {
     private final Map<String, String> expectedTags = ImmutableMap.of("tag1", "one_value", "unit", "KB/second");
 
     private final List<NumericData> expectedData1 = ImmutableList.of(
-                                                        new NumericData(10L, 2.80d));
+                                                        new NumericData(System.currentTimeMillis(), 2.80d));
 
     public NumericMetricTest() throws Exception {
         super();
@@ -63,13 +63,13 @@ public class NumericMetricTest extends BaseTest {
 
     @Test (dependsOnMethods="createNumericMetric")
     public void addData() {
-        client().metrics().addNumericMetricData(testTenant.getId(), metricId.getName(), expectedData1);
+      client().metrics().addNumericMetricData(testTenant.getId(), metricId.getName(), expectedData1);
     }
 
     @Test (dependsOnMethods="addData")
     public void getNumericDataTest() throws Exception {
-        List<NumericData> actual = client().metrics().getNumericMetricData(testTenant.getId(), metricId.getName());
-        //Assert.assertEquals(actual, expectedMetric.getData());
+      List<NumericData> actual = client().metrics().getNumericMetricData(testTenant.getId(), metricId.getName());
+      Assert.assertEquals(actual, expectedData1);
     }
 
 }
