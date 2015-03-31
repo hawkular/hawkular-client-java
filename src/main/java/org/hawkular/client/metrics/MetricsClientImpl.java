@@ -23,7 +23,11 @@ import java.util.List;
 import org.hawkular.client.BaseClient;
 import org.hawkular.client.MetricsClient;
 import org.hawkular.client.RestFactory;
+import org.hawkular.metrics.core.api.NumericData;
+import org.hawkular.metrics.core.api.NumericMetric;
 import org.hawkular.metrics.core.api.Tenant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Hawkular-Metrics client implementation
@@ -31,6 +35,7 @@ import org.hawkular.metrics.core.api.Tenant;
  *
  */
 public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements MetricsClient {
+    private static final Logger logger = LoggerFactory.getLogger(MetricsClientImpl.class);
 
     public MetricsClientImpl(URI endpointUri, String username, String password) throws Exception {
         super(endpointUri, username, password, new RestFactory<MetricsRestApi>(MetricsRestApi.class));
@@ -45,5 +50,28 @@ public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements Met
     @Override
     public void createTenant(Tenant tenant) {
         restApi().createTenant(tenant);
+    }
+
+    @Override
+    public void createNumericMetric(NumericMetric metric) {
+        restApi().createNumericMetric(metric.getTenantId(), metric);
+    }
+
+    @Override
+    public NumericMetric findNumericMetric(String tenantId, String metricId) {
+        return restApi().getNumericMetricTags(tenantId, metricId);
+    }
+
+    @Override
+    public void addNumericMetricData(String tenantId, String metricId,
+            List<NumericData> data) {
+        logger.debug("addNumericMetricData(): tenant={}, metric={}, data={}",tenantId, metricId, data);
+        restApi().addNumericMetricData(tenantId, metricId, data);
+    }
+
+    @Override
+    public List<NumericData> getNumericMetricData(String tenantId,
+            String metricId) {
+        return restApi().getNumericMetricData(tenantId, metricId);
     }
 }

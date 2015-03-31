@@ -19,8 +19,10 @@ package org.hawkular.client.test;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hawkular.client.HawkularClient;
+import org.hawkular.metrics.core.api.Tenant;
 import org.testng.Reporter;
 
 public class BaseTest {
@@ -51,5 +53,11 @@ public class BaseTest {
      */
     public HawkularClient client() {
         return client;
+    }
+
+    public static Tenant randomTenant() {
+        Tenant tenant = new Tenant();
+        tenant.setId(RandomStringUtils.randomAlphanumeric(8));
+        return tenant;
     }
 }

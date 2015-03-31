@@ -18,6 +18,8 @@ package org.hawkular.client;
 
 import java.util.List;
 
+import org.hawkular.metrics.core.api.NumericData;
+import org.hawkular.metrics.core.api.NumericMetric;
 import org.hawkular.metrics.core.api.Tenant;
 
 public interface MetricsClient {
@@ -25,4 +27,18 @@ public interface MetricsClient {
     List<Tenant> findTenants();
 
     void createTenant(Tenant tenant);
+
+    void createNumericMetric(NumericMetric metric);
+
+    NumericMetric findNumericMetric(String tenantId, String metricId);
+
+    /**
+     * Add data to a numeric metric
+     */
+    void addNumericMetricData(String tenantId, String metricId, List<NumericData> data);
+
+    /**
+     * Retrieve numeric data from a metric
+     */
+    List<NumericData> getNumericMetricData(String tenantId, String metricId);
 }
