@@ -24,6 +24,8 @@ import java.util.List;
 import org.hawkular.client.BaseClient;
 import org.hawkular.client.MetricsClient;
 import org.hawkular.client.RestFactory;
+import org.hawkular.metrics.core.api.Availability;
+import org.hawkular.metrics.core.api.AvailabilityMetric;
 import org.hawkular.metrics.core.api.NumericData;
 import org.hawkular.metrics.core.api.NumericMetric;
 import org.hawkular.metrics.core.api.Tenant;
@@ -86,6 +88,32 @@ public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements Met
         long now = System.currentTimeMillis();
         long sometime = now - EIGHT_HOURS.toMillis();
         return this.getNumericMetricData(tenantId, metricId, sometime, now);
+    }
+
+    @Override
+    public void createAvailability(String tenantId, AvailabilityMetric metric) {
+        logger.debug("createAvailability(): tenantId={}, metric={}", tenantId, metric);
+        restApi().createAvailability(tenantId, metric);
+    }
+
+    @Override
+    public String findAvailabilityByTags(String tenantId, String csvTags) {
+        logger.debug("createAvailability(): tenantId={}, tags={}", tenantId, csvTags);
+        return restApi().findAvailabilityByTags(tenantId, csvTags);
+    }
+
+    @Override
+    public void addAvailabilityData(String tenantId,
+                                          String availId,
+                                          List<Availability> data) {
+        logger.debug("addAvailabilityMetricData: tenantId={}, metricId={}, data={}", tenantId, availId, data);
+        restApi().addAvailabilityData(tenantId, availId, data);
+    }
+
+    @Override
+    public List<Availability> getAvailabilityData(String tenantId, String metricId) {
+        logger.debug("getAvailabilityData: tenantId={}, metricId={}", tenantId, metricId);
+        return restApi().getAvailabilityData(tenantId, metricId);
     }
 
 }

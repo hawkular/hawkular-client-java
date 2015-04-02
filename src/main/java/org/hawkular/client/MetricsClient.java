@@ -18,6 +18,8 @@ package org.hawkular.client;
 
 import java.util.List;
 
+import org.hawkular.metrics.core.api.Availability;
+import org.hawkular.metrics.core.api.AvailabilityMetric;
 import org.hawkular.metrics.core.api.NumericData;
 import org.hawkular.metrics.core.api.NumericMetric;
 import org.hawkular.metrics.core.api.Tenant;
@@ -28,8 +30,14 @@ public interface MetricsClient {
 
     void createTenant(Tenant tenant);
 
+    /**
+     * Create a NumericMetric definition
+     */
     void createNumericMetric(NumericMetric metric);
 
+    /**
+     * Find a NumericMetric definition
+     */
     NumericMetric findNumericMetric(String tenantId, String metricId);
 
     /**
@@ -46,4 +54,27 @@ public interface MetricsClient {
      * Retrieve most recent numeric metric data. See implementation for default time range.
      */
     List<NumericData> getNumericMetricData(String tenantId, String metricId);
+
+    /**
+     * Create a AvailabilityMetric definition
+     */
+    void createAvailability(String tenantId, AvailabilityMetric metric);
+
+    /**
+     * Not sure what this api returns
+     */
+    String findAvailabilityByTags(String tenantId, String csvTags);
+
+    /**
+     * Add availability data
+     */
+    void addAvailabilityData(String tenantId,
+                                   String availId,
+                                   List<Availability> data);
+
+    /**
+     * Get availability data
+     */
+    List<Availability> getAvailabilityData(String tenantId,
+                                           String metricId);
 }

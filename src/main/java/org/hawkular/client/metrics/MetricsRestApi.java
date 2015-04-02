@@ -27,6 +27,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.hawkular.metrics.core.api.Availability;
+import org.hawkular.metrics.core.api.AvailabilityMetric;
 import org.hawkular.metrics.core.api.NumericData;
 import org.hawkular.metrics.core.api.NumericMetric;
 import org.hawkular.metrics.core.api.Tenant;
@@ -71,4 +73,22 @@ public interface MetricsRestApi {
     NumericMetric getNumericMetricTags(@PathParam ("tenantId") String tenantId,
                                        @PathParam("id") String metricId);
 
+    @POST
+    @Path("/{tenantId}/metrics/availability")
+    void createAvailability(@PathParam("tenantId") String tenantId, AvailabilityMetric metric);
+
+    @GET
+    @Path("/{tenantId}/availability")
+    String findAvailabilityByTags(@PathParam("tenantId")String tenantId, @QueryParam("tags") String csvTags);
+
+    @POST
+    @Path("/{tenantId}/metrics/availability/{metricId}/data")
+    void addAvailabilityData(@PathParam("tenantId")String tenantId,
+                                         @PathParam("metricId") String metricId,
+                                         List<Availability> data);
+
+    @GET
+    @Path("/{tenantId}/metrics/availability/{metricId}/data")
+    List<Availability> getAvailabilityData(@PathParam("tenantId") String tenantId,
+                                           @PathParam("metricId") String metricId);
 }
