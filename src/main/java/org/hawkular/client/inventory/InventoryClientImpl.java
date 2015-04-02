@@ -92,6 +92,11 @@ implements InventoryClient, InventoryJSONConverter {
     }
 
     @Override
+    public boolean createTenant(Tenant tenant) {
+        return createTenant(tenant.getId());
+    }
+
+    @Override
     public boolean updateTenant(String tenantId, Map<String,Object> properties) {
         Response response = restApi().updateTenant(tenantId, properties);
         if(response.getStatus() == 201){
@@ -111,6 +116,11 @@ implements InventoryClient, InventoryJSONConverter {
                           tenantId,response.getStatus());
             return false;
         }
+    }
+
+    @Override
+    public boolean deleteTenant(Tenant tenant) {
+        return deleteTenant(tenant.getId());
     }
 
     @Override
@@ -435,4 +445,5 @@ implements InventoryClient, InventoryJSONConverter {
         resourceJSON.setType(resourceTypeJSON);
         return resourceJSON;
     }
+
 }

@@ -49,6 +49,8 @@ public interface InventoryClient {
     boolean createTenant(String tenantId);
     boolean updateTenant(String tenantId, Map<String, Object> properties);
     boolean deleteTenant(String tenantId);
+    boolean deleteTenant(Tenant tenant);
+    boolean createTenant(Tenant tenant);
 
     //Environment
     Set<Environment> getEnvironments(String tenantId);
