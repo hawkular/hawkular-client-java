@@ -55,6 +55,12 @@ public interface MetricsClient {
      */
     List<NumericData> getNumericMetricData(String tenantId, String metricId);
 
+    List<NumericData> getNumericMetricDataWithBuckets(String tenantId,
+                                                      String metricId,
+                                                      long startTime,
+                                                      long endTime,
+                                                      int buckets);
+
     /**
      * Create a AvailabilityMetric definition
      */

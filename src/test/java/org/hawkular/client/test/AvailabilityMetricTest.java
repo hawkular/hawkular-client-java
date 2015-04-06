@@ -16,26 +16,30 @@
  */
 package org.hawkular.client.test;
 
-import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.hawkular.metrics.core.api.Availability;
 import org.hawkular.metrics.core.api.AvailabilityType;
 import org.hawkular.metrics.core.api.Tenant;
 import org.testng.Assert;
+import org.testng.Reporter;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
+/**
+ * Simulate a series of availability metric for a web server {(timestamp, status), (timestamp, status)}
+ * Insert and retrieve data
+ * @author vnguyen
+ *
+ */
 public class AvailabilityMetricTest extends BaseTest {
 
-    // System.currentTimeMillis() may return the same value when being called successively
-    // we add/subtract this multiplier to each call to "space out the time
-    private AtomicLong multiplier = new AtomicLong(Duration.ofHours(1).toMillis());
+    private BTG timestampGen = new BTG();
 
     private final Tenant tenant = randomTenant();
-    private final List<Availability> expectedAvailability = ImmutableList.of(down(), up(), up(), down());
+    private final List<Availability> expectedAvailability = ImmutableList.of(up(), down(), down());
 
     public AvailabilityMetricTest() throws Exception {
         super();
@@ -49,14 +53,17 @@ public class AvailabilityMetricTest extends BaseTest {
     @Test(dependsOnMethods="addAvailDataTest")
     public void getAvailabilityTest() throws Exception {
         List<Availability> actual = client().metrics().getAvailabilityData(tenant.getId(), "apache");
-        Assert.assertEquals(actual, expectedAvailability);
+        Assert.assertEquals(actual.size(), expectedAvailability.size());
+        Reporter.log(actual.toString());
+        Reporter.log(expectedAvailability.toString());
+        Assert.assertEquals(Lists.reverse(actual), expectedAvailability);
     }
 
     private Availability up() {
-        return new Availability(System.currentTimeMillis() - multiplier.getAndAdd(1000), AvailabilityType.UP);
+        return new Availability(timestampGen.nextMilli(), AvailabilityType.UP);
     }
 
     private Availability down() {
-        return new Availability(System.currentTimeMillis() - multiplier.getAndAdd(1000), AvailabilityType.DOWN);
+        return new Availability(timestampGen.nextMilli(), AvailabilityType.DOWN);
     }
 }

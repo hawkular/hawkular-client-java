@@ -65,6 +65,15 @@ public interface MetricsRestApi {
                                            );
 
     @GET
+    @Path ("/{tenantId}/metrics/numeric/{id}/data")
+    List<NumericData> getNumericMetricDataWithBuckets(@PathParam("tenantId") String tenantId,
+                                           @PathParam("id") String metricId,
+                                           @QueryParam("start") long startTime,
+                                           @QueryParam("end") long endTime,
+                                           @QueryParam("buckets") int buckets
+                                           );
+
+    @GET
     @Path("/{tenantId}/metrics/numeric/{id}/tags")
     List<NumericData> getNumericMetricData(String tenantId, String metricId);
 
