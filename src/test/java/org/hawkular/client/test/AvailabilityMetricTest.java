@@ -56,7 +56,8 @@ public class AvailabilityMetricTest extends BaseTest {
         Assert.assertEquals(actual.size(), expectedAvailability.size());
         Reporter.log(actual.toString());
         Reporter.log(expectedAvailability.toString());
-        Assert.assertEquals(Lists.reverse(actual), expectedAvailability); // have to reserve list due to https://issues.jboss.org/browse/HWKMETRICS-51
+        // have to reserve list due to https://issues.jboss.org/browse/HWKMETRICS-51
+        Assert.assertEquals(Lists.reverse(actual), expectedAvailability); 
     }
 
     private Availability up() {
