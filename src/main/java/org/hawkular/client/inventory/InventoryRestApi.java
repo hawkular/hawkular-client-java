@@ -89,7 +89,7 @@ public interface InventoryRestApi {    //PingHandler
     @GET
     @Path("/{tenantId}/environments/{environmentId}")
     Environment getEnvironment(@PathParam("tenantId") String tenantId,
-                               @PathParam("environmentId") String environmentId);
+            @PathParam("environmentId") String environmentId);
 
     @POST
     @Path("/{tenantId}/environments")
@@ -97,12 +97,14 @@ public interface InventoryRestApi {    //PingHandler
 
     @PUT
     @Path("/{tenantId}/environments/{environmentId}")
-    Response updateEnvironment(@PathParam("tenantId") String tenantId, @PathParam("environmentId") String environmentId,
-                               Map<String, Object> properties);
+    Response updateEnvironment(@PathParam("tenantId") String tenantId,
+            @PathParam("environmentId") String environmentId,
+            Map<String, Object> properties);
+
     @DELETE
     @Path("/{tenantId}/environments/{environmentId}")
     Response deleteEnvironment(@PathParam("tenantId") String tenantId,
-                               @PathParam("environmentId") String environmentId);
+            @PathParam("environmentId") String environmentId);
 
     //Metrics Types
     @GET
@@ -120,43 +122,43 @@ public interface InventoryRestApi {    //PingHandler
     @PUT
     @Path("/{tenantId}/metricTypes/{metricTypeId}")
     Response updateMetricType(@PathParam("tenantId") String tenantId, @PathParam("metricTypeId") String metricTypeId,
-                              MetricTypeUpdateJSON update);
+            MetricTypeUpdateJSON update);
 
     @DELETE
     @Path("/{tenantId}/metricTypes/{metricTypeId}")
     Response deleteMetricType(@PathParam("tenantId") String tenantId,
-                              @PathParam("metricTypeId") String metricTypeId);
+            @PathParam("metricTypeId") String metricTypeId);
 
     //Metrics
     @POST
     @Path("/{tenantId}/{environmentId}/metrics")
     Response createMetric(@PathParam("tenantId") String tenantId,
-                          @PathParam("environmentId") String environmentId,
-                          MetricJSON metric);
+            @PathParam("environmentId") String environmentId,
+            MetricJSON metric);
 
     @GET
     @Path("/{tenantId}/{environmentId}/metrics/{metricId}")
     Metric getMetric(@PathParam("tenantId") String tenantId,
-                     @PathParam("environmentId") String environmentId,
-                     @PathParam("metricId") String metricId);
+            @PathParam("environmentId") String environmentId,
+            @PathParam("metricId") String metricId);
 
     @GET
     @Path("/{tenantId}/{environmentId}/metrics")
     Set<Metric> getMetrics(@PathParam("tenantId") String tenantId,
-                           @PathParam("environmentId") String environmentId);
+            @PathParam("environmentId") String environmentId);
 
     @PUT
     @Path("/{tenantId}/{environmentId}/metrics/{metricId}")
     Response updateMetric(@PathParam("tenantId") String tenantId,
-                          @PathParam("environmentId") String environmentId,
-                          @PathParam("metricId") String metricId,
-                          MetricUpdateJSON updates);
+            @PathParam("environmentId") String environmentId,
+            @PathParam("metricId") String metricId,
+            MetricUpdateJSON updates);
 
     @DELETE
     @Path("/{tenantId}/{environmentId}/metrics/{metricId}")
     Response deleteMetric(@PathParam("tenantId") String tenantId,
-                          @PathParam("environmentId") String environmentId,
-                          @PathParam("metricId") String metricId);
+            @PathParam("environmentId") String environmentId,
+            @PathParam("metricId") String metricId);
 
     //ResourceTypes
     @GET
@@ -166,17 +168,17 @@ public interface InventoryRestApi {    //PingHandler
     @GET
     @Path("/{tenantId}/resourceTypes/{resourceTypeId}")
     ResourceType getResourceType(@PathParam("tenantId") String tenantId,
-                                 @PathParam("resourceTypeId") String resourceTypeId);
+            @PathParam("resourceTypeId") String resourceTypeId);
 
     @GET
     @Path("/{tenantId}/resourceTypes/{resourceTypeId}/metricTypes")
     Set<MetricType> getMetricTypes(@PathParam("tenantId") String tenantId,
-                                   @PathParam("resourceTypeId") String resourceTypeId);
+            @PathParam("resourceTypeId") String resourceTypeId);
 
     @GET
     @Path("/{tenantId}/resourceTypes/{resourceTypeId}/resources")
     Set<Resource> getResources(@PathParam("tenantId") String tenantId,
-                               @PathParam("resourceTypeId") String resourceTypeId);
+            @PathParam("resourceTypeId") String resourceTypeId);
 
     @POST
     @Path("/{tenantId}/resourceTypes")
@@ -185,65 +187,64 @@ public interface InventoryRestApi {    //PingHandler
     @DELETE
     @Path("/{tenantId}/resourceTypes/{resourceTypeId}")
     Response deleteResourceType(@PathParam("tenantId") String tenantId,
-                                @PathParam("resourceTypeId") String resourceTypeId);
+            @PathParam("resourceTypeId") String resourceTypeId);
 
     @POST
     @Path("/{tenantId}/resourceTypes/{resourceTypeId}/metricTypes")
     Response addMetricType(@PathParam("tenantId") String tenantId,
-                           @PathParam("resourceTypeId") String resourceTypeId,
-                           IdJSON metricTypeId);
+            @PathParam("resourceTypeId") String resourceTypeId,
+            IdJSON metricTypeId);
 
     @DELETE
     @Path("/{tenantId}/resourceTypes/{resourceTypeId}/metricTypes/{metricTypeId}")
     Response removeMetricType(@PathParam("tenantId") String tenantId,
-                              @PathParam("resourceTypeId") String resourceTypeId,
-                              @PathParam("metricTypeId") String metricTypeId);
+            @PathParam("resourceTypeId") String resourceTypeId,
+            @PathParam("metricTypeId") String metricTypeId);
 
     //Resource
     @POST
     @Path("/{tenantId}/{environmentId}/resources")
     Response addResource(@PathParam("tenantId") String tenantId,
-                       @PathParam("environmentId") String environmentId,
-                       ResourceJSON resource);
+            @PathParam("environmentId") String environmentId,
+            ResourceJSON resource);
 
     @GET
     @Path("/{tenantId}/{environmentId}/resources")
     Set<Resource> getResourcesByType(@PathParam("tenantId") String tenantId,
-                                     @PathParam("environmentId") String environmentId,
-                                     String typeId,
-                                     String typeVersion);
+            @PathParam("environmentId") String environmentId,
+            String typeId,
+            String typeVersion);
 
     @GET
     @Path("/{tenantId}/{environmentId}/resources/{resourceId}")
     Resource getResource(@PathParam("tenantId") String tenantId,
-                         @PathParam("environmentId") String environmentId,
-                         @PathParam("resourceId") String uid);
-
+            @PathParam("environmentId") String environmentId,
+            @PathParam("resourceId") String uid);
 
     @DELETE
     @Path("/{tenantId}/{environmentId}/resources/{resourceId}")
     Response deleteResource(@PathParam("tenantId") String tenantId,
-                            @PathParam("environmentId") String environmentId,
-                            @PathParam("resourceId") String resourceId);
+            @PathParam("environmentId") String environmentId,
+            @PathParam("resourceId") String resourceId);
 
     @POST
     @Path("/{tenantId}/{environmentId}/resources/{resourceId}/metrics/")
     Response addMetricToResource(@PathParam("tenantId") String tenantId,
-                                 @PathParam("environmentId") String environmentId,
-                                 @PathParam("resourceId") String resourceId,
-                                 Collection<String> metricIds);
+            @PathParam("environmentId") String environmentId,
+            @PathParam("resourceId") String resourceId,
+            Collection<String> metricIds);
 
     @GET
     @Path("/{tenantId}/{environmentId}/resources/{resourceId}/metrics")
     Set<Metric> listMetricsOfResource(@PathParam("tenantId") String tenantId,
-                                      @PathParam("environmentId") String environmentID,
-                                      @PathParam("resourceId") String resourceId);
+            @PathParam("environmentId") String environmentID,
+            @PathParam("resourceId") String resourceId);
 
     @GET
     @Path("/{tenantId}/{environmentId}/resources/{resourceId}/metrics/{metricId}")
     Metric getMetricOfResource(@PathParam("tenantId") String tenantId,
-                               @PathParam("environmentId") String environmentId,
-                               @PathParam("resourceId") String resourceId,
-                               @PathParam("metricId") String metricId);
+            @PathParam("environmentId") String environmentId,
+            @PathParam("resourceId") String resourceId,
+            @PathParam("metricId") String metricId);
 
 }
