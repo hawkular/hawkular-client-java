@@ -60,6 +60,7 @@ public interface InventoryClient {
     boolean createEnvironment(Environment environment);
     boolean updateEnvironment(String tenantId, String environmentId, Map<String, Object> properties);
     boolean deleteEnvironment(String tenantId, String environmentId);
+    boolean deleteEnvironment(Environment environment);
 
     //MetricType
     MetricType getMetricType(String tenantId, String metricTypeId);
@@ -70,6 +71,7 @@ public interface InventoryClient {
                              MetricTypeUpdateJSON update);
     boolean deleteMetricType(String tenantId,
                              String metricTypeId);
+    boolean deleteMetricType(MetricType metricType);
 
     //Metrics
     boolean createMetric(String tenantId,String environmentId,MetricJSON metric);
