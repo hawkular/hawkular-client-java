@@ -27,6 +27,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import org.hawkular.client.metrics.model.AggregateNumericData;
 import org.hawkular.metrics.core.api.Availability;
 import org.hawkular.metrics.core.api.AvailabilityMetric;
 import org.hawkular.metrics.core.api.NumericData;
@@ -66,7 +67,7 @@ public interface MetricsRestApi {
 
     @GET
     @Path ("/{tenantId}/metrics/numeric/{id}/data")
-    List<NumericData> getNumericMetricDataWithBuckets(@PathParam("tenantId") String tenantId,
+    List<AggregateNumericData> getAggregateNumericDataByBuckets(@PathParam("tenantId") String tenantId,
                                            @PathParam("id") String metricId,
                                            @QueryParam("start") long startTime,
                                            @QueryParam("end") long endTime,

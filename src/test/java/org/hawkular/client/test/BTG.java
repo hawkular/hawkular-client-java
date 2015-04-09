@@ -19,13 +19,16 @@ package org.hawkular.client.test;
 import java.time.Duration;
 import java.time.Instant;
 
+import net.jcip.annotations.NotThreadSafe;
+
 /**
  * A Better-Timestamp-Generator helper class generates new timestamp value starting
- * from a window (default=8hours from now) in 30 seconds increment to avoid
- * getting almost identical values when calling System.currentTimeMillis() in
+ * from (current time - window) in 30 seconds increment to avoid getting almost
+ * identical values when calling System.currentTimeMillis() in
  * rapid succession
  * @author vnguyen
  */
+@NotThreadSafe
 public class BTG {
     private Instant nextVal;
     private Duration window;

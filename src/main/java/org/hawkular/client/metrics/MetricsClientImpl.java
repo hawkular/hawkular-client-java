@@ -24,6 +24,7 @@ import java.util.List;
 import org.hawkular.client.BaseClient;
 import org.hawkular.client.MetricsClient;
 import org.hawkular.client.RestFactory;
+import org.hawkular.client.metrics.model.AggregateNumericData;
 import org.hawkular.metrics.core.api.Availability;
 import org.hawkular.metrics.core.api.AvailabilityMetric;
 import org.hawkular.metrics.core.api.NumericData;
@@ -91,14 +92,14 @@ public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements Met
     }
 
     @Override
-    public List<NumericData> getNumericMetricDataWithBuckets(String tenantId,
+    public List<AggregateNumericData> getAggregateNumericDataByBuckets(String tenantId,
                                                              String metricId,
                                                              long startTime,
                                                              long endTime,
                                                              int buckets) {
         logger.debug("getNumericMetricDataWithBuckets(): tenantId={}, metric={}, start={}, end={}, buckets={}",
                         tenantId, metricId, startTime, endTime, buckets);
-        return restApi().getNumericMetricDataWithBuckets(tenantId, metricId, startTime, endTime, buckets);
+        return restApi().getAggregateNumericDataByBuckets(tenantId, metricId, startTime, endTime, buckets);
     }
 
 

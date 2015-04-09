@@ -18,6 +18,7 @@ package org.hawkular.client;
 
 import java.util.List;
 
+import org.hawkular.client.metrics.model.AggregateNumericData;
 import org.hawkular.metrics.core.api.Availability;
 import org.hawkular.metrics.core.api.AvailabilityMetric;
 import org.hawkular.metrics.core.api.NumericData;
@@ -55,7 +56,7 @@ public interface MetricsClient {
      */
     List<NumericData> getNumericMetricData(String tenantId, String metricId);
 
-    List<NumericData> getNumericMetricDataWithBuckets(String tenantId,
+    List<AggregateNumericData> getAggregateNumericDataByBuckets(String tenantId,
                                                       String metricId,
                                                       long startTime,
                                                       long endTime,

@@ -29,15 +29,20 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
 
 public class NumericMetricTest extends BaseTest {
+    private final BTG ts = new BTG();
     private final Tenant testTenant = randomTenant();
     private final MetricId metricId = new MetricId("metric22");
     private final NumericMetric expectedMetric = new NumericMetric(testTenant.getId(), metricId);
     private final Map<String, String> expectedTags = ImmutableMap.of("tag1", "one_value", "unit", "KB/second");
 
     private final List<NumericData> expectedData1 = ImmutableList.of(
-                                                        new NumericData(System.currentTimeMillis(), 2.80d));
+                                                        new NumericData(ts.nextMilli(), 2.80d),
+                                                        new NumericData(ts.nextMilli(), 3.14d),
+                                                        new NumericData(ts.nextMilli(), 0.333d)
+                                                        );
 
     public NumericMetricTest() throws Exception {
         super();
@@ -69,7 +74,7 @@ public class NumericMetricTest extends BaseTest {
     @Test (dependsOnMethods="addData")
     public void getNumericDataTest() throws Exception {
       List<NumericData> actual = client().metrics().getNumericMetricData(testTenant.getId(), metricId.getName());
-      Assert.assertEquals(actual, expectedData1);
+      Assert.assertEquals(Lists.reverse(actual), expectedData1);
     }
 
 }
