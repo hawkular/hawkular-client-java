@@ -19,7 +19,6 @@ package org.hawkular.client.inventory;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -64,7 +63,7 @@ public interface InventoryRestApi {    //PingHandler
     @Path("/")
     StringValue pingHello();
 
-    //Tenant
+    //TenantJson
     @GET
     @Path("/tenants")
     List<Tenant> getTenants();
@@ -84,7 +83,7 @@ public interface InventoryRestApi {    //PingHandler
     //Environment
     @GET
     @Path("/{tenantId}/environments")
-    Set<Environment> getEnvironments(@PathParam("tenantId") String tenantId);
+    List<Environment> getEnvironments(@PathParam("tenantId") String tenantId);
 
     @GET
     @Path("/{tenantId}/environments/{environmentId}")
@@ -109,7 +108,7 @@ public interface InventoryRestApi {    //PingHandler
     //Metrics Types
     @GET
     @Path("/{tenantId}/metricTypes")
-    Set<MetricType> getMetricTypes(@PathParam("tenantId") String tenantId);
+    List<MetricType> getMetricTypes(@PathParam("tenantId") String tenantId);
 
     @GET
     @Path("/{tenantId}/metricTypes/{metricTypeId}")
@@ -144,7 +143,7 @@ public interface InventoryRestApi {    //PingHandler
 
     @GET
     @Path("/{tenantId}/{environmentId}/metrics")
-    Set<Metric> getMetrics(@PathParam("tenantId") String tenantId,
+    List<Metric> getMetrics(@PathParam("tenantId") String tenantId,
             @PathParam("environmentId") String environmentId);
 
     @PUT
@@ -163,7 +162,7 @@ public interface InventoryRestApi {    //PingHandler
     //ResourceTypes
     @GET
     @Path("/{tenantId}/resourceTypes")
-    Set<ResourceType> getResourceTypes(@PathParam("tenantId") String tenantId);
+    List<ResourceType> getResourceTypes(@PathParam("tenantId") String tenantId);
 
     @GET
     @Path("/{tenantId}/resourceTypes/{resourceTypeId}")
@@ -172,12 +171,12 @@ public interface InventoryRestApi {    //PingHandler
 
     @GET
     @Path("/{tenantId}/resourceTypes/{resourceTypeId}/metricTypes")
-    Set<MetricType> getMetricTypes(@PathParam("tenantId") String tenantId,
+    List<MetricType> getMetricTypes(@PathParam("tenantId") String tenantId,
             @PathParam("resourceTypeId") String resourceTypeId);
 
     @GET
     @Path("/{tenantId}/resourceTypes/{resourceTypeId}/resources")
-    Set<Resource> getResources(@PathParam("tenantId") String tenantId,
+    List<Resource> getResources(@PathParam("tenantId") String tenantId,
             @PathParam("resourceTypeId") String resourceTypeId);
 
     @POST
@@ -210,7 +209,7 @@ public interface InventoryRestApi {    //PingHandler
 
     @GET
     @Path("/{tenantId}/{environmentId}/resources")
-    Set<Resource> getResourcesByType(@PathParam("tenantId") String tenantId,
+    List<Resource> getResourcesByType(@PathParam("tenantId") String tenantId,
             @PathParam("environmentId") String environmentId,
             String typeId,
             String typeVersion);
@@ -236,7 +235,7 @@ public interface InventoryRestApi {    //PingHandler
 
     @GET
     @Path("/{tenantId}/{environmentId}/resources/{resourceId}/metrics")
-    Set<Metric> listMetricsOfResource(@PathParam("tenantId") String tenantId,
+    List<Metric> listMetricsOfResource(@PathParam("tenantId") String tenantId,
             @PathParam("environmentId") String environmentID,
             @PathParam("resourceId") String resourceId);
 

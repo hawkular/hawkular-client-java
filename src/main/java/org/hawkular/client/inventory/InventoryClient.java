@@ -19,7 +19,6 @@ package org.hawkular.client.inventory;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.hawkular.client.inventory.model.IdJSON;
 import org.hawkular.client.inventory.model.MetricJSON;
@@ -43,7 +42,7 @@ public interface InventoryClient {
     String pingHello();
     String pingTime();
 
-    //Tenant
+    //TenantJson
     List<Tenant> getTenants();
     boolean createTenant(IdJSON tenantId);
     boolean createTenant(String tenantId);
@@ -53,8 +52,9 @@ public interface InventoryClient {
     boolean createTenant(Tenant tenant);
 
     //Environment
-    Set<Environment> getEnvironments(String tenantId);
+    List<Environment> getEnvironments(String tenantId);
     Environment getEnvironment(String tenantId, String environmentId);
+    Environment getEnvironment(Environment environment);
     boolean createEnvironment(String tenantId, IdJSON environmentId);
     boolean createEnvironment(String tenantId, String environmentId);
     boolean createEnvironment(Environment environment);
@@ -63,7 +63,9 @@ public interface InventoryClient {
     boolean deleteEnvironment(Environment environment);
 
     //MetricType
+    List<MetricType> getMetricTypes(String tenantId);
     MetricType getMetricType(String tenantId, String metricTypeId);
+    MetricType getMetricType(MetricType metricType);
     boolean createMetricType(String tenantId, MetricTypeJSON metricType);
     boolean createMetricType(String tenantId, String metricTypeId, String metricTypeUnit);
     boolean createMetricType(MetricType metricType);
@@ -78,21 +80,22 @@ public interface InventoryClient {
     boolean createMetric(String tenantId,String environmentId,String metricId,String metricTypeId);
     boolean createMetric(Metric metric);
     Metric getMetric(String tenantId,String environmentId,String metricId);
-    Set<Metric> getMetrics(String tenantId,String environmentId);
+    Metric getMetric(Metric metric);
+    List<Metric> getMetrics(String tenantId,String environmentId);
     boolean updateMetric(String tenantId,
                          String environmentId,
                          String metricId,
                          MetricUpdateJSON updates);
+    boolean deleteMetric(Metric metric);
     boolean deleteMetric(String tenantId,
                          String environmentId,
                          String metricId);
-    Set<MetricType> getMetricTypes(String tenantId);
 
     //ResourceType
-    Set<ResourceType> getResourceTypes(String tenantId);
+    List<ResourceType> getResourceTypes(String tenantId);
     ResourceType getResourceType(String tenantId, String resourceTypeId);
-    Set<MetricType> getMetricTypes(String tenantId, String resourceTypeId);
-    Set<Resource> getResources(String tenantId, String resourceTypeId);
+    List<MetricType> getMetricTypes(String tenantId, String resourceTypeId);
+    List<Resource> getResources(String tenantId, String resourceTypeId);
     boolean createResourceType(String tenantId, ResourceTypeJSON resourceType);
     boolean createResourceType(String tenantId, String resourceId, String resourceVersion);
     boolean createResourceType(ResourceType resourceType);
@@ -105,10 +108,10 @@ public interface InventoryClient {
     boolean addResource( String tenantId, String environmentId, String resourceId,
                          String resourceTypeId, String resourceTypeVersion );
     boolean addResource(Resource resource);
-    Set<Resource> getResourcesByType(String tenantId, String environmentId, String typeId, String typeVersion);
+    List<Resource> getResourcesByType(String tenantId, String environmentId, String typeId, String typeVersion);
     Resource getResource(String tenantId, String environmentId, String uid);
     boolean deleteResource(String tenantId, String environmentId, String resourceId);
     boolean addMetricToResource(String tenantId, String environmentId, String resourceId,Collection<String> metricIds);
-    Set<Metric> listMetricsOfResource(String tenantId, String environmentID, String resourceId);
+    List<Metric> listMetricsOfResource(String tenantId, String environmentID, String resourceId);
     Metric getMetricOfResource(String tenantId, String environmentId, String resourceId, String metricId);
 }
