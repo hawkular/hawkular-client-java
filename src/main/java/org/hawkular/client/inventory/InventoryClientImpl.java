@@ -21,13 +21,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.ws.rs.core.Response;
 
 import org.hawkular.client.BaseClient;
 import org.hawkular.client.RestFactory;
-import org.hawkular.client.inventory.model.ApiError;
 import org.hawkular.client.inventory.model.IdJSON;
 import org.hawkular.client.inventory.model.MetricJSON;
 import org.hawkular.client.inventory.model.MetricTypeJSON;
@@ -71,8 +69,8 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public List<Tenant> getTenants() {
-        List<Tenant> tenantJsons = restApi().getTenants();
-        return tenantJsons == null ? new ArrayList<Tenant>() : tenantJsons;
+        List<Tenant> tenants = restApi().getTenants();
+        return tenants == null ? new ArrayList<Tenant>() : tenants;
     }
 
     @Override
@@ -85,7 +83,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
                 return true;
             } else {
                 _logger.warn("Tenant[{}] creation failed, Response Status code: {}, Error message if any:{}",
-                        tenantId.getId(), response.getStatus(), response.readEntity(ApiError.class));
+                        tenantId.getId(), response.getStatus(), response.readEntity(String.class));
                 return false;
             }
         } finally {
@@ -137,14 +135,19 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     //Enviroment
 
     @Override
-    public Set<Environment> getEnvironments(String tenantId) {
-        // TODO Auto-generated method stub
-        return null;
+    public List<Environment> getEnvironments(String tenantId) {
+        List<Environment> environments = restApi().getEnvironments(tenantId);
+        return environments == null ? new ArrayList<Environment>() : environments;
     }
 
     @Override
     public Environment getEnvironment(String tenantId, String environmentId) {
         return restApi().getEnvironment(tenantId, environmentId);
+    }
+
+    @Override
+    public Environment getEnvironment(Environment environment) {
+        return restApi().getEnvironment(environment.getTenantId(), environment.getId());
     }
 
     @Override
@@ -206,37 +209,22 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
         return this.deleteEnvironment(environment.getTenantId(), environment.getId());
     }
 
-    @Override
-    public boolean createMetric(String tenantId, String environmentId, MetricJSON metric) {
-        Response response = restApi().createMetric(tenantId, environmentId, metric);
-        try {
-            if (response.getStatus() == 201) {
-                _logger.debug("Metric[id:{},typeId:{}] created successfully under the environment[{}],"
-                        + " tenant[{}], Location URI:{}", metric.getId(), metric.getMetricTypeId(), environmentId,
-                        tenantId, response.getLocation().toString());
-                return true;
-            } else {
-                _logger.warn("Metric[id:{},typeId:{}] creation failed under the environment[{}], tenant[{}],"
-                        + " Response Status Code:{}", metric.getId(), metric.getMetricTypeId(), environmentId,
-                        tenantId,
-                        response.getStatus());
-                return false;
-            }
-        } finally {
-            response.close();
-        }
-    }
-
     //MetricType
 
     @Override
-    public Set<MetricType> getMetricTypes(String tenantId) {
-        return this.restApi().getMetricTypes(tenantId);
+    public List<MetricType> getMetricTypes(String tenantId) {
+        List<MetricType> metricTypes = this.restApi().getMetricTypes(tenantId);
+        return metricTypes == null ? new ArrayList<MetricType>() : metricTypes;
     }
 
     @Override
     public MetricType getMetricType(String tenantId, String metricTypeId) {
         return this.restApi().getMetricType(tenantId, metricTypeId);
+    }
+
+    @Override
+    public MetricType getMetricType(MetricType metricType) {
+        return this.getMetricType(metricType.getTenantId(), metricType.getId());
     }
 
     @Override
@@ -298,6 +286,29 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
         return this.deleteMetricType(metricType.getTenantId(), metricType.getId());
     }
 
+    //Metric
+
+    @Override
+    public boolean createMetric(String tenantId, String environmentId, MetricJSON metric) {
+        Response response = restApi().createMetric(tenantId, environmentId, metric);
+        try {
+            if (response.getStatus() == 201) {
+                _logger.debug("Metric[id:{},typeId:{}] created successfully under the environment[{}],"
+                        + " tenant[{}], Location URI:{}", metric.getId(), metric.getMetricTypeId(), environmentId,
+                        tenantId, response.getLocation().toString());
+                return true;
+            } else {
+                _logger.warn("Metric[id:{},typeId:{}] creation failed under the environment[{}], tenant[{}],"
+                        + " Response Status Code:{}", metric.getId(), metric.getMetricTypeId(), environmentId,
+                        tenantId,
+                        response.getStatus());
+                return false;
+            }
+        } finally {
+            response.close();
+        }
+    }
+
     @Override
     public boolean createMetric(String tenantId, String environmentId, String metricId, String metricTypeId) {
         return createMetric(tenantId, environmentId, getMetricJSON(metricId, metricTypeId));
@@ -311,14 +322,19 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public Metric getMetric(String tenantId, String environmentId, String metricId) {
-        // TODO Auto-generated method stub
-        return null;
+        return this.restApi().getMetric(tenantId, environmentId, metricId);
     }
 
     @Override
-    public Set<Metric> getMetrics(String tenantId, String environmentId) {
-        // TODO Auto-generated method stub
-        return null;
+    public Metric getMetric(Metric metric) {
+        return this.restApi().getMetric(metric.getTenantId(), metric.getEnvironmentId(), metric.getId());
+    }
+
+    @Override
+    public List<Metric> getMetrics(String tenantId, String environmentId) {
+        List<Metric> metrics = restApi().getMetrics(tenantId, environmentId);
+        return metrics == null ? new ArrayList<Metric>() : metrics;
+
     }
 
     @Override
@@ -329,14 +345,32 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public boolean deleteMetric(String tenantId, String environmentId, String metricId) {
-        // TODO Auto-generated method stub
-        return false;
+        Response response = restApi().deleteMetric(tenantId, environmentId, metricId);
+        try {
+            if (response.getStatus() == 204) {
+                _logger.debug("Metric[{}] under [tenant:{},environment:{}] was deleted successfully", metricId,
+                        tenantId, environmentId);
+                return true;
+            } else {
+                _logger.warn(
+                        "MetricType[{}] under the [tenant:{},environment:{}] deletion failed, Response Status code: {}",
+                        metricId, tenantId, environmentId, response.getStatus());
+                return false;
+            }
+        } finally {
+            response.close();
+        }
     }
 
     @Override
-    public Set<ResourceType> getResourceTypes(String tenantId) {
-        // TODO Auto-generated method stub
-        return null;
+    public boolean deleteMetric(Metric metric) {
+        return this.deleteMetric(metric.getTenantId(), metric.getEnvironmentId(), metric.getId());
+    }
+
+    @Override
+    public List<ResourceType> getResourceTypes(String tenantId) {
+        List<ResourceType> metrics = restApi().getResourceTypes(tenantId);
+        return metrics == null ? new ArrayList<ResourceType>() : metrics;
     }
 
     @Override
@@ -346,15 +380,15 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     }
 
     @Override
-    public Set<MetricType> getMetricTypes(String tenantId, String resourceTypeId) {
-        // TODO Auto-generated method stub
-        return null;
+    public List<MetricType> getMetricTypes(String tenantId, String resourceTypeId) {
+        List<MetricType> metricTypes = restApi().getMetricTypes(tenantId);
+        return metricTypes == null ? new ArrayList<MetricType>() : metricTypes;
     }
 
     @Override
-    public Set<Resource> getResources(String tenantId, String resourceTypeId) {
-        // TODO Auto-generated method stub
-        return null;
+    public List<Resource> getResources(String tenantId, String resourceTypeId) {
+        List<Resource> resources = restApi().getResources(tenantId, resourceTypeId);
+        return resources == null ? new ArrayList<Resource>() : resources;
     }
 
     @Override
@@ -438,9 +472,9 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     }
 
     @Override
-    public Set<Resource> getResourcesByType(String tenantId, String environmentId, String typeId, String typeVersion) {
-        // TODO Auto-generated method stub
-        return null;
+    public List<Resource> getResourcesByType(String tenantId, String environmentId, String typeId, String typeVersion) {
+        List<Resource> resources = restApi().getResourcesByType(tenantId, environmentId, typeId, typeVersion);
+        return resources == null ? new ArrayList<Resource>() : resources;
     }
 
     @Override
@@ -462,9 +496,9 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     }
 
     @Override
-    public Set<Metric> listMetricsOfResource(String tenantId, String environmentID, String resourceId) {
-        // TODO Auto-generated method stub
-        return null;
+    public List<Metric> listMetricsOfResource(String tenantId, String environmentID, String resourceId) {
+        List<Metric> metrics = restApi().listMetricsOfResource(tenantId, environmentID, resourceId);
+        return metrics == null ? new ArrayList<Metric>() : metrics;
     }
 
     @Override
