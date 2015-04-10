@@ -66,8 +66,4 @@ public class StatisticHelper {
                                             .put("percentile95th", PERCENTILE95th)
                                             .build();
 
-//    public static Function<List<NumericData>, List<AggregateNumericData>> AGGREGATE =
-//            listOfRaw -> {
-//                return new AggregateNume;
-//            };
 }

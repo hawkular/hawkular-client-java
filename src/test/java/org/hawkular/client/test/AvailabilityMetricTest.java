@@ -26,7 +26,6 @@ import org.testng.Reporter;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
 /**
  * Simulate a series of availability metric for a web server {(timestamp, status), (timestamp, status)}
@@ -53,11 +52,13 @@ public class AvailabilityMetricTest extends BaseTest {
     @Test(dependsOnMethods="addAvailDataTest")
     public void getAvailabilityTest() throws Exception {
         List<Availability> actual = client().metrics().getAvailabilityData(tenant.getId(), "apache");
+
         Assert.assertEquals(actual.size(), expectedAvailability.size());
-        Reporter.log(actual.toString());
-        Reporter.log(expectedAvailability.toString());
-        // have to reverse list due to https://issues.jboss.org/browse/HWKMETRICS-51
-        Assert.assertEquals(Lists.reverse(actual), expectedAvailability);
+
+        Reporter.log("Expected: " + expectedAvailability.toString());
+        Reporter.log("Actual: " + actual.toString(), true);
+
+        Assert.assertEquals(actual, expectedAvailability);
     }
 
     private Availability up() {
