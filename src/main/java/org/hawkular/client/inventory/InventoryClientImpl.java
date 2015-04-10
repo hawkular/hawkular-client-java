@@ -82,7 +82,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
                         tenantId.getId(), response.getLocation().toString());
                 return true;
             } else {
-                _logger.warn("Tenant[{}] creation failed, Response Status code: {}, Error message if any:{}",
+                _logger.warn("Tenant[{}] creation failed, HTTP Status code: {}, Error message if any:{}",
                         tenantId.getId(), response.getStatus(), response.readEntity(String.class));
                 return false;
             }
@@ -118,8 +118,8 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
                 _logger.debug("Tenant[{}] deleted successfully", tenantId);
                 return true;
             } else {
-                _logger.warn("Tenant[{}] deletion failed, Response Status code: {}",
-                        tenantId, response.getStatus());
+                _logger.warn("Tenant[{}] deletion failed, HTTP Status code: {}, Error message if any:{}",
+                        tenantId, response.getStatus(), response.readEntity(String.class));
                 return false;
             }
         } finally {
@@ -159,8 +159,10 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
                         environmentId.getId(), tenantId, response.getLocation().toString());
                 return true;
             } else {
-                _logger.warn("Environment[{}] creation failed under the tenant[{}], Response Status code: {}",
-                        environmentId.getId(), tenantId, response.getStatus());
+                _logger.warn(
+                        "Environment[{}] creation failed under the tenant[{}], HTTP Status code: {},"
+                                + " Error message if any:{}", environmentId.getId(), tenantId, response.getStatus(),
+                        response.readEntity(String.class));
                 return false;
             }
         } finally {
@@ -195,8 +197,10 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
                         environmentId, tenantId);
                 return true;
             } else {
-                _logger.warn("Environment[{}] under the tenant[{}] deletion failed, Response Status code: {}",
-                        environmentId, tenantId, response.getStatus());
+                _logger.warn(
+                        "Environment[{}] under the tenant[{}] deletion failed, HTTP Status code: {},"
+                                + " Error message if any:{}", environmentId, tenantId, response.getStatus(),
+                        response.readEntity(String.class));
                 return false;
             }
         } finally {
@@ -238,8 +242,8 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
                 return true;
             } else {
                 _logger.warn("MetricType[id:{},unit:{}] creation failed under the tenant[{}], "
-                        + " Response Status code: {}", metricType.getId(), metricType.getUnit(),
-                        tenantId, response.getStatus());
+                        + " HTTP Status code: {}, Error message if any:{}", metricType.getId(), metricType.getUnit(),
+                        tenantId, response.getStatus(), response.readEntity(String.class));
                 return false;
             }
         } finally {
@@ -272,8 +276,10 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
                 _logger.debug("MetricType[{}] under the tenant[{}] was deleted successfully", metricTypeId, tenantId);
                 return true;
             } else {
-                _logger.warn("MetricType[{}] under the tenant[{}] deletion failed, Response Status code: {}",
-                        metricTypeId, tenantId, response.getStatus());
+                _logger.warn(
+                        "MetricType[{}] under the tenant[{}] deletion failed, HTTP Status code: {},"
+                                + " Error message if any:{}", metricTypeId, tenantId, response.getStatus(),
+                        response.readEntity(String.class));
                 return false;
             }
         } finally {
@@ -299,9 +305,9 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
                 return true;
             } else {
                 _logger.warn("Metric[id:{},typeId:{}] creation failed under the environment[{}], tenant[{}],"
-                        + " Response Status Code:{}", metric.getId(), metric.getMetricTypeId(), environmentId,
-                        tenantId,
-                        response.getStatus());
+                        + " HTTP Status code: {}, Error message if any:{}", metric.getId(), metric.getMetricTypeId(),
+                        environmentId,
+                        tenantId, response.getStatus(), response.readEntity(String.class));
                 return false;
             }
         } finally {
@@ -353,8 +359,9 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
                 return true;
             } else {
                 _logger.warn(
-                        "MetricType[{}] under the [tenant:{},environment:{}] deletion failed, Response Status code: {}",
-                        metricId, tenantId, environmentId, response.getStatus());
+                        "Metric[{}] under the [tenant:{},environment:{}] deletion failed, HTTP Status code: {},"
+                                + " Error message if any:{}", metricId, tenantId, environmentId, response.getStatus(),
+                        response.readEntity(String.class));
                 return false;
             }
         } finally {
@@ -401,8 +408,9 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
             return true;
         } else {
             _logger.debug("ResourceType[id:{},version:{}] creation failed under the tenant[{}], "
-                    + " Response Status code: {}", resourceType.getId(), resourceType.getVersion(),
-                    tenantId, response.getStatus());
+                    + " HTTP Status code: {}, Error message if any:{}", resourceType.getId(),
+                    resourceType.getVersion(),
+                    tenantId, response.getStatus(), response.readEntity(String.class));
             return false;
         }
     }
@@ -447,8 +455,8 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
             return true;
         } else {
             _logger.debug("Unable to add Resource[id:{},typeId:{}] under the tenant[{}], environment[{}], "
-                    + "Response Status Code:{}", resource.getId(), resource.getType().getId(),
-                    tenantId, environmentId, response.getStatus());
+                    + "HTTP Status code: {}, Error message if any:{}", resource.getId(), resource.getType().getId(),
+                    tenantId, environmentId, response.getStatus(), response.readEntity(String.class));
             return false;
         }
     }
