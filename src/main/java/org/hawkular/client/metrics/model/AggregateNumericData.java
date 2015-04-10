@@ -19,7 +19,6 @@ package org.hawkular.client.metrics.model;
 import java.util.List;
 import java.util.Objects;
 
-import org.hawkular.client.test.StatisticHelper;
 import org.hawkular.metrics.core.api.NumericData;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
