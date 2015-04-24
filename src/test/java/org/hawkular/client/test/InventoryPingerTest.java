@@ -27,6 +27,6 @@ public class InventoryPingerTest extends BaseTest {
 
     @Test(priority=1)
     public void pingerTest() throws Exception {
-        Assert.assertEquals(client().inventory().pingHello(), "Hello World");
+        Assert.assertEquals(client().inventory().pingHello(), "Hawkular Inventory");
     }
 }

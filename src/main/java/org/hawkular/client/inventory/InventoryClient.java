@@ -21,18 +21,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.hawkular.client.inventory.model.IdJSON;
-import org.hawkular.client.inventory.model.MetricJSON;
-import org.hawkular.client.inventory.model.MetricTypeJSON;
-import org.hawkular.client.inventory.model.MetricTypeUpdateJSON;
-import org.hawkular.client.inventory.model.MetricUpdateJSON;
-import org.hawkular.client.inventory.model.ResourceJSON;
-import org.hawkular.client.inventory.model.ResourceTypeJSON;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Metric;
 import org.hawkular.inventory.api.model.MetricType;
+import org.hawkular.inventory.api.model.MetricUnit;
 import org.hawkular.inventory.api.model.Resource;
 import org.hawkular.inventory.api.model.ResourceType;
 import org.hawkular.inventory.api.model.Tenant;
+import org.hawkular.inventory.api.model.Version;
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
@@ -66,26 +62,27 @@ public interface InventoryClient {
     List<MetricType> getMetricTypes(String tenantId);
     MetricType getMetricType(String tenantId, String metricTypeId);
     MetricType getMetricType(MetricType metricType);
-    boolean createMetricType(String tenantId, MetricTypeJSON metricType);
-    boolean createMetricType(String tenantId, String metricTypeId, String metricTypeUnit);
+    boolean createMetricType(String tenantId, String metricTypeId, MetricUnit unit);
     boolean createMetricType(MetricType metricType);
+    boolean createMetricType(String tenantId, MetricType.Blueprint metricType);
     boolean updateMetricType(String tenantId, String metricTypeId,
-                             MetricTypeUpdateJSON update);
+                             MetricType metricType);
     boolean deleteMetricType(String tenantId,
                              String metricTypeId);
     boolean deleteMetricType(MetricType metricType);
 
     //Metrics
-    boolean createMetric(String tenantId,String environmentId,MetricJSON metric);
-    boolean createMetric(String tenantId,String environmentId,String metricId,String metricTypeId);
     boolean createMetric(Metric metric);
+    boolean createMetric(String tenantId,String environmentId,Metric.Blueprint metric);
+    boolean createMetric(String tenantId,String environmentId,String metricId,String metricTypeId);
+    boolean createMetric(String tenantId,String environmentId,String metricId,MetricType type);
     Metric getMetric(String tenantId,String environmentId,String metricId);
     Metric getMetric(Metric metric);
     List<Metric> getMetrics(String tenantId,String environmentId);
     boolean updateMetric(String tenantId,
                          String environmentId,
                          String metricId,
-                         MetricUpdateJSON updates);
+                         Metric metric);
     boolean deleteMetric(Metric metric);
     boolean deleteMetric(String tenantId,
                          String environmentId,
@@ -94,23 +91,28 @@ public interface InventoryClient {
     //ResourceType
     List<ResourceType> getResourceTypes(String tenantId);
     ResourceType getResourceType(String tenantId, String resourceTypeId);
+    ResourceType getResourceType(ResourceType resourceType);
     List<MetricType> getMetricTypes(String tenantId, String resourceTypeId);
     List<Resource> getResources(String tenantId, String resourceTypeId);
-    boolean createResourceType(String tenantId, ResourceTypeJSON resourceType);
-    boolean createResourceType(String tenantId, String resourceId, String resourceVersion);
     boolean createResourceType(ResourceType resourceType);
+    boolean createResourceType(String tenantId, ResourceType.Blueprint resourceType);
+    boolean createResourceType(String tenantId, String resourceId, String resourceVersion);
+    boolean createResourceType(String tenantId, String resourceId, Version resourceVersion);
     boolean deleteResourceType(String tenantId, String resourceTypeId);
+    boolean deleteResourceType(ResourceType resourceType);
     boolean addMetricType(String tenantId, String resourceTypeId, IdJSON metricTypeId);
     boolean removeMetricType(String tenantId, String resourceTypeId, String metricTypeId);
 
     //Resource
-    boolean addResource(String tenantId, String environmentId, ResourceJSON resource);
-    boolean addResource( String tenantId, String environmentId, String resourceId,
-                         String resourceTypeId, String resourceTypeVersion );
     boolean addResource(Resource resource);
+    boolean addResource(String tenantId, String environmentId, Resource.Blueprint resource);
+    boolean addResource( String tenantId, String environmentId, String resourceId,
+                         String resourceTypeId);
     List<Resource> getResourcesByType(String tenantId, String environmentId, String typeId, String typeVersion);
     Resource getResource(String tenantId, String environmentId, String uid);
+    Resource getResource(Resource resource);
     boolean deleteResource(String tenantId, String environmentId, String resourceId);
+    boolean deleteResource(Resource resource);
     boolean addMetricToResource(String tenantId, String environmentId, String resourceId,Collection<String> metricIds);
     List<Metric> listMetricsOfResource(String tenantId, String environmentID, String resourceId);
     Metric getMetricOfResource(String tenantId, String environmentId, String resourceId, String metricId);

@@ -28,16 +28,11 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.hawkular.client.inventory.model.IdJSON;
-import org.hawkular.client.inventory.model.MetricJSON;
-import org.hawkular.client.inventory.model.MetricTypeJSON;
-import org.hawkular.client.inventory.model.MetricTypeUpdateJSON;
-import org.hawkular.client.inventory.model.MetricUpdateJSON;
-import org.hawkular.client.inventory.model.ResourceJSON;
-import org.hawkular.client.inventory.model.ResourceTypeJSON;
 import org.hawkular.client.inventory.model.StringValue;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Metric;
@@ -116,12 +111,12 @@ public interface InventoryRestApi {    //PingHandler
 
     @POST
     @Path("/{tenantId}/metricTypes")
-    Response createMetricType(@PathParam("tenantId") String tenantId, MetricTypeJSON metricType);
+    Response createMetricType(@PathParam("tenantId") String tenantId, MetricType.Blueprint metricType);
 
     @PUT
     @Path("/{tenantId}/metricTypes/{metricTypeId}")
     Response updateMetricType(@PathParam("tenantId") String tenantId, @PathParam("metricTypeId") String metricTypeId,
-            MetricTypeUpdateJSON update);
+            MetricType.Update metricType);
 
     @DELETE
     @Path("/{tenantId}/metricTypes/{metricTypeId}")
@@ -133,7 +128,7 @@ public interface InventoryRestApi {    //PingHandler
     @Path("/{tenantId}/{environmentId}/metrics")
     Response createMetric(@PathParam("tenantId") String tenantId,
             @PathParam("environmentId") String environmentId,
-            MetricJSON metric);
+            Metric.Blueprint metric);
 
     @GET
     @Path("/{tenantId}/{environmentId}/metrics/{metricId}")
@@ -151,7 +146,7 @@ public interface InventoryRestApi {    //PingHandler
     Response updateMetric(@PathParam("tenantId") String tenantId,
             @PathParam("environmentId") String environmentId,
             @PathParam("metricId") String metricId,
-            MetricUpdateJSON updates);
+            Metric.Update metric);
 
     @DELETE
     @Path("/{tenantId}/{environmentId}/metrics/{metricId}")
@@ -181,7 +176,7 @@ public interface InventoryRestApi {    //PingHandler
 
     @POST
     @Path("/{tenantId}/resourceTypes")
-    Response createResourceType(@PathParam("tenantId") String tenantId, ResourceTypeJSON resourceType);
+    Response createResourceType(@PathParam("tenantId") String tenantId, ResourceType.Blueprint resourceType);
 
     @DELETE
     @Path("/{tenantId}/resourceTypes/{resourceTypeId}")
@@ -205,14 +200,14 @@ public interface InventoryRestApi {    //PingHandler
     @Path("/{tenantId}/{environmentId}/resources")
     Response addResource(@PathParam("tenantId") String tenantId,
             @PathParam("environmentId") String environmentId,
-            ResourceJSON resource);
+            Resource.Blueprint resource);
 
     @GET
     @Path("/{tenantId}/{environmentId}/resources")
     List<Resource> getResourcesByType(@PathParam("tenantId") String tenantId,
             @PathParam("environmentId") String environmentId,
-            String typeId,
-            String typeVersion);
+            @QueryParam("typeId") String typeId,
+            @QueryParam("typeVersion") String typeVersion);
 
     @GET
     @Path("/{tenantId}/{environmentId}/resources/{resourceId}")
