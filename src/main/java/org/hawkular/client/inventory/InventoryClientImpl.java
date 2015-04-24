@@ -27,19 +27,15 @@ import javax.ws.rs.core.Response;
 import org.hawkular.client.BaseClient;
 import org.hawkular.client.RestFactory;
 import org.hawkular.client.inventory.model.IdJSON;
-import org.hawkular.client.inventory.model.MetricJSON;
-import org.hawkular.client.inventory.model.MetricTypeJSON;
-import org.hawkular.client.inventory.model.MetricTypeUpdateJSON;
-import org.hawkular.client.inventory.model.MetricUpdateJSON;
-import org.hawkular.client.inventory.model.ResourceJSON;
-import org.hawkular.client.inventory.model.ResourceTypeJSON;
 import org.hawkular.client.inventory.model.StringValue;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Metric;
 import org.hawkular.inventory.api.model.MetricType;
+import org.hawkular.inventory.api.model.MetricUnit;
 import org.hawkular.inventory.api.model.Resource;
 import org.hawkular.inventory.api.model.ResourceType;
 import org.hawkular.inventory.api.model.Tenant;
+import org.hawkular.inventory.api.model.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
 public class InventoryClientImpl extends BaseClient<InventoryRestApi>
-        implements InventoryClient, InventoryJSONConverter {
+        implements InventoryClient {
     private static final Logger _logger = LoggerFactory.getLogger(InventoryClientImpl.class);
 
     public InventoryClientImpl(URI endpointUri, String username,
@@ -232,7 +228,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     }
 
     @Override
-    public boolean createMetricType(String tenantId, MetricTypeJSON metricType) {
+    public boolean createMetricType(String tenantId, MetricType.Blueprint metricType) {
         Response response = restApi().createMetricType(tenantId, metricType);
         try {
             if (response.getStatus() == 201) {
@@ -252,18 +248,18 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     }
 
     @Override
-    public boolean createMetricType(String tenantId, String metricTypeId, String metricTypeUnit) {
-        return createMetricType(tenantId, getMetricTypeJSON(metricTypeId, metricTypeUnit));
+    public boolean createMetricType(String tenantId, String metricTypeId, MetricUnit unit) {
+        return createMetricType(new MetricType(tenantId, metricTypeId, unit));
     }
 
     @Override
     public boolean createMetricType(MetricType metricType) {
-        return createMetricType(metricType.getTenantId(), metricType.getId(),
-                metricType.getUnit().getDisplayName());
+        return createMetricType(metricType.getTenantId(),
+                new MetricType.Blueprint(metricType.getId(), metricType.getUnit(), metricType.getProperties()));
     }
 
     @Override
-    public boolean updateMetricType(String tenantId, String metricTypeId, MetricTypeUpdateJSON update) {
+    public boolean updateMetricType(String tenantId, String metricTypeId, MetricType metricType) {
         // TODO Auto-generated method stub
         return false;
     }
@@ -295,13 +291,14 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     //Metric
 
     @Override
-    public boolean createMetric(String tenantId, String environmentId, MetricJSON metric) {
+    public boolean createMetric(String tenantId, String environmentId, Metric.Blueprint metric) {
         Response response = restApi().createMetric(tenantId, environmentId, metric);
         try {
             if (response.getStatus() == 201) {
                 _logger.debug("Metric[id:{},typeId:{}] created successfully under the environment[{}],"
-                        + " tenant[{}], Location URI:{}", metric.getId(), metric.getMetricTypeId(), environmentId,
-                        tenantId, response.getLocation().toString());
+                        + " tenant[{}], Location URI:{}", metric.getId(), metric.getMetricTypeId(),
+                        tenantId,
+                        response.getLocation().toString());
                 return true;
             } else {
                 _logger.warn("Metric[id:{},typeId:{}] creation failed under the environment[{}], tenant[{}],"
@@ -317,13 +314,18 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public boolean createMetric(String tenantId, String environmentId, String metricId, String metricTypeId) {
-        return createMetric(tenantId, environmentId, getMetricJSON(metricId, metricTypeId));
+        return createMetric(tenantId, environmentId, new Metric.Blueprint(metricTypeId, metricId));
+    }
+
+    @Override
+    public boolean createMetric(String tenantId, String environmentId, String metricId, MetricType type) {
+        return createMetric(tenantId, environmentId, new Metric.Blueprint(type.getId(), metricId));
     }
 
     @Override
     public boolean createMetric(Metric metric) {
-        return createMetric(metric.getTenantId(), metric.getEnvironmentId(),
-                metric.getId(), metric.getType().getId());
+        return createMetric(metric.getTenantId(), metric.getEnvironmentId(), new Metric.Blueprint(metric.getType()
+                .getId(), metric.getId(), metric.getProperties()));
     }
 
     @Override
@@ -344,7 +346,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     }
 
     @Override
-    public boolean updateMetric(String tenantId, String environmentId, String metricId, MetricUpdateJSON updates) {
+    public boolean updateMetric(String tenantId, String environmentId, String metricId, Metric metric) {
         // TODO Auto-generated method stub
         return false;
     }
@@ -382,8 +384,12 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ResourceType getResourceType(String tenantId, String resourceTypeId) {
-        // TODO Auto-generated method stub
-        return null;
+        return restApi().getResourceType(tenantId, resourceTypeId);
+    }
+
+    @Override
+    public ResourceType getResourceType(ResourceType resourceType) {
+        return restApi().getResourceType(resourceType.getTenantId(), resourceType.getId());
     }
 
     @Override
@@ -399,38 +405,65 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     }
 
     @Override
-    public boolean createResourceType(String tenantId, ResourceTypeJSON resourceType) {
+    public boolean createResourceType(String tenantId, ResourceType.Blueprint resourceType) {
         Response response = restApi().createResourceType(tenantId, resourceType);
-        if (response.getStatus() == 201) {
-            _logger.debug("ResourceType[id:{},version:{}] created successfully under the tenant[{}], "
-                    + "Location URI:{}", resourceType.getId(), resourceType.getVersion(),
-                    tenantId, response.getLocation().toString());
-            return true;
-        } else {
-            _logger.debug("ResourceType[id:{},version:{}] creation failed under the tenant[{}], "
-                    + " HTTP Status code: {}, Error message if any:{}", resourceType.getId(),
-                    resourceType.getVersion(),
-                    tenantId, response.getStatus(), response.readEntity(String.class));
-            return false;
+        try {
+            if (response.getStatus() == 201) {
+                _logger.debug("ResourceType[id:{},version:{}] created successfully under the tenant[{}], "
+                        + "Location URI:{}", resourceType.getId(), resourceType.getVersion(),
+                        tenantId, response.getLocation().toString());
+                return true;
+            } else {
+                _logger.debug("ResourceType[id:{},version:{}] creation failed under the tenant[{}], "
+                        + " HTTP Status code: {}, Error message if any:{}", resourceType.getId(),
+                        resourceType.getVersion(),
+                        tenantId, response.getStatus(), response.readEntity(String.class));
+                return false;
+            }
+        } finally {
+            response.close();
         }
     }
 
     @Override
     public boolean createResourceType(String tenantId, String resourceId, String resourceVersion) {
-        return createResourceType(tenantId, getResourceTypeJSON(resourceId, resourceVersion));
+        return createResourceType(tenantId, new ResourceType.Blueprint(resourceId, resourceVersion));
+    }
+
+    @Override
+    public boolean createResourceType(String tenantId, String resourceId, Version resourceVersion) {
+        return createResourceType(tenantId, new ResourceType.Blueprint(resourceId, resourceVersion.toString()));
     }
 
     @Override
     public boolean createResourceType(ResourceType resourceType) {
-        return createResourceType(resourceType.getTenantId(),
-                resourceType.getId(),
-                resourceType.getVersion().toString());
+        return createResourceType(resourceType.getTenantId(), new ResourceType.Blueprint(resourceType.getId(),
+                resourceType.getVersion().toString()));
     }
 
     @Override
     public boolean deleteResourceType(String tenantId, String resourceTypeId) {
-        // TODO Auto-generated method stub
-        return false;
+        Response response = restApi().deleteResourceType(tenantId, resourceTypeId);
+        try {
+            if (response.getStatus() == 204) {
+                _logger.debug("ResourceType[{}] under the tenant[{}] was deleted successfully", resourceTypeId,
+                        tenantId);
+                return true;
+            } else {
+                _logger.warn(
+                        "ResourceType[{}] under the tenant[{}] deletion failed, HTTP Status code: {},"
+                                + " Error message if any:{}", resourceTypeId, tenantId, response.getStatus(),
+                        response.readEntity(String.class));
+                return false;
+            }
+        } finally {
+            response.close();
+        }
+    }
+
+    @Override
+    public boolean deleteResourceType(ResourceType resourceType) {
+        return deleteResourceType(resourceType.getTenantId(), resourceType.getId());
     }
 
     @Override
@@ -446,37 +479,38 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     }
 
     @Override
-    public boolean addResource(String tenantId, String environmentId, ResourceJSON resource) {
+    public boolean addResource(String tenantId, String environmentId, Resource.Blueprint resource) {
         Response response = restApi().addResource(tenantId, environmentId, resource);
-        if (response.getStatus() == 201) {
-            _logger.debug("Resource[id:{},typeId:{}] added successfully under the tenant[{}], environment[{}], "
-                    + "Location URI:{}", resource.getId(), resource.getType().getId(),
-                    tenantId, environmentId, response.getLocation().toString());
-            return true;
-        } else {
-            _logger.debug("Unable to add Resource[id:{},typeId:{}] under the tenant[{}], environment[{}], "
-                    + "HTTP Status code: {}, Error message if any:{}", resource.getId(), resource.getType().getId(),
-                    tenantId, environmentId, response.getStatus(), response.readEntity(String.class));
-            return false;
+        try {
+            if (response.getStatus() == 201) {
+                _logger.debug("Resource[id:{},typeId:{}] added successfully under the tenant[{}], environment[{}], "
+                        + "Location URI:{}", resource.getId(), resource.getResourceTypeId(),
+                        tenantId, environmentId, response.getLocation().toString());
+                return true;
+            } else {
+                _logger.debug("Unable to add Resource[id:{},typeId:{}] under the tenant[{}], environment[{}], "
+                        + "HTTP Status code: {}, Error message if any:{}", resource.getId(),
+                        resource.getResourceTypeId(),
+                        tenantId, environmentId, response.getStatus(),
+                        response.readEntity(String.class));
+                return false;
+            }
+        } finally {
+            response.close();
         }
     }
 
     @Override
     public boolean addResource(String tenantId, String environmentId, String resourceId,
-            String resourceTypeId, String resourceTypeVersion) {
-        return addResource(tenantId,
-                environmentId,
-                getResourceJSON(resourceId,
-                        getResourceTypeJSON(resourceTypeId, resourceTypeVersion)));
+            String resourceTypeId) {
+        return addResource(tenantId, environmentId,
+                new Resource.Blueprint(resourceId, resourceTypeId));
     }
 
     @Override
     public boolean addResource(Resource resource) {
-        return addResource(resource.getTenantId(),
-                resource.getEnvironmentId(),
-                getResourceJSON(resource.getId(),
-                        getResourceTypeJSON(resource.getType().getId(),
-                                resource.getType().getVersion().toString())));
+        return addResource(resource.getTenantId(), resource.getEnvironmentId(),
+                new Resource.Blueprint(resource.getId(), resource.getType().getId()));
     }
 
     @Override
@@ -491,9 +525,34 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     }
 
     @Override
+    public Resource getResource(Resource resource) {
+        return getResource(resource.getTenantId(), resource.getEnvironmentId(), resource.getId());
+    }
+
+    @Override
     public boolean deleteResource(String tenantId, String environmentId, String resourceId) {
-        // TODO Auto-generated method stub
-        return false;
+        Response response = restApi().deleteResource(tenantId, environmentId, resourceId);
+        try {
+            if (response.getStatus() == 204) {
+                _logger.debug("Resource[{}] under [tenant:{},environment:{}] was deleted successfully", resourceId,
+                        tenantId, environmentId);
+                return true;
+            } else {
+                _logger.warn(
+                        "Resource[{}] under the [tenant:{},environment:{}] deletion failed, HTTP Status code: {},"
+                                + " Error message if any:{}", resourceId, tenantId, environmentId,
+                        response.getStatus(),
+                        response.readEntity(String.class));
+                return false;
+            }
+        } finally {
+            response.close();
+        }
+    }
+
+    @Override
+    public boolean deleteResource(Resource resource) {
+        return deleteResource(resource.getTenantId(), resource.getEnvironmentId(), resource.getId());
     }
 
     @Override
@@ -514,37 +573,4 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
         // TODO Auto-generated method stub
         return null;
     }
-
-    @Override
-    public MetricJSON getMetricJSON(String metricId, String metricTypeId) {
-        MetricJSON metricJSON = new MetricJSON();
-        metricJSON.setId(metricId);
-        metricJSON.setMetricTypeId(metricTypeId);
-        return metricJSON;
-    }
-
-    @Override
-    public MetricTypeJSON getMetricTypeJSON(String metricTypeId, String metricTypeUnit) {
-        MetricTypeJSON metricTypeJSON = new MetricTypeJSON();
-        metricTypeJSON.setId(metricTypeId);
-        metricTypeJSON.setUnit(metricTypeUnit);
-        return metricTypeJSON;
-    }
-
-    @Override
-    public ResourceTypeJSON getResourceTypeJSON(String resourceTypeId, String resourceTypeVersion) {
-        ResourceTypeJSON resourceTypeJSON = new ResourceTypeJSON();
-        resourceTypeJSON.setId(resourceTypeId);
-        resourceTypeJSON.setVersion(resourceTypeVersion);
-        return resourceTypeJSON;
-    }
-
-    @Override
-    public ResourceJSON getResourceJSON(String resourceId, ResourceTypeJSON resourceTypeJSON) {
-        ResourceJSON resourceJSON = new ResourceJSON();
-        resourceJSON.setId(resourceId);
-        resourceJSON.setType(resourceTypeJSON);
-        return resourceJSON;
-    }
-
 }
