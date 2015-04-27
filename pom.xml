@@ -136,6 +136,12 @@
         <excluded.tests>**/InventoryTest.java</excluded.tests>
       </properties>
     </profile>
+    <profile>
+      <id>noop</id>
+      <properties>
+        <excluded.tests>**/*</excluded.tests>
+      </properties>
+    </profile>
   </profiles>
   <build>
     <plugins>
