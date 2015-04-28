@@ -29,4 +29,4 @@ RUN yum install -y git &&\
   mvn dependency:go-offline test -Dtest=NoopTest &&\
   ln -s ${WORKING_DIR}/target/surefire-reports /reports
 
-CMD ["mvn", "-f", "/opt/hawkular-java-client", "-o", "test", "-Pci" ]
+CMD ["/opt/hawkular-java-client/misc/wait.sh && mvn", "-f", "/opt/hawkular-java-client", "-o", "test", "-Pci" ]
