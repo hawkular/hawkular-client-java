@@ -23,10 +23,10 @@ USER root
 
 ENV WORKING_DIR=/opt/hawkular-java-client
 
-RUN yum install -y git &&\
+RUN yum install -y git wget &&\
   git clone https://github.com/Hawkular-QE/hawkular-java-client.git ${WORKING_DIR} &&\
   cd ${WORKING_DIR} &&\
   mvn dependency:go-offline test -Dtest=NoopTest &&\
   ln -s ${WORKING_DIR}/target/surefire-reports /reports
 
-CMD ["/opt/hawkular-java-client/misc/wait.sh && mvn", "-f", "/opt/hawkular-java-client", "-o", "test", "-Pci" ]
+CMD ${WORKING_DIR}/misc/wait.sh && mvn -f ${WORKING_DIR} -o test -Pci
