@@ -26,6 +26,7 @@ import org.testng.annotations.Test;
 public class InventoryTest extends BaseTest{
     private static final String TENANT_ID = "tenant_"+ RandomStringUtils.randomAlphabetic(8);
     private static final String ENVIRONMENT_ID = "environment_"+ RandomStringUtils.randomAlphabetic(8);
+    private static final String FEED_ID = "feed_"+ RandomStringUtils.randomAlphabetic(8);
     private static final String RESOURCE_TYPE_ID = "resource_type_"+ RandomStringUtils.randomAlphabetic(8);
     private static final String RESOURCE_ID = "resource_"+ RandomStringUtils.randomAlphabetic(8);
     private final Resource expectedResource;
@@ -37,7 +38,7 @@ public class InventoryTest extends BaseTest{
 
     private Resource generateTestResource() {
         ResourceType resourceType = new ResourceType(TENANT_ID, RESOURCE_TYPE_ID, "V:1.0");
-        Resource resource = new Resource(TENANT_ID, ENVIRONMENT_ID, RESOURCE_ID, resourceType);
+        Resource resource = new Resource(TENANT_ID, ENVIRONMENT_ID, FEED_ID, RESOURCE_ID, resourceType);
         return resource;
     }
 
