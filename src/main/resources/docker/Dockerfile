@@ -29,4 +29,6 @@ RUN yum install -y git wget &&\
   mvn dependency:go-offline test -Dtest=NoopTest &&\
   ln -s ${WORKING_DIR}/target/surefire-reports /reports
 
-CMD ${WORKING_DIR}/misc/wait.sh && mvn -f ${WORKING_DIR} -o test -Pci
+CMD ["sh", "-c",\
+    "${WORKING_DIR}/misc/wait.sh && mvn -f ${WORKING_DIR} -l /reports/mvn.log -o test -Pci &&\
+     tail -F /reports/mvn.log" ]
