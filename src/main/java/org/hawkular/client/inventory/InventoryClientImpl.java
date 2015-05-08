@@ -29,6 +29,7 @@ import org.hawkular.client.RestFactory;
 import org.hawkular.client.inventory.model.IdJSON;
 import org.hawkular.client.inventory.model.StringValue;
 import org.hawkular.inventory.api.model.Environment;
+import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Metric;
 import org.hawkular.inventory.api.model.MetricType;
 import org.hawkular.inventory.api.model.MetricUnit;
@@ -572,5 +573,86 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     public Metric getMetricOfResource(String tenantId, String environmentId, String resourceId, String metricId) {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    //Feed
+    @Override
+    public boolean registerFeed(String tenantId, String environmentId, Feed.Blueprint feed) {
+        Response response = restApi().registerFeed(tenantId, environmentId, feed);
+        try {
+            if (response.getStatus() == 201) {
+                _logger.debug("Feed[{}] under [tenant:{},environment:{}] was registered successfully", feed.getId(),
+                        tenantId, environmentId);
+                return true;
+            } else {
+                _logger.warn(
+                        "Feed[{}] under the [tenant:{},environment:{}] registration failed, HTTP Status code: {},"
+                                + " Error message if any:{}", feed.getId(), tenantId, environmentId,
+                        response.getStatus(),
+                        response.readEntity(String.class));
+                return false;
+            }
+        } finally {
+            response.close();
+        }
+    }
+
+    @Override
+    public boolean registerFeed(Feed feed) {
+        return this.registerFeed(feed.getTenantId(), feed.getEnvironmentId(),
+                new Feed.Blueprint(feed.getId(), feed.getProperties()));
+    }
+
+    @Override
+    public List<Feed> getAllFeeds(String tenantId, String environmentId) {
+        List<Feed> feeds = restApi().getAllFeeds(tenantId, environmentId);
+        return feeds == null ? new ArrayList<Feed>() : feeds;
+    }
+
+    @Override
+    public Feed getFeed(String tenantId, String environmentId, String feedId) {
+        return restApi().getFeed(tenantId, environmentId, feedId);
+    }
+
+    @Override
+    public Feed getFeed(Feed feed) {
+        return restApi().getFeed(feed.getTenantId(), feed.getEnvironmentId(), feed.getId());
+    }
+
+    @Override
+    public boolean updateFeed(String tenantId, String environmentId, String feedId, Feed feed) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean updateFeed(Feed feed) {
+        return this.updateFeed(feed.getTenantId(), feed.getEnvironmentId(), feed.getId(), feed);
+    }
+
+    @Override
+    public boolean deleteFeed(String tenantId, String environmentId, String feedId) {
+        Response response = restApi().deleteFeed(tenantId, environmentId, feedId);
+        try {
+            if (response.getStatus() == 204) {
+                _logger.debug("Feed[{}] under [tenant:{},environment:{}] was deleted successfully", feedId,
+                        tenantId, environmentId);
+                return true;
+            } else {
+                _logger.warn(
+                        "Feed[{}] under the [tenant:{},environment:{}] deletion failed, HTTP Status code: {},"
+                                + " Error message if any:{}", feedId, tenantId, environmentId,
+                        response.getStatus(),
+                        response.readEntity(String.class));
+                return false;
+            }
+        } finally {
+            response.close();
+        }
+    }
+
+    @Override
+    public boolean deleteFeed(Feed feed) {
+        return deleteFeed(feed.getTenantId(), feed.getEnvironmentId(), feed.getId());
     }
 }
