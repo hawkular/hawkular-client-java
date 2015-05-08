@@ -35,6 +35,7 @@ import javax.ws.rs.core.Response;
 import org.hawkular.client.inventory.model.IdJSON;
 import org.hawkular.client.inventory.model.StringValue;
 import org.hawkular.inventory.api.model.Environment;
+import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Metric;
 import org.hawkular.inventory.api.model.MetricType;
 import org.hawkular.inventory.api.model.Resource;
@@ -241,4 +242,28 @@ public interface InventoryRestApi {    //PingHandler
             @PathParam("resourceId") String resourceId,
             @PathParam("metricId") String metricId);
 
+    //Feed
+    @POST
+    @Path("/{tenantId}/{environmentId}/feeds")
+    Response registerFeed(@PathParam("tenantId") String tenantId, @PathParam("environmentId") String environmentId,
+            Feed.Blueprint feed);
+
+    @GET
+    @Path("/{tenantId}/{environmentId}/feeds")
+    List<Feed> getAllFeeds(@PathParam("tenantId") String tenantId, @PathParam("environmentId") String environmentId);
+
+    @GET
+    @Path("/{tenantId}/{environmentId}/feeds/{feedId}")
+    Feed getFeed(@PathParam("tenantId") String tenantId, @PathParam("environmentId") String environmentId,
+            @PathParam("feedId") String feedId);
+
+    @PUT
+    @Path("/{tenantId}/{environmentId}/feeds/{feedId}")
+    Response updateFeed(@PathParam("tenantId") String tenantId,
+            @PathParam("environmentId") String environmentId, @PathParam("feedId") String feedId, Feed feed);
+
+    @DELETE
+    @Path("/{tenantId}/{environmentId}/feeds/{feedId}")
+    Response deleteFeed(@PathParam("tenantId") String tenantId,
+            @PathParam("environmentId") String environmentId, @PathParam("feedId") String feedId);
 }

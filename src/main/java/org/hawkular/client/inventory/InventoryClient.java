@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.hawkular.client.inventory.model.IdJSON;
 import org.hawkular.inventory.api.model.Environment;
+import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Metric;
 import org.hawkular.inventory.api.model.MetricType;
 import org.hawkular.inventory.api.model.MetricUnit;
@@ -116,4 +117,15 @@ public interface InventoryClient {
     boolean addMetricToResource(String tenantId, String environmentId, String resourceId,Collection<String> metricIds);
     List<Metric> listMetricsOfResource(String tenantId, String environmentID, String resourceId);
     Metric getMetricOfResource(String tenantId, String environmentId, String resourceId, String metricId);
+
+    //Feed
+    boolean registerFeed(String tenantId, String environmentId, Feed.Blueprint feed);
+    boolean registerFeed(Feed feed);
+    List<Feed> getAllFeeds(String tenantId, String environmentId);
+    Feed getFeed(String tenantId, String environmentId, String feedId);
+    Feed getFeed(Feed feed);
+    boolean updateFeed(String tenantId, String environmentId, String feedId, Feed feed);
+    boolean updateFeed(Feed feed);
+    boolean deleteFeed(String tenantId, String environmentId, String feedId);
+    boolean deleteFeed(Feed feed);
 }
