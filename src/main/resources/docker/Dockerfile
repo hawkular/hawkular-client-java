@@ -31,4 +31,5 @@ RUN yum install -y git wget &&\
 
 CMD ["sh", "-c",\
     "${WORKING_DIR}/misc/wait.sh && mvn -f ${WORKING_DIR} -l /reports/mvn.log -o test -Pci &&\
+     touch /reports/.completed &&\
      tail -F /reports/mvn.log" ]
