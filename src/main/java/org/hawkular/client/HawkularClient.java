@@ -21,6 +21,7 @@ import java.util.Objects;
 
 import org.hawkular.client.inventory.InventoryClient;
 import org.hawkular.client.inventory.InventoryClientImpl;
+import org.hawkular.client.metrics.MetricsClient;
 import org.hawkular.client.metrics.MetricsClientImpl;
 
 import com.google.common.base.MoreObjects;
