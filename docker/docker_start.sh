@@ -16,9 +16,9 @@
 # limitations under the License.
 #
 
-hawkular_wait.sh && mvn -f ${WORKING_DIR}  -o test -Pci &&\
-     touch /reports/.completed 
+hawkular_wait.sh && mvn -f ${WORKING_DIR}  -o test -Pci 
 
+echo 1> /reports/.completed 
 chmod +x -R /reports
 
 echo "## Test completed ##"
