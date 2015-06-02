@@ -19,6 +19,7 @@
 hawkular_wait.sh && mvn -f ${WORKING_DIR}  -o test -Pci &&\
      touch /reports/.completed 
 
+chmod +x -R /reports
+
 echo "## Test completed ##"
-trap 'exit 0' SIGTERM
 while true; do sleep 5; done
