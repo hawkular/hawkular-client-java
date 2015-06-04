@@ -133,7 +133,7 @@
     <profile>
       <id>ci</id>
       <properties>
-        <excluded.tests>**/InventoryTest.java</excluded.tests>
+        <excluded.tests>**/Inventory*Test.java</excluded.tests>
       </properties>
     </profile>
     <profile>
