@@ -27,9 +27,10 @@ RUN yum install -y git wget &&\
   git clone https://github.com/Hawkular-QE/hawkular-java-client.git ${WORKING_DIR} &&\
   cd ${WORKING_DIR} &&\
   mvn dependency:go-offline test -Dtest=NoopTest &&\
-  ln -s ${WORKING_DIR}/target/surefire-reports /reports
+  ln -s ${WORKING_DIR}/target/surefire-reports /reports &&\
+  rm -rf /reports/*
 
-CMD ["sh", "-c",\
-    "${WORKING_DIR}/misc/wait.sh && mvn -f ${WORKING_DIR} -l /reports/mvn.log -o test -Pci &&\
-     touch /reports/.completed &&\
-     tail -F /reports/mvn.log" ]
+ADD hawkular_wait.sh /usr/bin/hawkular_wait.sh
+ADD docker_start.sh /usr/bin/docker_start.sh
+
+CMD ["sh", "-c", "/usr/bin/docker_start.sh"]
