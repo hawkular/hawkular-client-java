@@ -6,6 +6,10 @@ notifications:
     channels:
     - chat.freenode.net#hawkular
     on_success: change
+# whitelist
+branches:
+  only:
+    - master
 env:
   global:
   - secure: P1sgq46dmYBOb/pvHGO2ACO/Zum5wbXebLJ6kLV+Ss97y0B+KWKGCrc9Hh9TG28mdzPMCHbJOFynfneet8irpEIL97PbSb2HFeKhiHJTeB4d0y60uaa6Y6Lmo+YCniubvw+FaeoXBYjImg2nDXslvKDTu6I0JKQ1pk8Fkqx45Sw=
