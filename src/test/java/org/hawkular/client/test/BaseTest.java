@@ -37,7 +37,9 @@ public class BaseTest {
     public void init() throws Exception {
         URI endpoint = getEndpointFromEnv();
         Reporter.log(endpoint.toString());
-        client = new HawkularClient(endpoint, "", "");
+        //TODO: this authentication detail created for temporary purpose only. Should be changed later
+        //we may use the default one as jode/password
+        client = new HawkularClient(endpoint, "hawkular", "Hawkular@123");
     }
 
     private static URI getEndpointFromEnv() throws URISyntaxException {
