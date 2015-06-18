@@ -342,23 +342,27 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public boolean createMetric(Metric metric) {
-        return createMetric(metric.getEnvironmentId(), new Metric.Blueprint(metric.getType()
+        return createMetric(metric.getEnvironmentId(), metric.getFeedId(), new Metric.Blueprint(metric.getType()
                 .getId(), metric.getId(), metric.getProperties()));
     }
 
     @Override
     public Metric getMetric(String environmentId, String metricId) {
-        return this.restApi().getMetric(environmentId, metricId);
+        return getMetric(environmentId, null, metricId);
     }
 
     @Override
     public Metric getMetric(String environmentId, String feedId, String metricId) {
-        return this.restApi().getMetric(environmentId, feedId, metricId);
+        if (feedId == null) {
+            return this.restApi().getMetric(environmentId, metricId);
+        } else {
+            return this.restApi().getMetric(environmentId, feedId, metricId);
+        }
     }
 
     @Override
     public Metric getMetric(Metric metric) {
-        return this.restApi().getMetric(metric.getEnvironmentId(), metric.getFeedId(), metric.getId());
+        return getMetric(metric.getEnvironmentId(), metric.getFeedId(), metric.getId());
     }
 
     @Override
@@ -638,7 +642,8 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     }
 
     @Override
-    public List<Resource> getResourcesByType(String environmentId, String typeId, String typeVersion, boolean feedless) {
+    public List<Resource> getResourcesByType(String environmentId, String typeId, String typeVersion,
+            boolean feedless) {
         List<Resource> resources = restApi().getResourcesByType(environmentId, typeId, typeVersion, feedless);
         return resources == null ? new ArrayList<Resource>() : resources;
     }
