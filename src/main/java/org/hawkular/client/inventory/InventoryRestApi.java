@@ -18,10 +18,10 @@ package org.hawkular.client.inventory;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -61,209 +61,310 @@ public interface InventoryRestApi {    //PingHandler
 
     //TenantJson
     @GET
-    @Path("/tenants")
-    List<Tenant> getTenants();
-
-    @POST
-    @Path("/tenants")
-    Response createTenant(IdJSON tenantId);
+    @Path("/tenant")
+    Tenant getTenant();
 
     @PUT
-    @Path("/tenants/{tenantId}")
-    Response updateTenant(@PathParam("tenantId") String tenantId, Map<String, Object> properties);
+    @Path("/tenant")
+    Response updateTenant(Tenant.Update update);
 
     @DELETE
-    @Path("/tenants/{tenantId}")
-    Response deleteTenant(@PathParam("tenantId") String tenantId);
+    @Path("/tenant")
+    Response deleteTenant();
 
     //Environment
     @GET
-    @Path("/{tenantId}/environments")
-    List<Environment> getEnvironments(@PathParam("tenantId") String tenantId);
+    @Path("/environments")
+    List<Environment> getEnvironments();
 
     @GET
-    @Path("/{tenantId}/environments/{environmentId}")
-    Environment getEnvironment(@PathParam("tenantId") String tenantId,
-            @PathParam("environmentId") String environmentId);
+    @Path("/environments/{environmentId}")
+    Environment getEnvironment(@PathParam("environmentId") String environmentId);
 
     @POST
-    @Path("/{tenantId}/environments")
-    Response createEnvironment(@PathParam("tenantId") String tenantId, IdJSON environmentId);
+    @Path("/environments")
+    Response createEnvironment(Environment.Blueprint environmentBlueprint);
 
     @PUT
-    @Path("/{tenantId}/environments/{environmentId}")
-    Response updateEnvironment(@PathParam("tenantId") String tenantId,
+    @Path("/environments/{environmentId}")
+    Response updateEnvironment(
             @PathParam("environmentId") String environmentId,
-            Map<String, Object> properties);
+            Environment.Update update);
 
     @DELETE
-    @Path("/{tenantId}/environments/{environmentId}")
-    Response deleteEnvironment(@PathParam("tenantId") String tenantId,
-            @PathParam("environmentId") String environmentId);
+    @Path("/environments/{environmentId}")
+    Response deleteEnvironment(@PathParam("environmentId") String environmentId);
 
     //Metrics Types
     @GET
-    @Path("/{tenantId}/metricTypes")
-    List<MetricType> getMetricTypes(@PathParam("tenantId") String tenantId);
+    @Path("/metricTypes")
+    List<MetricType> getMetricTypes();
 
     @GET
-    @Path("/{tenantId}/metricTypes/{metricTypeId}")
-    MetricType getMetricType(@PathParam("tenantId") String tenantId, @PathParam("metricTypeId") String metricTypeId);
+    @Path("/metricTypes/{metricTypeId}")
+    MetricType getMetricType(@PathParam("metricTypeId") String metricTypeId);
 
     @POST
-    @Path("/{tenantId}/metricTypes")
-    Response createMetricType(@PathParam("tenantId") String tenantId, MetricType.Blueprint metricType);
+    @Path("/metricTypes")
+    Response createMetricType(MetricType.Blueprint metricType);
 
     @PUT
-    @Path("/{tenantId}/metricTypes/{metricTypeId}")
-    Response updateMetricType(@PathParam("tenantId") String tenantId, @PathParam("metricTypeId") String metricTypeId,
-            MetricType.Update metricType);
+    @Path("/metricTypes/{metricTypeId}")
+    Response updateMetricType(@PathParam("metricTypeId") String metricTypeId, MetricType.Update metricUpdate);
 
     @DELETE
-    @Path("/{tenantId}/metricTypes/{metricTypeId}")
-    Response deleteMetricType(@PathParam("tenantId") String tenantId,
-            @PathParam("metricTypeId") String metricTypeId);
+    @Path("/metricTypes/{metricTypeId}")
+    Response deleteMetricType(@PathParam("metricTypeId") String metricTypeId);
 
     //Metrics
     @POST
-    @Path("/{tenantId}/{environmentId}/metrics")
-    Response createMetric(@PathParam("tenantId") String tenantId,
+    @Path("/{environmentId}/metrics")
+    Response createMetric(
             @PathParam("environmentId") String environmentId,
             Metric.Blueprint metric);
 
+    @POST
+    @Path("/{environmentId}/{feedId}/metrics")
+    Response createMetric(
+            @PathParam("environmentId") String environmentId,
+            @PathParam("feedId") String feedId,
+            Metric.Blueprint metric);
+
     @GET
-    @Path("/{tenantId}/{environmentId}/metrics/{metricId}")
-    Metric getMetric(@PathParam("tenantId") String tenantId,
+    @Path("/{environmentId}/metrics/{metricId}")
+    Metric getMetric(
             @PathParam("environmentId") String environmentId,
             @PathParam("metricId") String metricId);
 
     @GET
-    @Path("/{tenantId}/{environmentId}/metrics")
-    List<Metric> getMetrics(@PathParam("tenantId") String tenantId,
+    @Path("/{environmentId}/{feedId}/metrics/{metricId}")
+    Metric getMetric(
+            @PathParam("environmentId") String environmentId,
+            @PathParam("feedId") String feedId,
+            @PathParam("metricId") String metricId);
+
+    @GET
+    @Path("/{environmentId}/metrics")
+    List<Metric> getMetrics(
             @PathParam("environmentId") String environmentId);
 
+    @GET
+    @Path("/{environmentId}/{feedId}/metrics")
+    List<Metric> getMetrics(
+            @PathParam("environmentId") String environmentId,
+            @PathParam("feedId") String feedId);
+
     @PUT
-    @Path("/{tenantId}/{environmentId}/metrics/{metricId}")
-    Response updateMetric(@PathParam("tenantId") String tenantId,
+    @Path("/{environmentId}/metrics/{metricId}")
+    Response updateMetric(
             @PathParam("environmentId") String environmentId,
             @PathParam("metricId") String metricId,
             Metric.Update metric);
 
-    @DELETE
-    @Path("/{tenantId}/{environmentId}/metrics/{metricId}")
-    Response deleteMetric(@PathParam("tenantId") String tenantId,
+    @PUT
+    @Path("/{environmentId}/{feedId}/metrics/{metricId}")
+    Response updateMetric(
             @PathParam("environmentId") String environmentId,
+            @PathParam("feedId") String feedId,
+            @PathParam("metricId") String metricId,
+            Metric.Update metric);
+
+    @DELETE
+    @Path("/{environmentId}/metrics/{metricId}")
+    Response deleteMetric(
+            @PathParam("environmentId") String environmentId,
+            @PathParam("metricId") String metricId);
+
+    @DELETE
+    @Path("/{environmentId}/{feedId}/metrics/{metricId}")
+    Response deleteMetric(
+            @PathParam("environmentId") String environmentId,
+            @PathParam("feedId") String feedId,
             @PathParam("metricId") String metricId);
 
     //ResourceTypes
     @GET
-    @Path("/{tenantId}/resourceTypes")
-    List<ResourceType> getResourceTypes(@PathParam("tenantId") String tenantId);
+    @Path("/resourceTypes")
+    List<ResourceType> getResourceTypes();
 
     @GET
-    @Path("/{tenantId}/resourceTypes/{resourceTypeId}")
-    ResourceType getResourceType(@PathParam("tenantId") String tenantId,
+    @Path("/resourceTypes/{resourceTypeId}")
+    ResourceType getResourceType(
             @PathParam("resourceTypeId") String resourceTypeId);
 
     @GET
-    @Path("/{tenantId}/resourceTypes/{resourceTypeId}/metricTypes")
-    List<MetricType> getMetricTypes(@PathParam("tenantId") String tenantId,
+    @Path("/resourceTypes/{resourceTypeId}/metricTypes")
+    List<MetricType> getMetricTypes(
             @PathParam("resourceTypeId") String resourceTypeId);
 
     @GET
-    @Path("/{tenantId}/resourceTypes/{resourceTypeId}/resources")
-    List<Resource> getResources(@PathParam("tenantId") String tenantId,
+    @Path("/resourceTypes/{resourceTypeId}/resources")
+    List<Resource> getResources(
             @PathParam("resourceTypeId") String resourceTypeId);
 
     @POST
-    @Path("/{tenantId}/resourceTypes")
-    Response createResourceType(@PathParam("tenantId") String tenantId, ResourceType.Blueprint resourceType);
+    @Path("/resourceTypes")
+    Response createResourceType(ResourceType.Blueprint resourceType);
+
+    @PUT
+    @Path("/resourceTypes/{resourceTypeId}")
+    Response updateResourceType(
+            @PathParam("resourceTypeId") String resourceTypeId,
+            ResourceType.Update update);
 
     @DELETE
-    @Path("/{tenantId}/resourceTypes/{resourceTypeId}")
-    Response deleteResourceType(@PathParam("tenantId") String tenantId,
+    @Path("/resourceTypes/{resourceTypeId}")
+    Response deleteResourceType(
             @PathParam("resourceTypeId") String resourceTypeId);
 
     @POST
-    @Path("/{tenantId}/resourceTypes/{resourceTypeId}/metricTypes")
-    Response addMetricType(@PathParam("tenantId") String tenantId,
+    @Path("/resourceTypes/{resourceTypeId}/metricTypes")
+    Response addMetricType(
             @PathParam("resourceTypeId") String resourceTypeId,
             IdJSON metricTypeId);
 
     @DELETE
-    @Path("/{tenantId}/resourceTypes/{resourceTypeId}/metricTypes/{metricTypeId}")
-    Response removeMetricType(@PathParam("tenantId") String tenantId,
+    @Path("/resourceTypes/{resourceTypeId}/metricTypes/{metricTypeId}")
+    Response removeMetricType(
             @PathParam("resourceTypeId") String resourceTypeId,
             @PathParam("metricTypeId") String metricTypeId);
 
     //Resource
     @POST
-    @Path("/{tenantId}/{environmentId}/resources")
-    Response addResource(@PathParam("tenantId") String tenantId,
+    @Path("/{environmentId}/resources")
+    Response addResource(
             @PathParam("environmentId") String environmentId,
             Resource.Blueprint resource);
 
-    @GET
-    @Path("/{tenantId}/{environmentId}/resources")
-    List<Resource> getResourcesByType(@PathParam("tenantId") String tenantId,
+    @POST
+    @Path("/{environmentId}/{feedId}/resources")
+    Response addResource(
             @PathParam("environmentId") String environmentId,
+            @PathParam("feedId") String feedId,
+            Resource.Blueprint resource);
+
+    @GET
+    @Path("/{environmentId}/resources")
+    List<Resource> getResourcesByType(
+            @PathParam("environmentId") String environmentId,
+            @QueryParam("typeId") String typeId,
+            @QueryParam("typeVersion") String typeVersion,
+            @QueryParam("feedless") @DefaultValue("false") boolean feedless);
+
+    @GET
+    @Path("/{environmentId}/{feedId}/resources")
+    List<Resource> getResourcesByType(
+            @PathParam("environmentId") String environmentId,
+            @PathParam("feedId") String feedId,
             @QueryParam("typeId") String typeId,
             @QueryParam("typeVersion") String typeVersion);
 
     @GET
-    @Path("/{tenantId}/{environmentId}/resources/{resourceId}")
-    Resource getResource(@PathParam("tenantId") String tenantId,
-            @PathParam("environmentId") String environmentId,
-            @PathParam("resourceId") String uid);
-
-    @DELETE
-    @Path("/{tenantId}/{environmentId}/resources/{resourceId}")
-    Response deleteResource(@PathParam("tenantId") String tenantId,
+    @Path("/{environmentId}/resources/{resourceId}")
+    Resource getResource(
             @PathParam("environmentId") String environmentId,
             @PathParam("resourceId") String resourceId);
 
+    @GET
+    @Path("/{environmentId}/{feedId}/resources/{resourceId}")
+    Resource getResource(
+            @PathParam("environmentId") String environmentId,
+            @PathParam("feedId") String feedId,
+            @PathParam("resourceId") String resourceId);
+
+    @PUT
+    @Path("/{environmentId}/resources/{resourceId}")
+    Response updateResource(
+            @PathParam("environmentId") String environmentId,
+            @PathParam("resourceId") String resourceId,
+            Resource.Update update);
+
+    @PUT
+    @Path("/{environmentId}/{feedId}/resources/{resourceId}")
+    Response updateResource(
+            @PathParam("environmentId") String environmentId,
+            @PathParam("feedId") String feedId,
+            @PathParam("resourceId") String resourceId,
+            Resource.Update update);
+
+    @DELETE
+    @Path("/{environmentId}/resources/{resourceId}")
+    Response deleteResource(
+            @PathParam("environmentId") String environmentId,
+            @PathParam("resourceId") String resourceId);
+
+    @DELETE
+    @Path("/{environmentId}/{feedId}/resources/{resourceId}")
+    Response deleteResource(
+            @PathParam("environmentId") String environmentId,
+            @PathParam("feedId") String feedId,
+            @PathParam("resourceId") String resourceId);
+
     @POST
-    @Path("/{tenantId}/{environmentId}/resources/{resourceId}/metrics/")
-    Response addMetricToResource(@PathParam("tenantId") String tenantId,
+    @Path("/{environmentId}/resources/{resourceId}/metrics/")
+    Response addMetricToResource(
             @PathParam("environmentId") String environmentId,
             @PathParam("resourceId") String resourceId,
             Collection<String> metricIds);
 
+    @POST
+    @Path("/{environmentId}/{feedId}/resources/{resourceId}/metrics/")
+    Response addMetricToResource(
+            @PathParam("environmentId") String environmentId,
+            @PathParam("feedId") String feedId,
+            @PathParam("resourceId") String resourceId,
+            Collection<String> metricIds);
+
     @GET
-    @Path("/{tenantId}/{environmentId}/resources/{resourceId}/metrics")
-    List<Metric> listMetricsOfResource(@PathParam("tenantId") String tenantId,
+    @Path("/{environmentId}/resources/{resourceId}/metrics")
+    List<Metric> listMetricsOfResource(
             @PathParam("environmentId") String environmentID,
             @PathParam("resourceId") String resourceId);
 
     @GET
-    @Path("/{tenantId}/{environmentId}/resources/{resourceId}/metrics/{metricId}")
-    Metric getMetricOfResource(@PathParam("tenantId") String tenantId,
+    @Path("/{environmentId}/{feedId}/resources/{resourceId}/metrics")
+    List<Metric> listMetricsOfResource(
+            @PathParam("environmentId") String environmentID,
+            @PathParam("feedId") String feedId,
+            @PathParam("resourceId") String resourceId);
+
+    @GET
+    @Path("/{environmentId}/resources/{resourceId}/metrics/{metricId}")
+    Metric getMetricOfResource(
             @PathParam("environmentId") String environmentId,
+            @PathParam("resourceId") String resourceId,
+            @PathParam("metricId") String metricId);
+
+    @GET
+    @Path("/{environmentId}/{feedId}/resources/{resourceId}/metrics/{metricId}")
+    Metric getMetricOfResource(
+            @PathParam("environmentId") String environmentId,
+            @PathParam("feedId") String feedId,
             @PathParam("resourceId") String resourceId,
             @PathParam("metricId") String metricId);
 
     //Feed
     @POST
-    @Path("/{tenantId}/{environmentId}/feeds")
-    Response registerFeed(@PathParam("tenantId") String tenantId, @PathParam("environmentId") String environmentId,
+    @Path("/{environmentId}/feeds")
+    Response registerFeed(@PathParam("environmentId") String environmentId,
             Feed.Blueprint feed);
 
     @GET
-    @Path("/{tenantId}/{environmentId}/feeds")
-    List<Feed> getAllFeeds(@PathParam("tenantId") String tenantId, @PathParam("environmentId") String environmentId);
+    @Path("/{environmentId}/feeds")
+    List<Feed> getAllFeeds(@PathParam("environmentId") String environmentId);
 
     @GET
-    @Path("/{tenantId}/{environmentId}/feeds/{feedId}")
-    Feed getFeed(@PathParam("tenantId") String tenantId, @PathParam("environmentId") String environmentId,
+    @Path("/{environmentId}/feeds/{feedId}")
+    Feed getFeed(@PathParam("environmentId") String environmentId,
             @PathParam("feedId") String feedId);
 
     @PUT
-    @Path("/{tenantId}/{environmentId}/feeds/{feedId}")
-    Response updateFeed(@PathParam("tenantId") String tenantId,
-            @PathParam("environmentId") String environmentId, @PathParam("feedId") String feedId, Feed feed);
+    @Path("/{environmentId}/feeds/{feedId}")
+    Response updateFeed(
+            @PathParam("environmentId") String environmentId, @PathParam("feedId") String feedId, Feed.Update update);
 
     @DELETE
-    @Path("/{tenantId}/{environmentId}/feeds/{feedId}")
-    Response deleteFeed(@PathParam("tenantId") String tenantId,
+    @Path("/{environmentId}/feeds/{feedId}")
+    Response deleteFeed(
             @PathParam("environmentId") String environmentId, @PathParam("feedId") String feedId);
 }

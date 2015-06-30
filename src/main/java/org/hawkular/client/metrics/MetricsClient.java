@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client;
+package org.hawkular.client.metrics;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public interface MetricsClient {
 
     List<Tenant> findTenants();
 
-    void createTenant(Tenant tenant);
+    boolean createTenant(Tenant tenant);
 
     /**
      * Create a NumericMetric definition

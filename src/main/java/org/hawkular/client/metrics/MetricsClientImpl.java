@@ -21,8 +21,9 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.ws.rs.core.Response;
+
 import org.hawkular.client.BaseClient;
-import org.hawkular.client.MetricsClient;
 import org.hawkular.client.RestFactory;
 import org.hawkular.client.metrics.model.AggregateNumericData;
 import org.hawkular.metrics.core.api.Availability;
@@ -39,6 +40,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements MetricsClient {
+    private static final Logger _logger = LoggerFactory.getLogger(MetricsClientImpl.class);
     private static final Duration EIGHT_HOURS = Duration.ofHours(8);
     private static final Logger logger = LoggerFactory.getLogger(MetricsClientImpl.class);
 
@@ -53,8 +55,21 @@ public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements Met
     }
 
     @Override
-    public void createTenant(Tenant tenant) {
-        restApi().createTenant(tenant);
+    public boolean createTenant(Tenant tenant) {
+        Response response = restApi().createTenant(tenant);
+        try {
+            if (response.getStatus() == 201) {
+                _logger.debug("Tenant[{}] created successfully, Location URI: {}",
+                        tenant.getId(), response.getLocation().toString());
+                return true;
+            } else {
+                _logger.warn("Tenant[{}] creation failed, HTTP Status code: {}, Error message if any:{}",
+                        tenant.getId(), response.getStatus(), response.readEntity(String.class));
+                return false;
+            }
+        } finally {
+            response.close();
+        }
     }
 
     @Override

@@ -16,8 +16,6 @@
  */
 package org.hawkular.client.test;
 
-import java.util.List;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Feed;
@@ -27,32 +25,37 @@ import org.hawkular.inventory.api.model.Resource;
 import org.hawkular.inventory.api.model.ResourceType;
 import org.hawkular.inventory.api.model.Tenant;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 public class InventoryTest extends BaseTest {
-    private static final String TENANT_ID = "tenant_" + RandomStringUtils.randomAlphabetic(8);
+    private static String TENANT_ID;
     private static final String ENVIRONMENT_ID = "environment_" + RandomStringUtils.randomAlphabetic(8);
-    private static final Feed FEED =
-            new Feed(TENANT_ID, ENVIRONMENT_ID, "feed_" + RandomStringUtils.randomAlphabetic(8));
-    private static final ResourceType RESOURCE_TYPE =
-            new ResourceType(TENANT_ID, "resource_type_" + RandomStringUtils.randomAlphabetic(8), "V:1.0");
-    private static final Resource RESOURCE =
-            new Resource(TENANT_ID, ENVIRONMENT_ID, FEED.getId(), "resource_" + RandomStringUtils.randomAlphabetic(8),
-                    RESOURCE_TYPE);
-    private static final MetricType METRIC_TYPE =
-            new MetricType(TENANT_ID, "metri_type_" + RandomStringUtils.randomAlphabetic(8));
-    private static final Metric METRIC =
-            new Metric(TENANT_ID, ENVIRONMENT_ID, FEED.getId(), "metric_" + RandomStringUtils.randomAlphabetic(8),
-                    METRIC_TYPE);
+    private static Feed FEED;
+    private static ResourceType RESOURCE_TYPE;
+    private static Resource RESOURCE;
+    private static MetricType METRIC_TYPE;
+    private static Metric METRIC;
 
     public InventoryTest() throws Exception {
         super();
     }
 
+    @BeforeClass
+    public void loadVariables() {
+        TENANT_ID = client().inventory().getTenant().getId();
+        FEED = new Feed(TENANT_ID, ENVIRONMENT_ID, "feed_" + RandomStringUtils.randomAlphabetic(8));
+        RESOURCE_TYPE = new ResourceType(TENANT_ID, "resource_type_" + RandomStringUtils.randomAlphabetic(8), "V:1.0");
+        RESOURCE = new Resource(TENANT_ID, ENVIRONMENT_ID, FEED.getId(), "resource_"
+                + RandomStringUtils.randomAlphabetic(8), RESOURCE_TYPE);
+        METRIC_TYPE = new MetricType(TENANT_ID, "metri_type_" + RandomStringUtils.randomAlphabetic(8));
+        METRIC = new Metric(TENANT_ID, ENVIRONMENT_ID, FEED.getId(),
+                "metric_" + RandomStringUtils.randomAlphabetic(8), METRIC_TYPE);
+    }
+
     @Test(priority = 1)
     public void createTest() {
-        Assert.assertTrue(client().inventory().createTenant(TENANT_ID));
-        Assert.assertTrue(client().inventory().createEnvironment(TENANT_ID, ENVIRONMENT_ID));
+        Assert.assertTrue(client().inventory().createEnvironment(ENVIRONMENT_ID));
         Assert.assertTrue(client().inventory().registerFeed(FEED));
         Assert.assertTrue(client().inventory().createResourceType(RESOURCE_TYPE));
         Assert.assertTrue(client().inventory().addResource(RESOURCE));
@@ -63,18 +66,11 @@ public class InventoryTest extends BaseTest {
     @Test(priority = 2)
     public void listTest() {
         //Tenant test
-        List<Tenant> tenants = client().inventory().getTenants();
-        boolean isTenantFound = false;
-        for (Tenant tenant : tenants) {
-            if (tenant.getId().equals(TENANT_ID)) {
-                isTenantFound = true;
-                break;
-            }
-        }
-        Assert.assertTrue(isTenantFound);
+        Tenant tenant = client().inventory().getTenant();
+        Assert.assertTrue(tenant != null);
 
         //Environment test
-        Environment environmentRx = client().inventory().getEnvironment(TENANT_ID, ENVIRONMENT_ID);
+        Environment environmentRx = client().inventory().getEnvironment(ENVIRONMENT_ID);
         Assert.assertEquals(environmentRx, new Environment(TENANT_ID, ENVIRONMENT_ID));
 
         /** Feed returns null, disabled for now, https://github.com/hawkular/hawkular-inventory/pull/60*/
@@ -120,14 +116,14 @@ public class InventoryTest extends BaseTest {
         Assert.assertEquals(metricRx.getType(), METRIC.getType());
     }
 
-    @Test(priority = 3)
+    /**Deletion is not supported right now, returns 403. Communicate with dev to know who have access to delete */
+   /* @Test(priority = 3)
     public void deleteTest() {
         Assert.assertTrue(client().inventory().deleteMetric(METRIC));
         Assert.assertTrue(client().inventory().deleteMetricType(METRIC_TYPE));
         Assert.assertTrue(client().inventory().deleteResource(RESOURCE));
         Assert.assertTrue(client().inventory().deleteResourceType(RESOURCE_TYPE));
         Assert.assertTrue(client().inventory().deleteFeed(FEED));
-        Assert.assertTrue(client().inventory().deleteEnvironment(TENANT_ID, ENVIRONMENT_ID));
-        Assert.assertTrue(client().inventory().deleteTenant(TENANT_ID));
-    }
+        Assert.assertTrue(client().inventory().deleteEnvironment(ENVIRONMENT_ID));
+    }*/
 }

@@ -26,6 +26,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.hawkular.client.metrics.model.AggregateNumericData;
 import org.hawkular.metrics.core.api.Availability;
@@ -45,7 +46,7 @@ public interface MetricsRestApi {
 
     @POST
     @Path ("/tenants")
-    void createTenant(Tenant tenant);
+    Response createTenant(Tenant tenant);
 
     @POST
     @Path ("/{tenantId}/metrics/numeric")

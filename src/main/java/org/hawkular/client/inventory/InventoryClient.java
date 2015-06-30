@@ -29,103 +29,217 @@ import org.hawkular.inventory.api.model.MetricUnit;
 import org.hawkular.inventory.api.model.Resource;
 import org.hawkular.inventory.api.model.ResourceType;
 import org.hawkular.inventory.api.model.Tenant;
+import org.hawkular.inventory.api.model.Tenant.Update;
 import org.hawkular.inventory.api.model.Version;
+
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
 public interface InventoryClient {
 
+    public enum RESPONSE_CODE {
+        CREATE_SUCCESS(201),
+        ADD_SUCCESS(201),
+        REGISTER_SUCCESS(201),
+        UPDATE_SUCCESS(204),
+        DELETE_SUCCESS(204),
+        REMOVE_SUCCESS(204);
+
+        private int code;
+
+        private RESPONSE_CODE(int code) {
+            this.code = code;
+        }
+
+        public int value() {
+            return this.code;
+        }
+    }
+
     //PingHandler/Ping
     String pingHello();
+
     String pingTime();
 
-    //TenantJson
-    List<Tenant> getTenants();
-    boolean createTenant(IdJSON tenantId);
-    boolean createTenant(String tenantId);
-    boolean updateTenant(String tenantId, Map<String, Object> properties);
-    boolean deleteTenant(String tenantId);
-    boolean deleteTenant(Tenant tenant);
-    boolean createTenant(Tenant tenant);
+    //Tenant
+    Tenant getTenant();
+
+    boolean updateTenant(Map<String, Object> properties);
+
+    boolean updateTenant(Update updateTenant);
+
+    boolean deleteTenant();
 
     //Environment
-    List<Environment> getEnvironments(String tenantId);
-    Environment getEnvironment(String tenantId, String environmentId);
+    List<Environment> getEnvironments();
+
+    Environment getEnvironment(String environmentId);
+
     Environment getEnvironment(Environment environment);
-    boolean createEnvironment(String tenantId, IdJSON environmentId);
-    boolean createEnvironment(String tenantId, String environmentId);
+
+    boolean createEnvironment(String environmentId, Map<String, Object> properties);
+
+    boolean createEnvironment(String environmentId);
+
+    boolean createEnvironment(Environment.Blueprint environmentBlueprint);
+
     boolean createEnvironment(Environment environment);
-    boolean updateEnvironment(String tenantId, String environmentId, Map<String, Object> properties);
-    boolean deleteEnvironment(String tenantId, String environmentId);
+
+    boolean updateEnvironment(String environmentId, Map<String, Object> properties);
+
+    boolean updateEnvironment(String environmentId, Environment.Update update);
+
+    boolean updateEnvironment(Environment environment);
+
+    boolean deleteEnvironment(String environmentId);
+
     boolean deleteEnvironment(Environment environment);
 
     //MetricType
-    List<MetricType> getMetricTypes(String tenantId);
-    MetricType getMetricType(String tenantId, String metricTypeId);
+    List<MetricType> getMetricTypes();
+
+    MetricType getMetricType(String metricTypeId);
+
     MetricType getMetricType(MetricType metricType);
-    boolean createMetricType(String tenantId, String metricTypeId, MetricUnit unit);
+
+    boolean createMetricType(String metricTypeId, MetricUnit unit);
+
     boolean createMetricType(MetricType metricType);
-    boolean createMetricType(String tenantId, MetricType.Blueprint metricType);
-    boolean updateMetricType(String tenantId, String metricTypeId,
-                             MetricType metricType);
-    boolean deleteMetricType(String tenantId,
-                             String metricTypeId);
+
+    boolean createMetricType(MetricType.Blueprint metricType);
+
+    boolean updateMetricType(String metricTypeId,
+            MetricType metricType);
+
+    boolean updateMetricType(String metricTypeId,
+            MetricType.Update metricUpdate);
+
+    boolean deleteMetricType(String metricTypeId);
+
     boolean deleteMetricType(MetricType metricType);
 
     //Metrics
     boolean createMetric(Metric metric);
-    boolean createMetric(String tenantId,String environmentId,Metric.Blueprint metric);
-    boolean createMetric(String tenantId,String environmentId,String metricId,String metricTypeId);
-    boolean createMetric(String tenantId,String environmentId,String metricId,MetricType type);
-    Metric getMetric(String tenantId,String environmentId,String metricId);
+
+    boolean createMetric(String environmentId, Metric.Blueprint metric);
+
+    boolean createMetric(String environmentId, String feedId, Metric.Blueprint metric);
+
+    Metric getMetric(String environmentId, String metricId);
+
+    Metric getMetric(String environmentId, String metricId, String feedId);
+
     Metric getMetric(Metric metric);
-    List<Metric> getMetrics(String tenantId,String environmentId);
-    boolean updateMetric(String tenantId,
-                         String environmentId,
-                         String metricId,
-                         Metric metric);
+
+    List<Metric> getMetrics(String environmentId);
+
+    List<Metric> getMetrics(String environmentId, String feedId);
+
+    boolean updateMetric(Metric metric);
+
+    boolean updateMetric(String environmentId, String metricId, Metric.Update metricUpdate);
+
+    boolean updateMetric(String environmentId, String feedId, String metricId, Metric.Update metricUpdate);
+
     boolean deleteMetric(Metric metric);
-    boolean deleteMetric(String tenantId,
-                         String environmentId,
-                         String metricId);
+
+    boolean deleteMetric(String environmentId,
+            String metricId);
+
+    boolean deleteMetric(String environmentId,
+            String feedId,
+            String metricId);
 
     //ResourceType
-    List<ResourceType> getResourceTypes(String tenantId);
-    ResourceType getResourceType(String tenantId, String resourceTypeId);
+    List<ResourceType> getResourceTypes();
+
+    ResourceType getResourceType(String resourceTypeId);
+
     ResourceType getResourceType(ResourceType resourceType);
-    List<MetricType> getMetricTypes(String tenantId, String resourceTypeId);
-    List<Resource> getResources(String tenantId, String resourceTypeId);
+
+    List<MetricType> getMetricTypes(String resourceTypeId);
+
+    List<Resource> getResources(String resourceTypeId);
+
     boolean createResourceType(ResourceType resourceType);
-    boolean createResourceType(String tenantId, ResourceType.Blueprint resourceType);
-    boolean createResourceType(String tenantId, String resourceId, String resourceVersion);
-    boolean createResourceType(String tenantId, String resourceId, Version resourceVersion);
-    boolean deleteResourceType(String tenantId, String resourceTypeId);
+
+    boolean createResourceType(ResourceType.Blueprint resourceType);
+
+    boolean createResourceType(String resourceId, String resourceVersion);
+
+    boolean createResourceType(String resourceId, Version resourceVersion);
+
+    boolean updateResourceType(String resourceTypeId, ResourceType.Update resourceTypeUpdate);
+
+    boolean updateResourceType(ResourceType resourceType);
+
+    boolean deleteResourceType(String resourceTypeId);
+
     boolean deleteResourceType(ResourceType resourceType);
-    boolean addMetricType(String tenantId, String resourceTypeId, IdJSON metricTypeId);
-    boolean removeMetricType(String tenantId, String resourceTypeId, String metricTypeId);
+
+    boolean addMetricType(String resourceTypeId, IdJSON metricTypeId);
+
+    boolean removeMetricType(String resourceTypeId, String metricTypeId);
 
     //Resource
     boolean addResource(Resource resource);
-    boolean addResource(String tenantId, String environmentId, Resource.Blueprint resource);
-    boolean addResource( String tenantId, String environmentId, String resourceId,
-                         String resourceTypeId);
-    List<Resource> getResourcesByType(String tenantId, String environmentId, String typeId, String typeVersion);
-    Resource getResource(String tenantId, String environmentId, String uid);
+
+    boolean addResource(String environmentId, Resource.Blueprint resource);
+
+    boolean addResource(String environmentId, String feedId, Resource.Blueprint resource);
+
+    List<Resource> getResourcesByType(String environmentId, String typeId, String typeVersion, boolean feedless);
+
+    List<Resource> getResourcesByType(String environmentId, String typeId, String typeVersion);
+
+    List<Resource> getResourcesByType(String environmentId, String feedId, String typeId, String typeVersion);
+
+    Resource getResource(String environmentId, String feedId, String resourceId);
+
+    Resource getResource(String environmentId, String resourceId);
+
     Resource getResource(Resource resource);
-    boolean deleteResource(String tenantId, String environmentId, String resourceId);
+
+    boolean updateResource(String environmentId, String resourceId, Resource.Update update);
+
+    boolean updateResource(String environmentId, String feedId, String resourceId, Resource.Update update);
+
+    boolean updateResource(Resource resource);
+
+    boolean deleteResource(String environmentId, String feedId, String resourceId);
+
+    boolean deleteResource(String environmentId, String resourceId);
+
     boolean deleteResource(Resource resource);
-    boolean addMetricToResource(String tenantId, String environmentId, String resourceId,Collection<String> metricIds);
-    List<Metric> listMetricsOfResource(String tenantId, String environmentID, String resourceId);
-    Metric getMetricOfResource(String tenantId, String environmentId, String resourceId, String metricId);
+
+    boolean addMetricToResource(String environmentId, String feedId, String resourceId, Collection<String> metricIds);
+
+    boolean addMetricToResource(String environmentId, String resourceId, Collection<String> metricIds);
+
+    List<Metric> listMetricsOfResource(String environmentID, String feedId, String resourceId);
+
+    List<Metric> listMetricsOfResource(String environmentID, String resourceId);
+
+    Metric getMetricOfResource(String environmentId, String feedId, String resourceId, String metricId);
+
+    Metric getMetricOfResource(String environmentId, String resourceId, String metricId);
 
     //Feed
-    boolean registerFeed(String tenantId, String environmentId, Feed.Blueprint feed);
+    boolean registerFeed(String environmentId, Feed.Blueprint feed);
+
     boolean registerFeed(Feed feed);
-    List<Feed> getAllFeeds(String tenantId, String environmentId);
-    Feed getFeed(String tenantId, String environmentId, String feedId);
+
+    List<Feed> getAllFeeds(String environmentId);
+
+    Feed getFeed(String environmentId, String feedId);
+
     Feed getFeed(Feed feed);
-    boolean updateFeed(String tenantId, String environmentId, String feedId, Feed feed);
+
+    boolean updateFeed(String environmentId, String feedId, Feed.Update update);
+
     boolean updateFeed(Feed feed);
-    boolean deleteFeed(String tenantId, String environmentId, String feedId);
+
+    boolean deleteFeed(String environmentId, String feedId);
+
     boolean deleteFeed(Feed feed);
 }
