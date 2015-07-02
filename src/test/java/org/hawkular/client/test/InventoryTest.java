@@ -43,7 +43,7 @@ public class InventoryTest extends BaseTest {
 
     @BeforeClass
     public void loadVariables() {
-        TENANT_ID = client().inventory().getTenant().getId();
+        TENANT_ID = client().inventory().getTenant().getEntity().getId();
         FEED = new Feed(TENANT_ID, ENVIRONMENT_ID, "feed_" + RandomStringUtils.randomAlphabetic(8));
         RESOURCE_TYPE = new ResourceType(TENANT_ID, "resource_type_" + RandomStringUtils.randomAlphabetic(8), "V:1.0");
         RESOURCE = new Resource(TENANT_ID, ENVIRONMENT_ID, FEED.getId(), "resource_"
@@ -55,22 +55,22 @@ public class InventoryTest extends BaseTest {
 
     @Test(priority = 1)
     public void createTest() {
-        Assert.assertTrue(client().inventory().createEnvironment(ENVIRONMENT_ID));
-        Assert.assertTrue(client().inventory().registerFeed(FEED));
-        Assert.assertTrue(client().inventory().createResourceType(RESOURCE_TYPE));
-        Assert.assertTrue(client().inventory().addResource(RESOURCE));
-        Assert.assertTrue(client().inventory().createMetricType(METRIC_TYPE));
-        Assert.assertTrue(client().inventory().createMetric(METRIC));
+        Assert.assertTrue(client().inventory().createEnvironment(ENVIRONMENT_ID).isSuccess());
+        Assert.assertTrue(client().inventory().registerFeed(FEED).isSuccess());
+        Assert.assertTrue(client().inventory().createResourceType(RESOURCE_TYPE).isSuccess());
+        Assert.assertTrue(client().inventory().addResource(RESOURCE).isSuccess());
+        Assert.assertTrue(client().inventory().createMetricType(METRIC_TYPE).isSuccess());
+        Assert.assertTrue(client().inventory().createMetric(METRIC).isSuccess());
     }
 
     @Test(priority = 2)
     public void listTest() {
         //Tenant test
-        Tenant tenant = client().inventory().getTenant();
+        Tenant tenant = client().inventory().getTenant().getEntity();
         Assert.assertTrue(tenant != null);
 
         //Environment test
-        Environment environmentRx = client().inventory().getEnvironment(ENVIRONMENT_ID);
+        Environment environmentRx = client().inventory().getEnvironment(ENVIRONMENT_ID).getEntity();
         Assert.assertEquals(environmentRx, new Environment(TENANT_ID, ENVIRONMENT_ID));
 
         /** Feed returns null, disabled for now, https://github.com/hawkular/hawkular-inventory/pull/60*/
@@ -82,14 +82,14 @@ public class InventoryTest extends BaseTest {
         Assert.assertEquals(feedRx.getProperties(), FEED.getProperties());*/
 
         //ResourceType Test
-        ResourceType resourceTypeRx = client().inventory().getResourceType(RESOURCE_TYPE);
+        ResourceType resourceTypeRx = client().inventory().getResourceType(RESOURCE_TYPE).getEntity();
         Assert.assertEquals(resourceTypeRx.getId(), RESOURCE_TYPE.getId());
         Assert.assertEquals(resourceTypeRx.getTenantId(), RESOURCE_TYPE.getTenantId());
         Assert.assertEquals(resourceTypeRx.getProperties(), RESOURCE_TYPE.getProperties());
         Assert.assertEquals(resourceTypeRx.getVersion(), RESOURCE_TYPE.getVersion());
 
         //Resource Test
-        Resource resourceRx = client().inventory().getResource(RESOURCE);
+        Resource resourceRx = client().inventory().getResource(RESOURCE).getEntity();
         Assert.assertEquals(resourceRx.getTenantId(), RESOURCE.getTenantId());
         Assert.assertEquals(resourceRx.getEnvironmentId(), RESOURCE.getEnvironmentId());
         /** Feed id returns null, disabled for now*/
@@ -99,14 +99,14 @@ public class InventoryTest extends BaseTest {
         Assert.assertEquals(resourceRx.getType(), RESOURCE.getType());
 
         //MetricType Test
-        MetricType metricTypeRx = client().inventory().getMetricType(METRIC_TYPE);
+        MetricType metricTypeRx = client().inventory().getMetricType(METRIC_TYPE).getEntity();
         Assert.assertEquals(metricTypeRx.getTenantId(), METRIC_TYPE.getTenantId());
         Assert.assertEquals(metricTypeRx.getProperties(), METRIC_TYPE.getProperties());
         Assert.assertEquals(metricTypeRx.getId(), METRIC_TYPE.getId());
         Assert.assertEquals(metricTypeRx.getUnit(), METRIC_TYPE.getUnit());
 
         //Metric Test
-        Metric metricRx = client().inventory().getMetric(METRIC);
+        Metric metricRx = client().inventory().getMetric(METRIC).getEntity();
         Assert.assertEquals(metricRx.getTenantId(), METRIC.getTenantId());
         Assert.assertEquals(metricRx.getEnvironmentId(), METRIC.getEnvironmentId());
         /** Feed id returns null, disabled for now*/

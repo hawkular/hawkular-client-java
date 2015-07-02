@@ -17,7 +17,6 @@
 package org.hawkular.client.inventory;
 
 import java.util.Collection;
-import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -33,7 +32,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.hawkular.client.inventory.model.IdJSON;
-import org.hawkular.client.inventory.model.StringValue;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Metric;
@@ -52,17 +50,17 @@ import org.hawkular.inventory.api.model.Tenant;
 public interface InventoryRestApi {    //PingHandler
     @GET
     @Path("/ping")
-    StringValue pingTime();
+    Response pingTime();
 
     //Ping
     @GET
     @Path("/")
-    StringValue pingHello();
+    Response pingHello();
 
     //TenantJson
     @GET
     @Path("/tenant")
-    Tenant getTenant();
+    Response getTenant();
 
     @PUT
     @Path("/tenant")
@@ -75,11 +73,11 @@ public interface InventoryRestApi {    //PingHandler
     //Environment
     @GET
     @Path("/environments")
-    List<Environment> getEnvironments();
+    Response getEnvironments();
 
     @GET
     @Path("/environments/{environmentId}")
-    Environment getEnvironment(@PathParam("environmentId") String environmentId);
+    Response getEnvironment(@PathParam("environmentId") String environmentId);
 
     @POST
     @Path("/environments")
@@ -98,11 +96,11 @@ public interface InventoryRestApi {    //PingHandler
     //Metrics Types
     @GET
     @Path("/metricTypes")
-    List<MetricType> getMetricTypes();
+    Response getMetricTypes();
 
     @GET
     @Path("/metricTypes/{metricTypeId}")
-    MetricType getMetricType(@PathParam("metricTypeId") String metricTypeId);
+    Response getMetricType(@PathParam("metricTypeId") String metricTypeId);
 
     @POST
     @Path("/metricTypes")
@@ -132,25 +130,25 @@ public interface InventoryRestApi {    //PingHandler
 
     @GET
     @Path("/{environmentId}/metrics/{metricId}")
-    Metric getMetric(
+    Response getMetric(
             @PathParam("environmentId") String environmentId,
             @PathParam("metricId") String metricId);
 
     @GET
     @Path("/{environmentId}/{feedId}/metrics/{metricId}")
-    Metric getMetric(
+    Response getMetric(
             @PathParam("environmentId") String environmentId,
             @PathParam("feedId") String feedId,
             @PathParam("metricId") String metricId);
 
     @GET
     @Path("/{environmentId}/metrics")
-    List<Metric> getMetrics(
+    Response getMetrics(
             @PathParam("environmentId") String environmentId);
 
     @GET
     @Path("/{environmentId}/{feedId}/metrics")
-    List<Metric> getMetrics(
+    Response getMetrics(
             @PathParam("environmentId") String environmentId,
             @PathParam("feedId") String feedId);
 
@@ -185,21 +183,21 @@ public interface InventoryRestApi {    //PingHandler
     //ResourceTypes
     @GET
     @Path("/resourceTypes")
-    List<ResourceType> getResourceTypes();
+    Response getResourceTypes();
 
     @GET
     @Path("/resourceTypes/{resourceTypeId}")
-    ResourceType getResourceType(
+    Response getResourceType(
             @PathParam("resourceTypeId") String resourceTypeId);
 
     @GET
     @Path("/resourceTypes/{resourceTypeId}/metricTypes")
-    List<MetricType> getMetricTypes(
+    Response getMetricTypes(
             @PathParam("resourceTypeId") String resourceTypeId);
 
     @GET
     @Path("/resourceTypes/{resourceTypeId}/resources")
-    List<Resource> getResources(
+    Response getResources(
             @PathParam("resourceTypeId") String resourceTypeId);
 
     @POST
@@ -245,7 +243,7 @@ public interface InventoryRestApi {    //PingHandler
 
     @GET
     @Path("/{environmentId}/resources")
-    List<Resource> getResourcesByType(
+    Response getResourcesByType(
             @PathParam("environmentId") String environmentId,
             @QueryParam("typeId") String typeId,
             @QueryParam("typeVersion") String typeVersion,
@@ -253,7 +251,7 @@ public interface InventoryRestApi {    //PingHandler
 
     @GET
     @Path("/{environmentId}/{feedId}/resources")
-    List<Resource> getResourcesByType(
+    Response getResourcesByType(
             @PathParam("environmentId") String environmentId,
             @PathParam("feedId") String feedId,
             @QueryParam("typeId") String typeId,
@@ -261,13 +259,13 @@ public interface InventoryRestApi {    //PingHandler
 
     @GET
     @Path("/{environmentId}/resources/{resourceId}")
-    Resource getResource(
+    Response getResource(
             @PathParam("environmentId") String environmentId,
             @PathParam("resourceId") String resourceId);
 
     @GET
     @Path("/{environmentId}/{feedId}/resources/{resourceId}")
-    Resource getResource(
+    Response getResource(
             @PathParam("environmentId") String environmentId,
             @PathParam("feedId") String feedId,
             @PathParam("resourceId") String resourceId);
@@ -317,27 +315,27 @@ public interface InventoryRestApi {    //PingHandler
 
     @GET
     @Path("/{environmentId}/resources/{resourceId}/metrics")
-    List<Metric> listMetricsOfResource(
+    Response listMetricsOfResource(
             @PathParam("environmentId") String environmentID,
             @PathParam("resourceId") String resourceId);
 
     @GET
     @Path("/{environmentId}/{feedId}/resources/{resourceId}/metrics")
-    List<Metric> listMetricsOfResource(
+    Response listMetricsOfResource(
             @PathParam("environmentId") String environmentID,
             @PathParam("feedId") String feedId,
             @PathParam("resourceId") String resourceId);
 
     @GET
     @Path("/{environmentId}/resources/{resourceId}/metrics/{metricId}")
-    Metric getMetricOfResource(
+    Response getMetricOfResource(
             @PathParam("environmentId") String environmentId,
             @PathParam("resourceId") String resourceId,
             @PathParam("metricId") String metricId);
 
     @GET
     @Path("/{environmentId}/{feedId}/resources/{resourceId}/metrics/{metricId}")
-    Metric getMetricOfResource(
+    Response getMetricOfResource(
             @PathParam("environmentId") String environmentId,
             @PathParam("feedId") String feedId,
             @PathParam("resourceId") String resourceId,
@@ -351,11 +349,11 @@ public interface InventoryRestApi {    //PingHandler
 
     @GET
     @Path("/{environmentId}/feeds")
-    List<Feed> getAllFeeds(@PathParam("environmentId") String environmentId);
+    Response getAllFeeds(@PathParam("environmentId") String environmentId);
 
     @GET
     @Path("/{environmentId}/feeds/{feedId}")
-    Feed getFeed(@PathParam("environmentId") String environmentId,
+    Response getFeed(@PathParam("environmentId") String environmentId,
             @PathParam("feedId") String feedId);
 
     @PUT

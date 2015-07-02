@@ -20,7 +20,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.hawkular.client.ClientResponse;
 import org.hawkular.client.inventory.model.IdJSON;
+import org.hawkular.client.inventory.model.StringValue;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Metric;
@@ -38,6 +40,7 @@ import org.hawkular.inventory.api.model.Version;
 public interface InventoryClient {
 
     public enum RESPONSE_CODE {
+        GET_SUCCESS(200),
         CREATE_SUCCESS(201),
         ADD_SUCCESS(201),
         REGISTER_SUCCESS(201),
@@ -57,189 +60,194 @@ public interface InventoryClient {
     }
 
     //PingHandler/Ping
-    String pingHello();
+    ClientResponse<StringValue> pingHello();
 
-    String pingTime();
+    ClientResponse<StringValue> pingTime();
 
     //Tenant
-    Tenant getTenant();
+    ClientResponse<Tenant> getTenant();
 
-    boolean updateTenant(Map<String, Object> properties);
+    ClientResponse<String> updateTenant(Map<String, Object> properties);
 
-    boolean updateTenant(Update updateTenant);
+    ClientResponse<String> updateTenant(Update updateTenant);
 
-    boolean deleteTenant();
+    ClientResponse<String> deleteTenant();
 
     //Environment
-    List<Environment> getEnvironments();
+    ClientResponse<List<Environment>> getEnvironments();
 
-    Environment getEnvironment(String environmentId);
+    ClientResponse<Environment> getEnvironment(String environmentId);
 
-    Environment getEnvironment(Environment environment);
+    ClientResponse<Environment> getEnvironment(Environment environment);
 
-    boolean createEnvironment(String environmentId, Map<String, Object> properties);
+    ClientResponse<String> createEnvironment(String environmentId, Map<String, Object> properties);
 
-    boolean createEnvironment(String environmentId);
+    ClientResponse<String> createEnvironment(String environmentId);
 
-    boolean createEnvironment(Environment.Blueprint environmentBlueprint);
+    ClientResponse<String> createEnvironment(Environment.Blueprint environmentBlueprint);
 
-    boolean createEnvironment(Environment environment);
+    ClientResponse<String> createEnvironment(Environment environment);
 
-    boolean updateEnvironment(String environmentId, Map<String, Object> properties);
+    ClientResponse<String> updateEnvironment(String environmentId, Map<String, Object> properties);
 
-    boolean updateEnvironment(String environmentId, Environment.Update update);
+    ClientResponse<String> updateEnvironment(String environmentId, Environment.Update update);
 
-    boolean updateEnvironment(Environment environment);
+    ClientResponse<String> updateEnvironment(Environment environment);
 
-    boolean deleteEnvironment(String environmentId);
+    ClientResponse<String> deleteEnvironment(String environmentId);
 
-    boolean deleteEnvironment(Environment environment);
+    ClientResponse<String> deleteEnvironment(Environment environment);
 
     //MetricType
-    List<MetricType> getMetricTypes();
+    ClientResponse<List<MetricType>> getMetricTypes();
 
-    MetricType getMetricType(String metricTypeId);
+    ClientResponse<MetricType> getMetricType(String metricTypeId);
 
-    MetricType getMetricType(MetricType metricType);
+    ClientResponse<MetricType> getMetricType(MetricType metricType);
 
-    boolean createMetricType(String metricTypeId, MetricUnit unit);
+    ClientResponse<String> createMetricType(String metricTypeId, MetricUnit unit);
 
-    boolean createMetricType(MetricType metricType);
+    ClientResponse<String> createMetricType(MetricType metricType);
 
-    boolean createMetricType(MetricType.Blueprint metricType);
+    ClientResponse<String> createMetricType(MetricType.Blueprint metricType);
 
-    boolean updateMetricType(String metricTypeId,
+    ClientResponse<String> updateMetricType(String metricTypeId,
             MetricType metricType);
 
-    boolean updateMetricType(String metricTypeId,
+    ClientResponse<String> updateMetricType(String metricTypeId,
             MetricType.Update metricUpdate);
 
-    boolean deleteMetricType(String metricTypeId);
+    ClientResponse<String> deleteMetricType(String metricTypeId);
 
-    boolean deleteMetricType(MetricType metricType);
+    ClientResponse<String> deleteMetricType(MetricType metricType);
 
     //Metrics
-    boolean createMetric(Metric metric);
+    ClientResponse<String> createMetric(Metric metric);
 
-    boolean createMetric(String environmentId, Metric.Blueprint metric);
+    ClientResponse<String> createMetric(String environmentId, Metric.Blueprint metric);
 
-    boolean createMetric(String environmentId, String feedId, Metric.Blueprint metric);
+    ClientResponse<String> createMetric(String environmentId, String feedId, Metric.Blueprint metric);
 
-    Metric getMetric(String environmentId, String metricId);
+    ClientResponse<Metric> getMetric(String environmentId, String metricId);
 
-    Metric getMetric(String environmentId, String metricId, String feedId);
+    ClientResponse<Metric> getMetric(String environmentId, String metricId, String feedId);
 
-    Metric getMetric(Metric metric);
+    ClientResponse<Metric> getMetric(Metric metric);
 
-    List<Metric> getMetrics(String environmentId);
+    ClientResponse<List<Metric>> getMetrics(String environmentId);
 
-    List<Metric> getMetrics(String environmentId, String feedId);
+    ClientResponse<List<Metric>> getMetrics(String environmentId, String feedId);
 
-    boolean updateMetric(Metric metric);
+    ClientResponse<String> updateMetric(Metric metric);
 
-    boolean updateMetric(String environmentId, String metricId, Metric.Update metricUpdate);
+    ClientResponse<String> updateMetric(String environmentId, String metricId, Metric.Update metricUpdate);
 
-    boolean updateMetric(String environmentId, String feedId, String metricId, Metric.Update metricUpdate);
+    ClientResponse<String> updateMetric(String environmentId, String feedId, String metricId,
+            Metric.Update metricUpdate);
 
-    boolean deleteMetric(Metric metric);
+    ClientResponse<String> deleteMetric(Metric metric);
 
-    boolean deleteMetric(String environmentId,
+    ClientResponse<String> deleteMetric(String environmentId,
             String metricId);
 
-    boolean deleteMetric(String environmentId,
+    ClientResponse<String> deleteMetric(String environmentId,
             String feedId,
             String metricId);
 
     //ResourceType
-    List<ResourceType> getResourceTypes();
+    ClientResponse<List<ResourceType>> getResourceTypes();
 
-    ResourceType getResourceType(String resourceTypeId);
+    ClientResponse<ResourceType> getResourceType(String resourceTypeId);
 
-    ResourceType getResourceType(ResourceType resourceType);
+    ClientResponse<ResourceType> getResourceType(ResourceType resourceType);
 
-    List<MetricType> getMetricTypes(String resourceTypeId);
+    ClientResponse<List<MetricType>> getMetricTypes(String resourceTypeId);
 
-    List<Resource> getResources(String resourceTypeId);
+    ClientResponse<List<Resource>> getResources(String resourceTypeId);
 
-    boolean createResourceType(ResourceType resourceType);
+    ClientResponse<String> createResourceType(ResourceType resourceType);
 
-    boolean createResourceType(ResourceType.Blueprint resourceType);
+    ClientResponse<String> createResourceType(ResourceType.Blueprint resourceType);
 
-    boolean createResourceType(String resourceId, String resourceVersion);
+    ClientResponse<String> createResourceType(String resourceId, String resourceVersion);
 
-    boolean createResourceType(String resourceId, Version resourceVersion);
+    ClientResponse<String> createResourceType(String resourceId, Version resourceVersion);
 
-    boolean updateResourceType(String resourceTypeId, ResourceType.Update resourceTypeUpdate);
+    ClientResponse<String> updateResourceType(String resourceTypeId, ResourceType.Update resourceTypeUpdate);
 
-    boolean updateResourceType(ResourceType resourceType);
+    ClientResponse<String> updateResourceType(ResourceType resourceType);
 
-    boolean deleteResourceType(String resourceTypeId);
+    ClientResponse<String> deleteResourceType(String resourceTypeId);
 
-    boolean deleteResourceType(ResourceType resourceType);
+    ClientResponse<String> deleteResourceType(ResourceType resourceType);
 
-    boolean addMetricType(String resourceTypeId, IdJSON metricTypeId);
+    ClientResponse<String> addMetricType(String resourceTypeId, IdJSON metricTypeId);
 
-    boolean removeMetricType(String resourceTypeId, String metricTypeId);
+    ClientResponse<String> removeMetricType(String resourceTypeId, String metricTypeId);
 
     //Resource
-    boolean addResource(Resource resource);
+    ClientResponse<String> addResource(Resource resource);
 
-    boolean addResource(String environmentId, Resource.Blueprint resource);
+    ClientResponse<String> addResource(String environmentId, Resource.Blueprint resource);
 
-    boolean addResource(String environmentId, String feedId, Resource.Blueprint resource);
+    ClientResponse<String> addResource(String environmentId, String feedId, Resource.Blueprint resource);
 
-    List<Resource> getResourcesByType(String environmentId, String typeId, String typeVersion, boolean feedless);
+    ClientResponse<List<Resource>> getResourcesByType(String environmentId, String typeId, String typeVersion,
+            boolean feedless);
 
-    List<Resource> getResourcesByType(String environmentId, String typeId, String typeVersion);
+    ClientResponse<List<Resource>> getResourcesByType(String environmentId, String typeId, String typeVersion);
 
-    List<Resource> getResourcesByType(String environmentId, String feedId, String typeId, String typeVersion);
+    ClientResponse<List<Resource>> getResourcesByType(String environmentId, String feedId, String typeId,
+            String typeVersion);
 
-    Resource getResource(String environmentId, String feedId, String resourceId);
+    ClientResponse<Resource> getResource(String environmentId, String feedId, String resourceId);
 
-    Resource getResource(String environmentId, String resourceId);
+    ClientResponse<Resource> getResource(String environmentId, String resourceId);
 
-    Resource getResource(Resource resource);
+    ClientResponse<Resource> getResource(Resource resource);
 
-    boolean updateResource(String environmentId, String resourceId, Resource.Update update);
+    ClientResponse<String> updateResource(String environmentId, String resourceId, Resource.Update update);
 
-    boolean updateResource(String environmentId, String feedId, String resourceId, Resource.Update update);
+    ClientResponse<String> updateResource(String environmentId, String feedId, String resourceId,
+            Resource.Update update);
 
-    boolean updateResource(Resource resource);
+    ClientResponse<String> updateResource(Resource resource);
 
-    boolean deleteResource(String environmentId, String feedId, String resourceId);
+    ClientResponse<String> deleteResource(String environmentId, String feedId, String resourceId);
 
-    boolean deleteResource(String environmentId, String resourceId);
+    ClientResponse<String> deleteResource(String environmentId, String resourceId);
 
-    boolean deleteResource(Resource resource);
+    ClientResponse<String> deleteResource(Resource resource);
 
-    boolean addMetricToResource(String environmentId, String feedId, String resourceId, Collection<String> metricIds);
+    ClientResponse<String> addMetricToResource(String environmentId, String feedId, String resourceId,
+            Collection<String> metricIds);
 
-    boolean addMetricToResource(String environmentId, String resourceId, Collection<String> metricIds);
+    ClientResponse<String> addMetricToResource(String environmentId, String resourceId, Collection<String> metricIds);
 
-    List<Metric> listMetricsOfResource(String environmentID, String feedId, String resourceId);
+    ClientResponse<List<Metric>> listMetricsOfResource(String environmentID, String feedId, String resourceId);
 
-    List<Metric> listMetricsOfResource(String environmentID, String resourceId);
+    ClientResponse<List<Metric>> listMetricsOfResource(String environmentID, String resourceId);
 
-    Metric getMetricOfResource(String environmentId, String feedId, String resourceId, String metricId);
+    ClientResponse<Metric> getMetricOfResource(String environmentId, String feedId, String resourceId, String metricId);
 
-    Metric getMetricOfResource(String environmentId, String resourceId, String metricId);
+    ClientResponse<Metric> getMetricOfResource(String environmentId, String resourceId, String metricId);
 
     //Feed
-    boolean registerFeed(String environmentId, Feed.Blueprint feed);
+    ClientResponse<String> registerFeed(String environmentId, Feed.Blueprint feed);
 
-    boolean registerFeed(Feed feed);
+    ClientResponse<String> registerFeed(Feed feed);
 
-    List<Feed> getAllFeeds(String environmentId);
+    ClientResponse<List<Feed>> getAllFeeds(String environmentId);
 
-    Feed getFeed(String environmentId, String feedId);
+    ClientResponse<Feed> getFeed(String environmentId, String feedId);
 
-    Feed getFeed(Feed feed);
+    ClientResponse<Feed> getFeed(Feed feed);
 
-    boolean updateFeed(String environmentId, String feedId, Feed.Update update);
+    ClientResponse<String> updateFeed(String environmentId, String feedId, Feed.Update update);
 
-    boolean updateFeed(Feed feed);
+    ClientResponse<String> updateFeed(Feed feed);
 
-    boolean deleteFeed(String environmentId, String feedId);
+    ClientResponse<String> deleteFeed(String environmentId, String feedId);
 
-    boolean deleteFeed(Feed feed);
+    ClientResponse<String> deleteFeed(Feed feed);
 }
