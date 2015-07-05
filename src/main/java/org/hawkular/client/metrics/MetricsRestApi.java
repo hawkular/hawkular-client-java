@@ -20,6 +20,7 @@ import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -28,78 +29,78 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.hawkular.client.metrics.model.AggregateNumericData;
-import org.hawkular.metrics.core.api.Availability;
-import org.hawkular.metrics.core.api.AvailabilityMetric;
-import org.hawkular.metrics.core.api.NumericData;
-import org.hawkular.metrics.core.api.NumericMetric;
-import org.hawkular.metrics.core.api.Tenant;
+import org.hawkular.client.metrics.model.AvailabilityDataPoint;
+import org.hawkular.client.metrics.model.GaugeDataPoint;
+import org.hawkular.client.metrics.model.MetricDefinition;
+import org.hawkular.client.metrics.model.TenantParam;
 
-@Path("/hawkular-metrics")
+
+@Path("/hawkular/metrics")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public interface MetricsRestApi {
 
     @GET
     @Path ("/tenants")
-    List<Tenant> findTenants();
+    List<TenantParam> getTenants();
 
     @POST
     @Path ("/tenants")
-    Response createTenant(Tenant tenant);
+    Response createTenant(TenantParam tenant);
 
     @POST
-    @Path ("/{tenantId}/metrics/numeric")
-    void createNumericMetric(@PathParam ("tenantId") String tenantId, NumericMetric metric);
-
-    @POST
-    @Path ("/{tenantId}/metrics/numeric/{id}/data")
-    void addNumericMetricData(  @PathParam("tenantId") String tenantId,
-                                @PathParam("id") String metricId,
-                                List<NumericData> data);
+    @Path ("/gauges")
+    void createGaugeMetric(@HeaderParam ("Hawkular-Tenant") String tenantId,
+                                                            MetricDefinition definition);
 
     @GET
-    @Path ("/{tenantId}/metrics/numeric/{id}/data")
-    List<NumericData> getNumericMetricData(@PathParam("tenantId") String tenantId,
-                                           @PathParam("id") String metricId,
-                                           @QueryParam("start") long startTime,
-                                           @QueryParam("end") long endTime
+    @Path ("/gauges/{id}")
+    MetricDefinition getGaugeMetric(@HeaderParam ("Hawkular-Tenant") String tenantId,
+                                    @PathParam("id")                 String metricId);
+
+
+    @POST
+    @Path ("/gauges/{id}/data")
+    void addGaugeData(@HeaderParam ("Hawkular-Tenant") String tenantId,
+                      @PathParam("id")                 String metricId,
+                                                       List<GaugeDataPoint> data);
+
+    @GET
+    @Path ("/gauges/{id}/data")
+    List<GaugeDataPoint> getGaugeData(@HeaderParam ("Hawkular-Tenant") String tenantId,
+                                      @PathParam("id") String metricId
                                            );
 
     @GET
-    @Path ("/{tenantId}/metrics/numeric/{id}/data")
-    List<AggregateNumericData> getAggregateNumericDataByBuckets(@PathParam("tenantId") String tenantId,
-                                           @PathParam("id") String metricId,
-                                           @QueryParam("start") long startTime,
-                                           @QueryParam("end") long endTime,
-                                           @QueryParam("buckets") int buckets
+    @Path ("/gauges/{id}/data")
+    List<GaugeDataPoint> getGaugeData(@HeaderParam ("Hawkular-Tenant") String tenantId,
+                                      @PathParam("id")                 String metricId,
+                                      @QueryParam("start")             long startTime,
+                                      @QueryParam("end")               long endTime
                                            );
 
-    @GET
-    @Path("/{tenantId}/metrics/numeric/{id}/tags")
-    List<NumericData> getNumericMetricData(String tenantId, String metricId);
-
-    @GET
-    @Path("/{tenantId}/metrics/numeric/{id}/tags")
-    NumericMetric getNumericMetricTags(@PathParam ("tenantId") String tenantId,
-                                       @PathParam("id") String metricId);
-
     @POST
-    @Path("/{tenantId}/metrics/availability")
-    void createAvailability(@PathParam("tenantId") String tenantId, AvailabilityMetric metric);
+    @Path("/availability")
+    void createAvailability(@HeaderParam ("Hawkular-Tenant") String tenantId,
+                                                             MetricDefinition definition);
+    @GET
+    @Path("/availability/{id}")
+    MetricDefinition getAvailabilityMetric(@HeaderParam ("Hawkular-Tenant") String tenantId,
+                                           @PathParam("id")                 String metricId);
 
     @GET
-    @Path("/{tenantId}/availability")
+    @Path("/availability/{tags}")
     String findAvailabilityByTags(@PathParam("tenantId")String tenantId, @QueryParam("tags") String csvTags);
 
+
     @POST
-    @Path("/{tenantId}/metrics/availability/{metricId}/data")
-    void addAvailabilityData(@PathParam("tenantId")String tenantId,
-                                         @PathParam("metricId") String metricId,
-                                         List<Availability> data);
+    @Path("/availability/{metricId}/data")
+    void addAvailabilityData(@HeaderParam ("Hawkular-Tenant") String tenantId,
+                             @PathParam("metricId")           String metricId,
+                                                              List<AvailabilityDataPoint> data);
 
     @GET
-    @Path("/{tenantId}/metrics/availability/{metricId}/data")
-    List<Availability> getAvailabilityData(@PathParam("tenantId") String tenantId,
-                                           @PathParam("metricId") String metricId);
+    @Path("/availability/{metricId}/data")
+    List<AvailabilityDataPoint> getAvailabilityData(@HeaderParam ("Hawkular-Tenant") String tenantId,
+                                                    @PathParam("metricId")           String metricId);
 }

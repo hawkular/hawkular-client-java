@@ -1,33 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-
-    Copyright 2015 Red Hat, Inc. and/or its affiliates
-    and other contributors as indicated by the @author tags.
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-       http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
--->
+<!-- Copyright 2015 Red Hat, Inc. and/or its affiliates and other contributors 
+  as indicated by the @author tags. Licensed under the Apache License, Version 
+  2.0 (the "License"); you may not use this file except in compliance with 
+  the License. You may obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0 
+  Unless required by applicable law or agreed to in writing, software distributed 
+  under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES 
+  OR CONDITIONS OF ANY KIND, either express or implied. See the License for 
+  the specific language governing permissions and limitations under the License. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.hawkular</groupId>
     <artifactId>hawkular-parent</artifactId>
-    <version>10</version>
+    <version>17</version>
   </parent>
   <groupId>org.hawkular.client</groupId>
   <artifactId>hawkular-java-client</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.2-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Hawkular Java Client</name>
@@ -45,7 +35,7 @@
   </licenses>
 
   <properties>
-    <hawkular.metrics.version>0.3.2-SNAPSHOT</hawkular.metrics.version>
+    <hawkular.metrics.version>0.4.0.Final</hawkular.metrics.version>
     <hawkular.inventory.version>0.0.1-SNAPSHOT</hawkular.inventory.version>
     <resteasy.version>3.0.8.Final</resteasy.version>
     <excluded.tests>nothing-to-exclude</excluded.tests>
@@ -104,14 +94,22 @@
     </dependency>
 
     <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.4</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
+      <version>1.7.12</version>
     </dependency>
 
     <!-- test -->
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
+      <version>6.9.4</version>
       <scope>test</scope>
     </dependency>
 

@@ -19,11 +19,12 @@ package org.hawkular.client.test;
 import java.util.List;
 import java.util.Optional;
 
-import org.testng.Assert;
-import org.apache.commons.lang3.RandomStringUtils;
+import org.hawkular.client.metrics.model.TenantParam;
 import org.hawkular.metrics.core.api.Tenant;
+import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
+
 
 public class TenantTest extends BaseTest {
 
@@ -33,25 +34,23 @@ public class TenantTest extends BaseTest {
 
     @Test(priority=5)
     public void createTenants() throws Exception {
-        List<Tenant> tenantsBefore = client().metrics().findTenants();
-        Reporter.log("Before: " + tenantsBefore.toString());
+        List<TenantParam> tenantsBefore = client().metrics().getTenants();
+        Reporter.log("Teant list Before: " + tenantsBefore.toString(), true);
 
-        Tenant tenant = new Tenant();
-        tenant.setId(RandomStringUtils.randomAlphabetic(5));
-        client().metrics().createTenant(tenant);
+        final Tenant expectedTenant = randomTenant();
+        client().metrics().createTenant(expectedTenant);
 
-        List<Tenant> tenantsAfter = client().metrics().findTenants();
-        Reporter.log("After: " + tenantsAfter.toString());
+        List<TenantParam> tenantsAfter = client().metrics().getTenants();
+        Reporter.log("Tenant list After: " + tenantsAfter.toString(), true);
 
         Assert.assertTrue(tenantsBefore.size() == tenantsAfter.size()-1);
 
-        Optional<Tenant> value = tenantsAfter
+        Optional<TenantParam> value = tenantsAfter
                 .stream()
-                .filter(a -> a.getId().equals(tenant.getId()))
+                .filter(a -> a.getId().equals(expectedTenant.getId()))
                 .findFirst();
 
-      Assert.assertTrue(value.isPresent());
-
+        Assert.assertTrue(value.isPresent());
     }
 
 }

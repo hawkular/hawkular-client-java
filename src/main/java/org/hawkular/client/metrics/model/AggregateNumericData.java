@@ -19,12 +19,9 @@ package org.hawkular.client.metrics.model;
 import java.util.List;
 import java.util.Objects;
 
-import org.hawkular.metrics.core.api.NumericData;
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.MoreObjects;
-import com.google.common.collect.ImmutableList;
 
 /**
  * I can't find anything similar to this in hawkular-metrics project
@@ -62,17 +59,18 @@ public class AggregateNumericData {
     public final double percentile95th;
     public final boolean empty;
 
-    public static List<AggregateNumericData> from(List<NumericData> rawData, int buckets) {
-        AggregateNumericData data = new AggregateNumericData(
-                0,
-                0,
-                StatisticHelper.MIN.apply(rawData).getAsDouble(),
-                StatisticHelper.MAX.apply(rawData).getAsDouble(),
-                StatisticHelper.AVG.apply(rawData).getAsDouble(),
-                StatisticHelper.MEDIAN.apply(rawData).getAsDouble(),
-                StatisticHelper.PERCENTILE95th.apply(rawData).getAsDouble(),
-                false);
-        return ImmutableList.of(data);
+    public static List<AggregateNumericData> from(DoubleDataPoint rawData, int buckets) {
+//        AggregateNumericData data = new AggregateNumericData(
+//                0,
+//                0,
+//                StatisticHelper.MIN.apply(rawData).getAsDouble(),
+//                StatisticHelper.MAX.apply(rawData).getAsDouble(),
+//                StatisticHelper.AVG.apply(rawData).getAsDouble(),
+//                StatisticHelper.MEDIAN.apply(rawData).getAsDouble(),
+//                StatisticHelper.PERCENTILE95th.apply(rawData).getAsDouble(),
+//                false);
+//        return ImmutableList.of(data);
+        return null;
     }
 
     @Override

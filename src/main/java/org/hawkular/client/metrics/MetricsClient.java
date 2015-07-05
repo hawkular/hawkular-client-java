@@ -18,70 +18,77 @@ package org.hawkular.client.metrics;
 
 import java.util.List;
 
-import org.hawkular.client.metrics.model.AggregateNumericData;
-import org.hawkular.metrics.core.api.Availability;
-import org.hawkular.metrics.core.api.AvailabilityMetric;
-import org.hawkular.metrics.core.api.NumericData;
-import org.hawkular.metrics.core.api.NumericMetric;
+import org.hawkular.client.metrics.model.AvailabilityDataPoint;
+import org.hawkular.client.metrics.model.GaugeDataPoint;
+import org.hawkular.client.metrics.model.MetricDefinition;
+import org.hawkular.client.metrics.model.TenantParam;
 import org.hawkular.metrics.core.api.Tenant;
 
 public interface MetricsClient {
 
-    List<Tenant> findTenants();
+    /**
+     * Get all tenants
+     * @return List of tenants
+     */
+    List<TenantParam> getTenants();
 
+    /**
+     * Create a new tenant
+     * @param tenant
+     */
     boolean createTenant(Tenant tenant);
 
     /**
-     * Create a NumericMetric definition
+     * Create a Gauge metric
      */
-    void createNumericMetric(NumericMetric metric);
+    void createGaugeMetric(String tenantId, MetricDefinition metricDefinition);
 
     /**
-     * Find a NumericMetric definition
+     * Get Gauge metric
      */
-    NumericMetric findNumericMetric(String tenantId, String metricId);
+    MetricDefinition getGaugeMetric(String tenantId, String metricId);
 
     /**
-     * Add data to a numeric metric
+     * Add data to Gauge metric
      */
-    void addNumericMetricData(String tenantId, String metricId, List<NumericData> data);
+    void addGaugeData(String tenantId, String metricId, List<GaugeDataPoint> data);
 
     /**
      * Retrieve numeric metric data within a specific time stamp range
      */
-    List<NumericData> getNumericMetricData(String tenantId, String metricId, long startTime, long endTime);
+    List<GaugeDataPoint> getGaugeData(String tenantId, String metricId);
 
+//    /**
+//     * Retrieve most recent numeric metric data. See implementation for default time range.
+//     */
+//    List<NumericData> getNumericMetricData(String tenantId, String metricId);
+//
+//    List<AggregateNumericData> getAggregateNumericDataByBuckets(String tenantId,
+//                                                      String metricId,
+//                                                      long startTime,
+//                                                      long endTime,
+//                                                      int buckets);
+//
     /**
-     * Retrieve most recent numeric metric data. See implementation for default time range.
+     * Create Availability metric definition
      */
-    List<NumericData> getNumericMetricData(String tenantId, String metricId);
-
-    List<AggregateNumericData> getAggregateNumericDataByBuckets(String tenantId,
-                                                      String metricId,
-                                                      long startTime,
-                                                      long endTime,
-                                                      int buckets);
+    void createAvailabilityMetric(String tenantId, MetricDefinition metricDefinition);
 
     /**
-     * Create a AvailabilityMetric definition
+     * Get Availability metric definition
      */
-    void createAvailability(String tenantId, AvailabilityMetric metric);
+    MetricDefinition getAvailabilityMetric(String tenantId, String metricId);
 
     /**
-     * Not sure what this api returns
-     */
-    String findAvailabilityByTags(String tenantId, String csvTags);
-
-    /**
-     * Add availability data
+     * Add Availability metric data
      */
     void addAvailabilityData(String tenantId,
-                                   String availId,
-                                   List<Availability> data);
+                             String metricId,
+                             List<AvailabilityDataPoint> data);
 
     /**
-     * Get availability data
+     * Get Availability metric data
      */
-    List<Availability> getAvailabilityData(String tenantId,
-                                           String metricId);
+    List<AvailabilityDataPoint> getAvailabilityData(String tenantId,
+                                                    String metricId);
 }

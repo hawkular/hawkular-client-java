@@ -19,7 +19,7 @@ package org.hawkular.client.test;
 import java.time.Duration;
 import java.time.Instant;
 
-import net.jcip.annotations.NotThreadSafe;
+import org.apache.http.annotation.NotThreadSafe;
 
 /**
  * A Better-Timestamp-Generator helper class generates new timestamp value starting

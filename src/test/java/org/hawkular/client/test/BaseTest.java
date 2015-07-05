@@ -22,7 +22,6 @@ import java.net.URISyntaxException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hawkular.client.HawkularClient;
-import org.hawkular.metrics.core.api.AvailabilityMetric;
 import org.hawkular.metrics.core.api.MetricId;
 import org.hawkular.metrics.core.api.Tenant;
 import org.testng.Reporter;
@@ -60,14 +59,17 @@ public class BaseTest {
     }
 
     public static Tenant randomTenant() {
-        Tenant tenant = new Tenant();
-        tenant.setId(RandomStringUtils.randomAlphanumeric(8));
+        Tenant tenant = new Tenant(RandomStringUtils.randomAlphanumeric(8).toLowerCase());
         return tenant;
     }
 
-    public static AvailabilityMetric randomAvailabilityMetric() {
-        MetricId id = new MetricId(RandomStringUtils.randomAlphanumeric(8));
-        AvailabilityMetric avail = new AvailabilityMetric(id);
-        return avail;
+    public static MetricId randomMetricId() {
+        return new MetricId(RandomStringUtils.randomAlphanumeric(8).toLowerCase());
     }
+
+//    public static AvailabilityMetric randomAvailabilityMetric() {
+//        MetricId id = new MetricId(RandomStringUtils.randomAlphanumeric(8));
+//        AvailabilityMetric avail = new AvailabilityMetric(id);
+//        return avail;
+//    }
 }

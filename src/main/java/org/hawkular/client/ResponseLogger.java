@@ -19,30 +19,25 @@ package org.hawkular.client;
 import java.io.IOException;
 
 import javax.ws.rs.client.ClientRequestContext;
-import javax.ws.rs.client.ClientRequestFilter;
+import javax.ws.rs.client.ClientResponseContext;
+import javax.ws.rs.client.ClientResponseFilter;
 import javax.ws.rs.ext.Provider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Provider
-public class OutgoingJSONLogger implements ClientRequestFilter {
-
-    private Logger LOG = LoggerFactory.getLogger(OutgoingJSONLogger.class);
-
-    private ObjectMapper mapper = new ObjectMapper();
+public class ResponseLogger implements ClientResponseFilter {
+    private Logger LOG = LoggerFactory.getLogger(ResponseLogger.class);
 
     @Override
-    public void filter(ClientRequestContext requestContext) throws IOException {
-        String method = requestContext.getMethod();
+    public void filter(ClientRequestContext arg0, ClientResponseContext responseContext)
+            throws IOException {
+
         if (LOG.isDebugEnabled()) {
-            LOG.debug("HTTP: {}", method);
-            LOG.debug("URI: {}", requestContext.getUri());
-            LOG.debug("Data: {}", mapper.writerWithDefaultPrettyPrinter()
-                                    .writeValueAsString(requestContext.getEntity()));
+            LOG.debug("<< Response headers: " + responseContext.getHeaders());
         }
     }
+
 
 }

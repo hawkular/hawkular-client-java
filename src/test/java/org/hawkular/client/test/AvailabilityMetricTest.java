@@ -18,54 +18,66 @@ package org.hawkular.client.test;
 
 import java.util.List;
 
-import org.hawkular.metrics.core.api.Availability;
+import org.hawkular.client.metrics.model.AvailabilityDataPoint;
+import org.hawkular.client.metrics.model.MetricDefinition;
+import org.hawkular.client.test.utils.AvailabilityDataGenerator;
 import org.hawkular.metrics.core.api.AvailabilityType;
-import org.hawkular.metrics.core.api.Tenant;
 import org.testng.Assert;
 import org.testng.Reporter;
+//import org.hawkular.metrics.core.api.Availability;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableList;
-
 /**
- * Simulate a series of availability metric for a web server {(timestamp, status), (timestamp, status)}
  * Insert and retrieve data
  * @author vnguyen
  *
  */
 public class AvailabilityMetricTest extends BaseTest {
 
-    private BTG timestampGen = new BTG();
+    private final MetricDefinition expectedDefinition = AvailabilityDataGenerator.genDef();
 
-    private final Tenant tenant = randomTenant();
-    private final List<Availability> expectedAvailability = ImmutableList.of(up(), down(), down());
+    private final MetricDefinition metric2 = AvailabilityDataGenerator.genDef();
+    private final List<AvailabilityDataPoint> expectedData
+            = AvailabilityDataGenerator.gen(
+                    AvailabilityType.DOWN,
+                    AvailabilityType.UP,
+                    AvailabilityType.UNKNOWN);
 
     public AvailabilityMetricTest() throws Exception {
         super();
     }
 
     @Test
-    public void addAvailDataTest() throws Exception {
-        client().metrics().addAvailabilityData(tenant.getId(), "apache", expectedAvailability);
+    public void createDefinition() throws Exception {
+        Reporter.log(expectedDefinition.toString(), true);
+        client().metrics().createAvailabilityMetric(expectedDefinition.getTenantId(), expectedDefinition);
     }
 
-    @Test(dependsOnMethods="addAvailDataTest")
-    public void getAvailabilityTest() throws Exception {
-        List<Availability> actual = client().metrics().getAvailabilityData(tenant.getId(), "apache");
+    // Known failure.  See https://issues.jboss.org/browse/HWKMETRICS-169
+    @Test (dependsOnMethods="createDefinition")
+    public void getDefinition() throws Exception {
+        MetricDefinition actual = client().metrics().getAvailabilityMetric(expectedDefinition.getTenantId(), expectedDefinition.getId());
+        Reporter.log(actual.toString(), true);
+        Assert.assertEquals(actual, expectedDefinition);
 
-        Assert.assertEquals(actual.size(), expectedAvailability.size());
+    }
 
-        Reporter.log("Expected: " + expectedAvailability.toString());
+    @Test
+    public void addData() throws Exception {
+        Reporter.log(expectedData.toString(), true);
+        client().metrics().addAvailabilityData(metric2.getTenantId(), metric2.getId(), expectedData);
+    }
+
+
+    @Test(dependsOnMethods="addData")
+    public void getData() throws Exception {
+        List<AvailabilityDataPoint> actual = client().metrics().getAvailabilityData(metric2.getTenantId(), metric2.getId());
+
+        Assert.assertEquals(actual.size(), expectedData.size());
+
+        Reporter.log("Expected: " + expectedData.toString(), true);
         Reporter.log("Actual: " + actual.toString(), true);
 
-        Assert.assertEquals(actual, expectedAvailability);
-    }
-
-    private Availability up() {
-        return new Availability(timestampGen.nextMilli(), AvailabilityType.UP);
-    }
-
-    private Availability down() {
-        return new Availability(timestampGen.nextMilli(), AvailabilityType.DOWN);
+        Assert.assertEquals(actual, expectedData);
     }
 }
