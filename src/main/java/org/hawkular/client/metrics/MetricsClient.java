@@ -19,6 +19,7 @@ package org.hawkular.client.metrics;
 import java.util.List;
 
 import org.hawkular.client.metrics.model.AvailabilityDataPoint;
+import org.hawkular.client.metrics.model.CounterDataPoint;
 import org.hawkular.client.metrics.model.GaugeDataPoint;
 import org.hawkular.client.metrics.model.MetricDefinition;
 import org.hawkular.client.metrics.model.TenantParam;
@@ -39,12 +40,12 @@ public interface MetricsClient {
     boolean createTenant(Tenant tenant);
 
     /**
-     * Create a Gauge metric
+     * Create a Gauge metric definition
      */
     void createGaugeMetric(String tenantId, MetricDefinition metricDefinition);
 
     /**
-     * Get Gauge metric
+     * Get Gauge metric definition
      */
     MetricDefinition getGaugeMetric(String tenantId, String metricId);
 
@@ -54,7 +55,7 @@ public interface MetricsClient {
     void addGaugeData(String tenantId, String metricId, List<GaugeDataPoint> data);
 
     /**
-     * Retrieve numeric metric data within a specific time stamp range
+     * Retrieve Gauge metric data
      */
     List<GaugeDataPoint> getGaugeData(String tenantId, String metricId);
 
@@ -70,7 +71,7 @@ public interface MetricsClient {
 //                                                      int buckets);
 //
     /**
-     * Create Availability metric definition
+     * Create a Availability metric definition
      */
     void createAvailabilityMetric(String tenantId, MetricDefinition metricDefinition);
 
@@ -80,15 +81,39 @@ public interface MetricsClient {
     MetricDefinition getAvailabilityMetric(String tenantId, String metricId);
 
     /**
-     * Add Availability metric data
+     * Add data to Availability metric
      */
     void addAvailabilityData(String tenantId,
                              String metricId,
                              List<AvailabilityDataPoint> data);
 
     /**
-     * Get Availability metric data
+     * Get data from Availability metric
      */
     List<AvailabilityDataPoint> getAvailabilityData(String tenantId,
                                                     String metricId);
+    /**
+     * Create a Counter metric definition
+     */
+    void createCounter(String tenantId,
+                       MetricDefinition metricDefinition);
+
+    /**
+     * Get Counter metric definition
+     */
+    MetricDefinition getCounter(String tenantId,
+                               String metricId);
+
+    /**
+     * Add data to Counter metric
+     */
+    void addCounterData(String tenantId,
+                        String metricId,
+                        List<CounterDataPoint> data);
+
+    /**
+     * Get data from Counter metric
+     */
+    List<CounterDataPoint> getCounterData(String tenantId,
+                                          String metricId);
 }

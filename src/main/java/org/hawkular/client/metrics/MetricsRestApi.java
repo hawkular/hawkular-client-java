@@ -30,6 +30,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.hawkular.client.metrics.model.AvailabilityDataPoint;
+import org.hawkular.client.metrics.model.CounterDataPoint;
 import org.hawkular.client.metrics.model.GaugeDataPoint;
 import org.hawkular.client.metrics.model.MetricDefinition;
 import org.hawkular.client.metrics.model.TenantParam;
@@ -103,4 +104,25 @@ public interface MetricsRestApi {
     @Path("/availability/{metricId}/data")
     List<AvailabilityDataPoint> getAvailabilityData(@HeaderParam ("Hawkular-Tenant") String tenantId,
                                                     @PathParam("metricId")           String metricId);
+
+
+    @POST
+    @Path("/counters")
+    void createCounter(@HeaderParam ("Hawkular-Tenant") String tenantId,
+                                                        MetricDefinition metricDefinition);
+    @GET
+    @Path("/counters/{metricId}")
+    MetricDefinition getCounter(@HeaderParam ("Hawkular-Tenant") String tenantId,
+                                @PathParam("metricId")           String metricId);
+
+    @POST
+    @Path("/counters/{metricId}/data")
+    void addCounterData(@HeaderParam ("Hawkular-Tenant") String tenantId,
+                        @PathParam("metricId")           String metricId,
+                                                         List<CounterDataPoint> data);
+
+    @GET
+    @Path("/counters/{metricId}/data")
+    List<CounterDataPoint> getCounterData(@HeaderParam ("Hawkular-Tenant") String tenantId,
+                                          @PathParam("metricId")           String metricId);
 }

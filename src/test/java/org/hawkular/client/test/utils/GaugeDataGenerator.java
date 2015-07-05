@@ -23,9 +23,7 @@ import org.hawkular.client.metrics.model.Gauge;
 import org.hawkular.client.metrics.model.GaugeDataPoint;
 import org.hawkular.client.metrics.model.MetricDefinition;
 import org.hawkular.client.test.BTG;
-import org.hawkular.client.test.BaseTest;
 import org.hawkular.metrics.core.api.DataPoint;
-import org.hawkular.metrics.core.api.Metric;
 import org.hawkular.metrics.core.api.MetricType;
 
 import com.google.common.base.MoreObjects;
@@ -52,11 +50,7 @@ public class GaugeDataGenerator {
     }
 
     public static MetricDefinition genDef() {
-
-        Metric<Gauge> metric = new Metric<>(BaseTest.randomTenant().getId(),
-                                            MetricType.GAUGE,
-                                            BaseTest.randomMetricId());
-        return new MetricDefinition(metric);
+        return DataGenerator.<Gauge>genDef(MetricType.GAUGE);
     }
 
     public List<GaugeDataPoint> data() {

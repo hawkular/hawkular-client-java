@@ -56,15 +56,16 @@ public class GaugeMetricTest extends BaseTest {
 
     }
 
-    @Test (dependsOnMethods="createDefinition")
+    @Test (dependsOnMethods="getDefinition")
     public void addData() {
-        Reporter.log(expectedData1.toString(), true);
+        Reporter.log("Adding: " + expectedData1.toString(), true);
         client().metrics().addGaugeData(expectedMetric.getTenantId(), expectedMetric.getId(), expectedData1);
     }
 
     @Test (dependsOnMethods="addData")
     public void getData() throws Exception {
       List<?> actual = client().metrics().getGaugeData(expectedMetric.getTenantId(), expectedMetric.getId());
+      Reporter.log("Got: " + actual.toString(), true);
       Assert.assertEquals(Lists.reverse(actual), expectedData1);
     }
 

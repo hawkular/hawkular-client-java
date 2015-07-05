@@ -25,6 +25,7 @@ import javax.ws.rs.core.Response;
 import org.hawkular.client.BaseClient;
 import org.hawkular.client.RestFactory;
 import org.hawkular.client.metrics.model.AvailabilityDataPoint;
+import org.hawkular.client.metrics.model.CounterDataPoint;
 import org.hawkular.client.metrics.model.GaugeDataPoint;
 import org.hawkular.client.metrics.model.MetricDefinition;
 import org.hawkular.client.metrics.model.TenantParam;
@@ -38,7 +39,6 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements MetricsClient {
-    private static final Logger _logger = LoggerFactory.getLogger(MetricsClientImpl.class);
     //private static final Duration EIGHT_HOURS = Duration.ofHours(8);
     private static final Logger logger = LoggerFactory.getLogger(MetricsClientImpl.class);
 
@@ -58,11 +58,11 @@ public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements Met
         Response response = restApi().createTenant(param);
         try {
             if (response.getStatus() == 201) {
-                _logger.debug("Tenant[{}] created successfully, Location URI: {}",
+                logger.debug("Tenant[{}] created successfully, Location URI: {}",
                         tenant.getId(), response.getLocation().toString());
                 return true;
             } else {
-                _logger.warn("Tenant[{}] creation failed, HTTP Status code: {}, Error message if any:{}",
+                logger.warn("Tenant[{}] creation failed, HTTP Status code: {}, Error message if any:{}",
                         tenant.getId(), response.getStatus(), response.readEntity(String.class));
                 return false;
             }
@@ -117,6 +117,31 @@ public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements Met
     public List<AvailabilityDataPoint> getAvailabilityData(String tenantId, String metricId) {
       logger.debug("getAvailabilityData: tenantId={}, metricId={}, data={}", tenantId, metricId);
       return restApi().getAvailabilityData(tenantId, metricId);
+    }
+
+    @Override
+    public void createCounter(String tenantId, MetricDefinition metricDefinition) {
+        logger.debug("createCounter: tenantId={}, metricDef={}", tenantId, metricDefinition);
+        restApi().createCounter(tenantId, metricDefinition);
+    }
+
+    @Override
+    public MetricDefinition getCounter(String tenantId, String metricId) {
+        logger.debug("getCounter: tenantId={}, metricId={}", tenantId, metricId);
+        return restApi().getCounter(tenantId, metricId);
+    }
+
+    @Override
+    public void addCounterData(String tenantId, String metricId,
+            List<CounterDataPoint> data) {
+        logger.debug("addCounterData: tenantId={}, metricId={}, data={}", tenantId, metricId, data);
+        restApi().addCounterData(tenantId, metricId, data);
+    }
+
+    @Override
+    public List<CounterDataPoint> getCounterData(String tenantId, String metricId) {
+        logger.debug("getCounterData: tenantId={}, metricId={}", tenantId, metricId);
+        return restApi().getCounterData(tenantId, metricId);
     }
 
 
