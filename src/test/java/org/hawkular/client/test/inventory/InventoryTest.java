@@ -46,7 +46,7 @@ public class InventoryTest extends BaseTest {
     public void loadVariables() {
         TENANT_ID = client().inventory().getTenant().getEntity().getId();
         FEED = new Feed(TENANT_ID, ENVIRONMENT_ID, "feed_" + RandomStringUtils.randomAlphabetic(8));
-        RESOURCE_TYPE = new ResourceType(TENANT_ID, "resource_type_" + RandomStringUtils.randomAlphabetic(8), "V:1.0");
+        RESOURCE_TYPE = new ResourceType(TENANT_ID, "resource_type_" + RandomStringUtils.randomAlphabetic(8));
         RESOURCE = new Resource(TENANT_ID, ENVIRONMENT_ID, FEED.getId(), "resource_"
                 + RandomStringUtils.randomAlphabetic(8), RESOURCE_TYPE);
         METRIC_TYPE = new MetricType(TENANT_ID, "metri_type_" + RandomStringUtils.randomAlphabetic(8));
@@ -87,7 +87,6 @@ public class InventoryTest extends BaseTest {
         Assert.assertEquals(resourceTypeRx.getId(), RESOURCE_TYPE.getId());
         Assert.assertEquals(resourceTypeRx.getTenantId(), RESOURCE_TYPE.getTenantId());
         Assert.assertEquals(resourceTypeRx.getProperties(), RESOURCE_TYPE.getProperties());
-        Assert.assertEquals(resourceTypeRx.getVersion(), RESOURCE_TYPE.getVersion());
 
         //Resource Test
         Resource resourceRx = client().inventory().getResource(RESOURCE).getEntity();

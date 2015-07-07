@@ -38,7 +38,6 @@ import org.hawkular.inventory.api.model.Resource;
 import org.hawkular.inventory.api.model.ResourceType;
 import org.hawkular.inventory.api.model.Tenant;
 import org.hawkular.inventory.api.model.Tenant.Update;
-import org.hawkular.inventory.api.model.Version;
 
 
 /**
@@ -351,19 +350,13 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     }
 
     @Override
-    public ClientResponse<String> createResourceType(String resourceId, String resourceVersion) {
-        return createResourceType(new ResourceType.Blueprint(resourceId, resourceVersion));
-    }
-
-    @Override
-    public ClientResponse<String> createResourceType(String resourceId, Version resourceVersion) {
-        return createResourceType(new ResourceType.Blueprint(resourceId, resourceVersion.toString()));
+    public ClientResponse<String> createResourceType(String resourceId) {
+        return createResourceType(new ResourceType.Blueprint(resourceId));
     }
 
     @Override
     public ClientResponse<String> createResourceType(ResourceType resourceType) {
-        return createResourceType(new ResourceType.Blueprint(resourceType.getId(), resourceType.getVersion()
-                .toString()));
+        return createResourceType(new ResourceType.Blueprint(resourceType.getId()));
     }
 
     @Override
@@ -375,8 +368,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> updateResourceType(ResourceType resourceType) {
-        return updateResourceType(resourceType.getId(), new ResourceType.Update(resourceType.getProperties(),
-                resourceType.getVersion().toString()));
+        return updateResourceType(resourceType.getId(), new ResourceType.Update(resourceType.getProperties()));
     }
 
     @Override

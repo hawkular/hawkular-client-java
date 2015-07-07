@@ -32,7 +32,6 @@ import org.hawkular.inventory.api.model.Resource;
 import org.hawkular.inventory.api.model.ResourceType;
 import org.hawkular.inventory.api.model.Tenant;
 import org.hawkular.inventory.api.model.Tenant.Update;
-import org.hawkular.inventory.api.model.Version;
 
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
@@ -169,9 +168,7 @@ public interface InventoryClient {
 
     ClientResponse<String> createResourceType(ResourceType.Blueprint resourceType);
 
-    ClientResponse<String> createResourceType(String resourceId, String resourceVersion);
-
-    ClientResponse<String> createResourceType(String resourceId, Version resourceVersion);
+    ClientResponse<String> createResourceType(String resourceId);
 
     ClientResponse<String> updateResourceType(String resourceTypeId, ResourceType.Update resourceTypeUpdate);
 
