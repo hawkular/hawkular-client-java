@@ -59,7 +59,7 @@ public class AggregateNumericData {
     public final double percentile95th;
     public final boolean empty;
 
-    public static List<AggregateNumericData> from(DoubleDataPoint rawData, int buckets) {
+    public static List<AggregateNumericData> from(Gauge rawData, int buckets) {
 //        AggregateNumericData data = new AggregateNumericData(
 //                0,
 //                0,

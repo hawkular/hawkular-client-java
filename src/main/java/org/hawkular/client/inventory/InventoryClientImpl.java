@@ -54,12 +54,16 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<StringValue> pingTime() {
-        return new ClientResponse<StringValue>(StringValue.class, restApi().pingTime(), RESPONSE_CODE.GET_SUCCESS.value());
+        return new ClientResponse<StringValue>(StringValue.class,
+                                               restApi().pingTime(),
+                                               RESPONSE_CODE.GET_SUCCESS.value());
     }
 
     @Override
     public ClientResponse<StringValue> pingHello() {
-        return new ClientResponse<StringValue>(StringValue.class, restApi().pingHello(), RESPONSE_CODE.GET_SUCCESS.value());
+        return new ClientResponse<StringValue>(StringValue.class,
+                                               restApi().pingHello(),
+                                               RESPONSE_CODE.GET_SUCCESS.value());
     }
 
     @Override
@@ -300,6 +304,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
         return new ClientResponse<String>(String.class, response, RESPONSE_CODE.DELETE_SUCCESS.value());
     }
 
+    @Override
     public ClientResponse<String> deleteMetric(String environmentId, String metricId) {
         return deleteMetric(environmentId, null, metricId);
     }

@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.test;
+package org.hawkular.client.test.inventory;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.hawkular.client.test.BaseTest;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Metric;

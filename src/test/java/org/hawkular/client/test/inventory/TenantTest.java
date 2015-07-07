@@ -14,19 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.test;
+package org.hawkular.client.test.inventory;
 
-import org.testng.Assert;
+import org.hawkular.client.ClientResponse;
+import org.hawkular.client.test.BaseTest;
+import org.hawkular.inventory.api.model.Tenant;
+import org.testng.Reporter;
 import org.testng.annotations.Test;
 
-public class InventoryPingerTest extends BaseTest {
+public class TenantTest extends BaseTest {
 
-    public InventoryPingerTest() throws Exception {
+    public TenantTest() throws Exception {
         super();
     }
 
-    @Test(priority=1)
-    public void pingerTest() throws Exception {
-        Assert.assertEquals(client().inventory().pingHello().getEntity().getValue(), "Hawkular Inventory");
+    @Test
+    public void getTenant() throws Exception {
+        ClientResponse<Tenant> resp = client().inventory().getTenant();
+        Reporter.log(resp.getEntity().getId(), true);
     }
+
+
 }

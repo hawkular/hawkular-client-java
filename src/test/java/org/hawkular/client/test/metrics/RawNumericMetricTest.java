@@ -14,7 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.test;
+package org.hawkular.client.test.metrics;
+
+import org.hawkular.client.test.BaseTest;
 
 //import org.hawkular.metrics.core.api.NumericData;
 

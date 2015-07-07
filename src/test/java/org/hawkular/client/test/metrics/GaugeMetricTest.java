@@ -14,12 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.test;
+package org.hawkular.client.test.metrics;
 
 import java.util.List;
 
 import org.hawkular.client.metrics.model.GaugeDataPoint;
 import org.hawkular.client.metrics.model.MetricDefinition;
+import org.hawkular.client.test.BaseTest;
 import org.hawkular.client.test.utils.GaugeDataGenerator;
 import org.testng.Assert;
 import org.testng.Reporter;
