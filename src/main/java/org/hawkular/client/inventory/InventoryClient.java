@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.hawkular.client.ClientResponse;
-import org.hawkular.client.inventory.model.IdJSON;
-import org.hawkular.client.inventory.model.StringValue;
+import org.hawkular.client.inventory.json.IdJSON;
+import org.hawkular.client.inventory.json.StringValue;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Metric;

@@ -19,15 +19,12 @@ package org.hawkular.client;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Response;
 
-import org.hawkular.client.inventory.model.ApiError;
-
 public class ClientResponse<T> {
     private int statusCode;
-    private ApiError apiError;
+    private String errorMsg;
     private T entity;
     private boolean success = false;
     GenericType<T> type;
-
 
     public ClientResponse(Class<T> type, Response response, int statusCode) {
         try {
@@ -36,7 +33,7 @@ public class ClientResponse<T> {
                 this.setSuccess(true);
                 this.setEntity(response.readEntity(type));
             } else {
-                this.setApiError(response.readEntity(ApiError.class));
+                this.setErrorMsg(response.readEntity(String.class));
             }
         } finally {
             response.close();
@@ -51,7 +48,7 @@ public class ClientResponse<T> {
                 this.setSuccess(true);
                 this.setEntity((T) response.readEntity(type));
             } else {
-                this.setApiError(response.readEntity(ApiError.class));
+                this.setErrorMsg(response.readEntity(String.class));
             }
         } finally {
             response.close();
@@ -64,14 +61,6 @@ public class ClientResponse<T> {
 
     public void setStatusCode(int statusCode) {
         this.statusCode = statusCode;
-    }
-
-    public ApiError getApiError() {
-        return apiError;
-    }
-
-    public void setApiError(ApiError apiError) {
-        this.apiError = apiError;
     }
 
     public boolean isSuccess() {
@@ -88,5 +77,13 @@ public class ClientResponse<T> {
 
     public void setEntity(T entity) {
         this.entity = entity;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 }

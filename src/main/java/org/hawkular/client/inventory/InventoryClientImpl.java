@@ -27,8 +27,8 @@ import javax.ws.rs.core.Response;
 import org.hawkular.client.BaseClient;
 import org.hawkular.client.ClientResponse;
 import org.hawkular.client.RestFactory;
-import org.hawkular.client.inventory.model.IdJSON;
-import org.hawkular.client.inventory.model.StringValue;
+import org.hawkular.client.inventory.json.IdJSON;
+import org.hawkular.client.inventory.json.StringValue;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Metric;
@@ -38,7 +38,6 @@ import org.hawkular.inventory.api.model.Resource;
 import org.hawkular.inventory.api.model.ResourceType;
 import org.hawkular.inventory.api.model.Tenant;
 import org.hawkular.inventory.api.model.Tenant.Update;
-
 
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
@@ -54,15 +53,15 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     @Override
     public ClientResponse<StringValue> pingTime() {
         return new ClientResponse<StringValue>(StringValue.class,
-                                               restApi().pingTime(),
-                                               RESPONSE_CODE.GET_SUCCESS.value());
+                restApi().pingTime(),
+                RESPONSE_CODE.GET_SUCCESS.value());
     }
 
     @Override
     public ClientResponse<StringValue> pingHello() {
         return new ClientResponse<StringValue>(StringValue.class,
-                                               restApi().pingHello(),
-                                               RESPONSE_CODE.GET_SUCCESS.value());
+                restApi().pingHello(),
+                RESPONSE_CODE.GET_SUCCESS.value());
     }
 
     @Override
@@ -351,12 +350,13 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> createResourceType(String resourceId) {
-        return createResourceType(new ResourceType.Blueprint(resourceId));
+        return createResourceType(new ResourceType.Blueprint(resourceId, null));
     }
 
     @Override
     public ClientResponse<String> createResourceType(ResourceType resourceType) {
-        return createResourceType(new ResourceType.Blueprint(resourceType.getId()));
+        return createResourceType(new ResourceType.Blueprint(resourceType.getId(), resourceType.getVersion(),
+                resourceType.getProperties()));
     }
 
     @Override
@@ -368,7 +368,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> updateResourceType(ResourceType resourceType) {
-        return updateResourceType(resourceType.getId(), new ResourceType.Update(resourceType.getProperties()));
+        return updateResourceType(resourceType.getId(), new ResourceType.Update(resourceType.getProperties(), null));
     }
 
     @Override
