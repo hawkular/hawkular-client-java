@@ -26,6 +26,7 @@ import org.hawkular.inventory.api.model.Resource;
 import org.hawkular.inventory.api.model.ResourceType;
 import org.hawkular.inventory.api.model.Tenant;
 import org.testng.Assert;
+import org.testng.Reporter;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -46,7 +47,8 @@ public class InventoryTest extends BaseTest {
     public void loadVariables() {
         TENANT_ID = client().inventory().getTenant().getEntity().getId();
         FEED = new Feed(TENANT_ID, ENVIRONMENT_ID, "feed_" + RandomStringUtils.randomAlphabetic(8));
-        RESOURCE_TYPE = new ResourceType(TENANT_ID, "resource_type_" + RandomStringUtils.randomAlphabetic(8));
+        RESOURCE_TYPE = new ResourceType(TENANT_ID, "resource_type_" + RandomStringUtils.randomAlphabetic(8),
+                "1.5b");
         RESOURCE = new Resource(TENANT_ID, ENVIRONMENT_ID, FEED.getId(), "resource_"
                 + RandomStringUtils.randomAlphabetic(8), RESOURCE_TYPE);
         METRIC_TYPE = new MetricType(TENANT_ID, "metri_type_" + RandomStringUtils.randomAlphabetic(8));
@@ -58,6 +60,8 @@ public class InventoryTest extends BaseTest {
     public void createTest() {
         Assert.assertTrue(client().inventory().createEnvironment(ENVIRONMENT_ID).isSuccess());
         Assert.assertTrue(client().inventory().registerFeed(FEED).isSuccess());
+        Reporter.log(
+                "Resource Type before creation: " + RESOURCE_TYPE.getId() + ", " + RESOURCE_TYPE.getProperties(), true);
         Assert.assertTrue(client().inventory().createResourceType(RESOURCE_TYPE).isSuccess());
         Assert.assertTrue(client().inventory().addResource(RESOURCE).isSuccess());
         Assert.assertTrue(client().inventory().createMetricType(METRIC_TYPE).isSuccess());
@@ -117,13 +121,13 @@ public class InventoryTest extends BaseTest {
     }
 
     /**Deletion is not supported right now, returns 403. Communicate with dev to know who have access to delete */
-   /* @Test(priority = 3)
-    public void deleteTest() {
-        Assert.assertTrue(client().inventory().deleteMetric(METRIC));
-        Assert.assertTrue(client().inventory().deleteMetricType(METRIC_TYPE));
-        Assert.assertTrue(client().inventory().deleteResource(RESOURCE));
-        Assert.assertTrue(client().inventory().deleteResourceType(RESOURCE_TYPE));
-        Assert.assertTrue(client().inventory().deleteFeed(FEED));
-        Assert.assertTrue(client().inventory().deleteEnvironment(ENVIRONMENT_ID));
-    }*/
+    /* @Test(priority = 3)
+     public void deleteTest() {
+         Assert.assertTrue(client().inventory().deleteMetric(METRIC));
+         Assert.assertTrue(client().inventory().deleteMetricType(METRIC_TYPE));
+         Assert.assertTrue(client().inventory().deleteResource(RESOURCE));
+         Assert.assertTrue(client().inventory().deleteResourceType(RESOURCE_TYPE));
+         Assert.assertTrue(client().inventory().deleteFeed(FEED));
+         Assert.assertTrue(client().inventory().deleteEnvironment(ENVIRONMENT_ID));
+     }*/
 }

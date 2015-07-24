@@ -46,7 +46,7 @@
 
   <properties>
     <hawkular.metrics.version>0.4.0.Final</hawkular.metrics.version>
-    <hawkular.inventory.version>0.1.0.Final</hawkular.inventory.version>
+    <hawkular.inventory.version>0.1.0.Alpha3</hawkular.inventory.version>
     <resteasy.version>3.0.8.Final</resteasy.version>
     <excluded.tests>nothing-to-exclude</excluded.tests>
   </properties>
@@ -146,7 +146,7 @@
     <profile>
       <id>ci</id>
       <properties>
-        <excluded.tests>**/InventoryTest*</excluded.tests>
+        <excluded.tests></excluded.tests>
       </properties>
     </profile>
     <profile>

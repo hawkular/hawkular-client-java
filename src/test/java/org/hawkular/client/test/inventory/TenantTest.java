@@ -19,6 +19,7 @@ package org.hawkular.client.test.inventory;
 import org.hawkular.client.ClientResponse;
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.inventory.api.model.Tenant;
+import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
 
@@ -31,8 +32,8 @@ public class TenantTest extends BaseTest {
     @Test
     public void getTenant() throws Exception {
         ClientResponse<Tenant> resp = client().inventory().getTenant();
+        Assert.assertTrue(resp.isSuccess());
         Reporter.log(resp.getEntity().getId(), true);
     }
-
 
 }
