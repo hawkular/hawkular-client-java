@@ -17,6 +17,7 @@
     limitations under the License.
 
 -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -46,7 +47,8 @@
 
   <properties>
     <hawkular.metrics.version>0.4.0.Final</hawkular.metrics.version>
-    <hawkular.inventory.version>0.1.0.Alpha3</hawkular.inventory.version>
+    <hawkular.inventory.version>0.2.0.Alpha2</hawkular.inventory.version>
+    <hawkular.inventory.json.helper.version>0.2.1-SNAPSHOT</hawkular.inventory.json.helper.version>
     <resteasy.version>3.0.8.Final</resteasy.version>
     <excluded.tests>nothing-to-exclude</excluded.tests>
   </properties>
@@ -62,6 +64,19 @@
       <groupId>org.hawkular.inventory</groupId>
       <artifactId>inventory-api</artifactId>
       <version>${hawkular.inventory.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hawkular.inventory</groupId>
+      <artifactId>hawkular-inventory-json-helper</artifactId>
+      <version>${hawkular.inventory.json.helper.version}</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.6.0</version>
     </dependency>
 
 

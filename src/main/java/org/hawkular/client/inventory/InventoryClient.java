@@ -21,11 +21,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.hawkular.client.ClientResponse;
+import org.hawkular.client.inventory.json.Endpoints;
 import org.hawkular.client.inventory.json.IdJSON;
 import org.hawkular.client.inventory.json.StringValue;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Metric;
+import org.hawkular.inventory.api.model.MetricDataType;
 import org.hawkular.inventory.api.model.MetricType;
 import org.hawkular.inventory.api.model.MetricUnit;
 import org.hawkular.inventory.api.model.Resource;
@@ -59,7 +61,7 @@ public interface InventoryClient {
     }
 
     //PingHandler/Ping
-    ClientResponse<StringValue> pingHello();
+    ClientResponse<Endpoints> pingHello();
 
     ClientResponse<StringValue> pingTime();
 
@@ -104,7 +106,7 @@ public interface InventoryClient {
 
     ClientResponse<MetricType> getMetricType(MetricType metricType);
 
-    ClientResponse<String> createMetricType(String metricTypeId, MetricUnit unit);
+    ClientResponse<String> createMetricType(String metricTypeId, MetricUnit unit, MetricDataType metricDataType);
 
     ClientResponse<String> createMetricType(MetricType metricType);
 

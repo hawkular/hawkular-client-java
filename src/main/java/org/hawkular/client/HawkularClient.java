@@ -29,6 +29,7 @@ import com.google.common.base.MoreObjects;
 public class HawkularClient {
     private MetricsClient metricsClient;
     private InventoryClient inventoryClient;
+    private String tenantId = null;
     private URI endpointUri;
 
     public HawkularClient(URI endpointUri, String username, String password) throws Exception {
@@ -48,9 +49,17 @@ public class HawkularClient {
     public int hashcode() {
         return Objects.hash(endpointUri.hashCode());
     }
+
     public String toString() {
         return MoreObjects.toStringHelper(this).
                 add("endpoint", endpointUri)
                 .toString();
+    }
+
+    public String getTenantId() {
+        if (tenantId == null) {
+            tenantId = inventory().getTenant().getEntity().getId();
+        }
+        return tenantId;
     }
 }
