@@ -16,40 +16,72 @@
  */
 package org.hawkular.client;
 
-import javax.ws.rs.core.GenericType;
+import java.io.IOException;
+import java.util.List;
+
 import javax.ws.rs.core.Response;
 
+import org.hawkular.inventory.api.model.CanonicalPath;
+import org.hawkular.inventory.api.model.Tenant;
+import org.hawkular.inventory.json.InventoryJacksonConfig;
+import org.hawkular.inventory.json.PathDeserializer;
+import org.hawkular.inventory.json.mixins.CanonicalPathWithTenantMixin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class ClientResponse<T> {
+    private static final Logger _logger = LoggerFactory.getLogger(ClientResponse.class);
     private int statusCode;
     private String errorMsg;
     private T entity;
     private boolean success = false;
-    GenericType<T> type;
 
-    public ClientResponse(Class<T> type, Response response, int statusCode) {
-        try {
-            this.setStatusCode(response.getStatus());
-            if (response.getStatus() == statusCode) {
-                this.setSuccess(true);
-                this.setEntity(response.readEntity(type));
-            } else {
-                this.setErrorMsg(response.readEntity(String.class));
-            }
-        } finally {
-            response.close();
-        }
+    public ClientResponse(Class<?> clazz, Response response, int statusCode) {
+        this(clazz, response, statusCode, null, false);
+    }
+
+    public ClientResponse(Class<?> clazz, Response response, int statusCode, String tenantId) {
+        this(clazz, response, statusCode, tenantId, false);
     }
 
     @SuppressWarnings("unchecked")
-    public ClientResponse(GenericType<?> type, Response response, int statusCode) {
+    public ClientResponse(Class<?> clazz, Response response, int statusCode, String tenantId, boolean isEntityList) {
         try {
             this.setStatusCode(response.getStatus());
             if (response.getStatus() == statusCode) {
                 this.setSuccess(true);
-                this.setEntity((T) response.readEntity(type));
+                if (clazz.getName().equalsIgnoreCase(String.class.getName())) {
+                    this.setEntity((T) response.readEntity(clazz));
+                } else {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    InventoryJacksonConfig.configure(objectMapper);
+                    if (clazz.getName().equalsIgnoreCase(Tenant.class.getName())) {
+                        objectMapper.addMixIn(CanonicalPath.class, CanonicalPathWithTenantMixin.class);
+                    } else if (tenantId != null) {
+                        PathDeserializer.setCurrentCanonicalOrigin(CanonicalPath.of()
+                                .tenant(tenantId).get());
+                    }
+                    if (isEntityList) {
+                        this.setEntity(objectMapper.readValue(response.readEntity(String.class),
+                                objectMapper.getTypeFactory().constructCollectionType(List.class, clazz)));
+
+                    } else {
+                        this.setEntity((T) objectMapper.readValue(response.readEntity(String.class), clazz));
+                    }
+                }
             } else {
                 this.setErrorMsg(response.readEntity(String.class));
             }
+        } catch (JsonParseException e) {
+            _logger.error("Error, ", e);
+        } catch (JsonMappingException e) {
+            _logger.error("Error, ", e);
+        } catch (IOException e) {
+            _logger.error("Error, ", e);
         } finally {
             response.close();
         }

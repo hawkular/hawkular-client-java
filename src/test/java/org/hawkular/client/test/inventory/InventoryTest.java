@@ -18,10 +18,13 @@ package org.hawkular.client.test.inventory;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.hawkular.client.test.BaseTest;
+import org.hawkular.inventory.api.model.CanonicalPath;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Metric;
+import org.hawkular.inventory.api.model.MetricDataType;
 import org.hawkular.inventory.api.model.MetricType;
+import org.hawkular.inventory.api.model.MetricUnit;
 import org.hawkular.inventory.api.model.Resource;
 import org.hawkular.inventory.api.model.ResourceType;
 import org.hawkular.inventory.api.model.Tenant;
@@ -46,14 +49,17 @@ public class InventoryTest extends BaseTest {
     @BeforeClass
     public void loadVariables() {
         TENANT_ID = client().inventory().getTenant().getEntity().getId();
-        FEED = new Feed(TENANT_ID, ENVIRONMENT_ID, "feed_" + RandomStringUtils.randomAlphabetic(8));
-        RESOURCE_TYPE = new ResourceType(TENANT_ID, "resource_type_" + RandomStringUtils.randomAlphabetic(8),
-                "1.5b");
-        RESOURCE = new Resource(TENANT_ID, ENVIRONMENT_ID, FEED.getId(), "resource_"
-                + RandomStringUtils.randomAlphabetic(8), RESOURCE_TYPE);
-        METRIC_TYPE = new MetricType(TENANT_ID, "metri_type_" + RandomStringUtils.randomAlphabetic(8));
-        METRIC = new Metric(TENANT_ID, ENVIRONMENT_ID, FEED.getId(),
-                "metric_" + RandomStringUtils.randomAlphabetic(8), METRIC_TYPE);
+        FEED = new Feed(CanonicalPath.of().tenant(TENANT_ID).environment(ENVIRONMENT_ID)
+                .feed("feed_" + RandomStringUtils.randomAlphabetic(8)).get());
+        RESOURCE_TYPE = new ResourceType(CanonicalPath.of().tenant(TENANT_ID)
+                .resourceType("resource_type_" + RandomStringUtils.randomAlphabetic(8)).get());
+        RESOURCE = new Resource(CanonicalPath.of().tenant(TENANT_ID).environment(ENVIRONMENT_ID).feed(FEED.getId())
+                .resource("resource_" + RandomStringUtils.randomAlphabetic(8)).get(), RESOURCE_TYPE);
+        METRIC_TYPE = new MetricType(CanonicalPath.of().tenant(TENANT_ID)
+                .metricType("metri_type_" + RandomStringUtils.randomAlphabetic(8)).get(), MetricUnit.NONE,
+                MetricDataType.GAUGE);
+        METRIC = new Metric(CanonicalPath.of().tenant(TENANT_ID).environment(ENVIRONMENT_ID).feed(FEED.getId())
+                .metric("metric_" + RandomStringUtils.randomAlphabetic(8)).get(), METRIC_TYPE);
     }
 
     @Test(priority = 1)
@@ -76,7 +82,8 @@ public class InventoryTest extends BaseTest {
 
         //Environment test
         Environment environmentRx = client().inventory().getEnvironment(ENVIRONMENT_ID).getEntity();
-        Assert.assertEquals(environmentRx, new Environment(TENANT_ID, ENVIRONMENT_ID));
+        Assert.assertEquals(environmentRx,
+                new Environment(CanonicalPath.of().tenant(TENANT_ID).environment(ENVIRONMENT_ID).get()));
 
         /** Feed returns null, disabled for now, https://github.com/hawkular/hawkular-inventory/pull/60*/
         //Feed Test

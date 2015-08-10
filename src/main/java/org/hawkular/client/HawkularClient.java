@@ -48,6 +48,7 @@ public class HawkularClient {
     public int hashcode() {
         return Objects.hash(endpointUri.hashCode());
     }
+
     public String toString() {
         return MoreObjects.toStringHelper(this).
                 add("endpoint", endpointUri)

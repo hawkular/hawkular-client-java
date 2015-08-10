@@ -14,20 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.test.inventory;
+package org.hawkular.client.inventory.json;
 
-import org.hawkular.client.test.BaseTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import java.util.ArrayList;
 
-public class InventoryPingerTest extends BaseTest {
+public class Endpoints {
+    private ArrayList<Endpoint> endpoints;
+    private String documentation;
 
-    public InventoryPingerTest() throws Exception {
-        super();
+    public Endpoints(ArrayList<Endpoint> endpoints, String documentation) {
+
     }
 
-    @Test(priority=1)
-    public void pingerTest() throws Exception {
-        Assert.assertEquals(client().inventory().pingHello().getEntity().getValue(), "Hawkular Inventory");
+    public Endpoints() {
+
     }
+
+    public ArrayList<Endpoint> getEndpoints() {
+        return endpoints;
+    }
+
+    public void setEndpoints(ArrayList<Endpoint> endpoints) {
+        this.endpoints = endpoints;
+    }
+
+    public String getDocumentation() {
+        return documentation;
+    }
+
+    public void setDocumentation(String documentation) {
+        this.documentation = documentation;
+    }
+
 }
