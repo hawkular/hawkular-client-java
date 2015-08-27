@@ -46,9 +46,9 @@
   </licenses>
 
   <properties>
-    <hawkular.metrics.version>0.4.0.Final</hawkular.metrics.version>
-    <hawkular.inventory.version>0.2.0.Alpha2</hawkular.inventory.version>
-    <hawkular.inventory.json.helper.version>0.2.1-SNAPSHOT</hawkular.inventory.json.helper.version>
+    <hawkular.metrics.version>0.5.0.Final</hawkular.metrics.version>
+    <hawkular.inventory.version>0.3.2.Final</hawkular.inventory.version>
+    <hawkular.inventory.json.helper.version>0.3.2.Final</hawkular.inventory.json.helper.version>
     <resteasy.version>3.0.8.Final</resteasy.version>
     <excluded.tests>nothing-to-exclude</excluded.tests>
   </properties>
@@ -62,7 +62,7 @@
 
     <dependency>
       <groupId>org.hawkular.inventory</groupId>
-      <artifactId>inventory-api</artifactId>
+      <artifactId>hawkular-inventory-api</artifactId>
       <version>${hawkular.inventory.version}</version>
     </dependency>
 
