@@ -49,6 +49,7 @@
     <hawkular.metrics.version>0.5.0.Final</hawkular.metrics.version>
     <hawkular.inventory.version>0.3.2.Final</hawkular.inventory.version>
     <hawkular.inventory.json.helper.version>0.3.2.Final</hawkular.inventory.json.helper.version>
+    <hawkular.alerts.version>0.4.0-SNAPSHOT</hawkular.alerts.version>
     <resteasy.version>3.0.8.Final</resteasy.version>
     <excluded.tests>nothing-to-exclude</excluded.tests>
   </properties>
@@ -72,6 +73,11 @@
       <version>${hawkular.inventory.json.helper.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>org.hawkular.alerts</groupId>
+      <artifactId>hawkular-alerts-api</artifactId>
+      <version>${hawkular.alerts.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>

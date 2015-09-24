@@ -48,6 +48,10 @@ public class ClientResponse<T> {
         this(clazz, response, statusCode, tenantId, false);
     }
 
+    public ClientResponse(Class<?> clazz, Response response, int statusCode, boolean isEntityList) {
+        this(clazz, response, statusCode, null, isEntityList);
+    }
+
     @SuppressWarnings("unchecked")
     public ClientResponse(Class<?> clazz, Response response, int statusCode, String tenantId, boolean isEntityList) {
         try {

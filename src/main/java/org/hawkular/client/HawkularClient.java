@@ -19,6 +19,8 @@ package org.hawkular.client;
 import java.net.URI;
 import java.util.Objects;
 
+import org.hawkular.client.alert.AlertsClient;
+import org.hawkular.client.alert.AlertsClientImpl;
 import org.hawkular.client.inventory.InventoryClient;
 import org.hawkular.client.inventory.InventoryClientImpl;
 import org.hawkular.client.metrics.MetricsClient;
@@ -29,12 +31,14 @@ import com.google.common.base.MoreObjects;
 public class HawkularClient {
     private MetricsClient metricsClient;
     private InventoryClient inventoryClient;
+    private AlertsClient alertsClient;
     private URI endpointUri;
 
     public HawkularClient(URI endpointUri, String username, String password) throws Exception {
         this.endpointUri = endpointUri;
         metricsClient = new MetricsClientImpl(endpointUri, username, password);
         inventoryClient = new InventoryClientImpl(endpointUri, username, password);
+        alertsClient = new AlertsClientImpl(endpointUri, username, password);
     }
 
     public MetricsClient metrics() {
@@ -43,6 +47,10 @@ public class HawkularClient {
 
     public InventoryClient inventory() {
         return inventoryClient;
+    }
+
+    public AlertsClient alerts() {
+        return alertsClient;
     }
 
     public int hashcode() {
@@ -54,4 +62,5 @@ public class HawkularClient {
                 add("endpoint", endpointUri)
                 .toString();
     }
+
 }
