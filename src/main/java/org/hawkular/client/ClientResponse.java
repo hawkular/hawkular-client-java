@@ -17,6 +17,7 @@
 package org.hawkular.client;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -41,19 +42,29 @@ public class ClientResponse<T> {
     private boolean success = false;
 
     public ClientResponse(Class<?> clazz, Response response, int statusCode) {
-        this(clazz, response, statusCode, null, false);
+        this(clazz, response, statusCode, null, null);
     }
 
     public ClientResponse(Class<?> clazz, Response response, int statusCode, String tenantId) {
-        this(clazz, response, statusCode, tenantId, false);
+        this(clazz, response, statusCode, tenantId, null);
     }
 
     public ClientResponse(Class<?> clazz, Response response, int statusCode, boolean isEntityList) {
-        this(clazz, response, statusCode, null, isEntityList);
+        this(clazz, response, statusCode, null, isEntityList == true ? List.class : null);
     }
 
-    @SuppressWarnings("unchecked")
     public ClientResponse(Class<?> clazz, Response response, int statusCode, String tenantId, boolean isEntityList) {
+        this(clazz, response, statusCode, tenantId, isEntityList == true ? List.class : null);
+    }
+
+    public ClientResponse(Class<?> clazz, Response response, int statusCode,
+            @SuppressWarnings("rawtypes") Class<? extends Collection> collectionType) {
+        this(clazz, response, statusCode, null, collectionType);
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public ClientResponse(Class<?> clazz, Response response, int statusCode, String tenantId,
+            Class<? extends Collection> collectionType) {
         try {
             this.setStatusCode(response.getStatus());
             if (response.getStatus() == statusCode) {
@@ -69,9 +80,9 @@ public class ClientResponse<T> {
                         PathDeserializer.setCurrentCanonicalOrigin(CanonicalPath.of()
                                 .tenant(tenantId).get());
                     }
-                    if (isEntityList) {
+                    if (collectionType != null) {
                         this.setEntity(objectMapper.readValue(response.readEntity(String.class),
-                                objectMapper.getTypeFactory().constructCollectionType(List.class, clazz)));
+                                objectMapper.getTypeFactory().constructCollectionType(collectionType, clazz)));
 
                     } else {
                         this.setEntity((T) objectMapper.readValue(response.readEntity(String.class), clazz));
@@ -121,5 +132,14 @@ public class ClientResponse<T> {
 
     public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
+    }
+
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Status Code:").append(this.statusCode);
+        builder.append(", Is Success:").append(this.success);
+        builder.append(", Error Message:").append(this.errorMsg);
+        builder.append(", Entity:[").append(this.entity).append("]");
+        return builder.toString();
     }
 }

@@ -49,8 +49,9 @@
     <hawkular.metrics.version>0.5.0.Final</hawkular.metrics.version>
     <hawkular.inventory.version>0.3.2.Final</hawkular.inventory.version>
     <hawkular.inventory.json.helper.version>0.3.2.Final</hawkular.inventory.json.helper.version>
-    <hawkular.alerts.version>0.4.0-SNAPSHOT</hawkular.alerts.version>
+    <hawkular.alerts.version>0.5.0-SNAPSHOT</hawkular.alerts.version>
     <resteasy.version>3.0.8.Final</resteasy.version>
+    <org.jboss.logging.version>3.3.0.Final</org.jboss.logging.version>
     <excluded.tests>nothing-to-exclude</excluded.tests>
   </properties>
 
@@ -161,6 +162,12 @@
       <artifactId>httpclient</artifactId>
       <version>4.4.1</version>
     </dependency>
+    <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging</artifactId>
+      <version>${org.jboss.logging.version}</version>
+    </dependency>
+    
   </dependencies>
 
   <profiles>

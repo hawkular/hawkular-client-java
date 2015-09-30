@@ -1,5 +1,7 @@
 package org.hawkular.client.alert;
 
+import java.util.Map;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -15,8 +17,8 @@ import javax.ws.rs.core.Response;
 import org.hawkular.alerts.api.json.GroupMemberInfo;
 import org.hawkular.alerts.api.json.UnorphanMemberInfo;
 import org.hawkular.alerts.api.model.dampening.Dampening;
+import org.hawkular.alerts.api.model.data.MixedData;
 import org.hawkular.alerts.api.model.trigger.Mode;
-import org.hawkular.alerts.api.model.trigger.Tag;
 import org.hawkular.alerts.api.model.trigger.Trigger;
 
 /**
@@ -29,14 +31,14 @@ import org.hawkular.alerts.api.model.trigger.Trigger;
 public interface AlertsRestApi {
 
     //Triggers
+    //https://github.com/hawkular/hawkular-alerts/blob/master/hawkular-alerts-rest/src/main/java/org/hawkular/alerts/rest/TriggersHandler.java
     @GET
     @Path("/triggers/")
     public Response findTriggers();
 
     @GET
     @Path("/triggers/tag")
-    public Response findTriggersByTag(@QueryParam("category") final String category,
-            @QueryParam("name") final String name);
+    public Response findTriggersByTag(@QueryParam("name") final String name, @QueryParam("value") final String value);
 
     @GET
     @Path("/triggers/groups/{groupId}/members")
@@ -132,57 +134,127 @@ public interface AlertsRestApi {
     @Path("/triggers/{triggerId}/conditions")
     public Response getTriggerConditions(@PathParam("triggerId") final String triggerId);
 
-    @GET
-    @Path("/triggers/{triggerId}/conditions/{conditionId}")
-    public Response getTriggerCondition(@PathParam("triggerId") final String triggerId,
-            @PathParam("conditionId") final String conditionId);
-
     @PUT
     @Path("/triggers/{triggerId}/conditions/{triggerMode}")
     public Response setConditions(@PathParam("triggerId") final String triggerId,
-            @PathParam("triggerMode") final Mode triggerMode, String jsonConditions);
+            @PathParam("triggerMode") final String triggerMode, String jsonConditions);
 
     @PUT
     @Path("/triggers/groups/{groupId}/conditions/{triggerMode}")
     public Response setGroupConditions(@PathParam("groupId") final String groupId,
-            @PathParam("triggerMode") final Mode triggerMode, String jsonGroupConditionsInfo);
+            @PathParam("triggerMode") final String triggerMode, String jsonGroupConditionsInfo);
 
-    @POST
-    @Path("/triggers/{triggerId}/conditions")
-    public Response createCondition(@PathParam("triggerId") final String triggerId, String jsonCondition);
+    //Alerts
+    //https://github.com/hawkular/hawkular-alerts/blob/master/hawkular-alerts-rest/src/main/java/org/hawkular/alerts/rest/AlertsHandler.java
+    @GET
+    @Path("/")
+    public Response findAlerts(
+            @QueryParam("startTime") final Long startTime,
+            @QueryParam("endTime") final Long endTime,
+            @QueryParam("alertIds") final String alertIds,
+            @QueryParam("triggerIds") final String triggerIds,
+            @QueryParam("statuses") final String statuses,
+            @QueryParam("severities") final String severities,
+            @QueryParam("tags") final String tags,
+            @QueryParam("thin") final Boolean thin);
 
     @PUT
-    @Path("/triggers/{triggerId}/conditions/{conditionId}")
-    public Response updateCondition(@PathParam("triggerId") final String triggerId,
-            @PathParam("conditionId") final String conditionId, String jsonCondition);
+    @Path("/ack/{alertId}")
+    public Response ackAlert(
+            @PathParam("alertId") final String alertId,
+            @QueryParam("ackBy") final String ackBy,
+            @QueryParam("ackNotes") final String ackNotes);
+
+    @PUT
+    @Path("/ack")
+    public Response ackAlerts(
+            @QueryParam("alertIds") final String alertIds,
+            @QueryParam("ackBy") final String ackBy,
+            @QueryParam("ackNotes") final String ackNotes);
 
     @DELETE
-    @Path("/triggers/{triggerId}/conditions/{conditionId}")
-    public Response deleteCondition(@PathParam("triggerId") final String triggerId,
-            @PathParam("conditionId") final String conditionId);
-
-    @POST
-    @Path("/triggers/tags")
-    public Response createTag(final Tag tag);
-
-    @POST
-    @Path("/triggers/groups/tags")
-    public Response createGroupTag(final Tag tag);
+    @Path("/{alertId}")
+    public Response deleteAlert(@PathParam("alertId") final String alertId);
 
     @PUT
-    @Path("/triggers/{triggerId}/tags")
-    public Response deleteTags(@PathParam("triggerId") final String triggerId,
-            @QueryParam("category") final String category, @QueryParam("name") final String name);
-
-    @PUT
-    @Path("/triggers/groups/{groupId}/tags")
-    public Response deleteGroupTags(@PathParam("groupId") final String groupId,
-            @QueryParam("category") final String category,
-            @QueryParam("name") final String name);
+    @Path("/delete")
+    public Response deleteAlerts(
+            @QueryParam("startTime") final Long startTime,
+            @QueryParam("endTime") final Long endTime,
+            @QueryParam("alertIds") final String alertIds,
+            @QueryParam("triggerIds") final String triggerIds,
+            @QueryParam("statuses") final String statuses,
+            @QueryParam("severities") final String severities,
+            @QueryParam("tags") final String tags);
 
     @GET
-    @Path("/triggers/{triggerId}/tags")
-    public Response getTriggerTags(@PathParam("triggerId") final String triggerId,
-            @QueryParam("category") final String category);
+    @Path("/alert/{alertId}")
+    public Response getAlert(
+            @PathParam("alertId") final String alertId,
+            @QueryParam("thin") final Boolean thin);
 
+    @PUT
+    @Path("/resolve/{alertId}")
+    public Response resolveAlert(
+            @PathParam("alertId") final String alertId,
+            @QueryParam("resolvedBy") final String resolvedBy,
+            @QueryParam("resolvedNotes") final String resolvedNotes);
+
+    @PUT
+    @Path("/resolve")
+    public Response resolveAlerts(
+            @QueryParam("alertIds") final String alertIds,
+            @QueryParam("resolvedBy") final String resolvedBy,
+            @QueryParam("resolvedNotes") final String resolvedNotes);
+
+    @POST
+    @Path("/data")
+    public Response sendData(final MixedData mixedData);
+
+    @GET
+    @Path("/reload")
+    public Response reloadAlerts();
+
+    @GET
+    @Path("/reload/{triggerId}")
+    public Response reloadTrigger(@PathParam("triggerId") final String triggerId);
+
+    //Actions
+    //https://github.com/hawkular/hawkular-alerts/blob/master/hawkular-alerts-rest/src/main/java/org/hawkular/alerts/rest/ActionsHandler.java
+    @GET
+    @Path("/actions/")
+    public Response findActions();
+
+    @GET
+    @Path("/actions/plugin/{actionPlugin}")
+    public Response findActionsByPlugin(@PathParam("actionPlugin") final String actionPlugin);
+
+    @POST
+    @Path("/actions/")
+    public Response createAction(final Map<String, String> actionProperties);
+
+    @GET
+    @Path("/actions/{actionPlugin}/{actionId}")
+    public Response getAction(final String actionPlugin, @PathParam("actionId") final String actionId);
+
+    @PUT
+    @Path("/actions/{actionPlugin}/{actionId}")
+    public Response updateAction(
+            final String actionPlugin,
+            @PathParam("actionId") final String actionId,
+            final Map<String, String> actionProperties);
+
+    @DELETE
+    @Path("/actions/{actionPlugin}/{actionId}")
+    public Response deleteAction(final String actionPlugin, @PathParam("actionId") final String actionId);
+
+    //Plugins
+    //https://github.com/hawkular/hawkular-alerts/blob/master/hawkular-alerts-rest/src/main/java/org/hawkular/alerts/rest/ActionPluginHandler.java
+    @GET
+    @Path("/plugins/")
+    public Response findActionPlugins();
+
+    @GET
+    @Path("/plugins/{actionPlugin}")
+    public Response getActionPlugin(@PathParam("actionPlugin") final String actionPlugin);
 }
