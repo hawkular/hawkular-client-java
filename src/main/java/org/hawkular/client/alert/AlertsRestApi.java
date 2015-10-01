@@ -1,5 +1,6 @@
 package org.hawkular.client.alert;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.Consumes;
@@ -16,6 +17,7 @@ import javax.ws.rs.core.Response;
 
 import org.hawkular.alerts.api.json.GroupMemberInfo;
 import org.hawkular.alerts.api.json.UnorphanMemberInfo;
+import org.hawkular.alerts.api.model.condition.Condition;
 import org.hawkular.alerts.api.model.dampening.Dampening;
 import org.hawkular.alerts.api.model.data.MixedData;
 import org.hawkular.alerts.api.model.trigger.Mode;
@@ -137,7 +139,7 @@ public interface AlertsRestApi {
     @PUT
     @Path("/triggers/{triggerId}/conditions/{triggerMode}")
     public Response setConditions(@PathParam("triggerId") final String triggerId,
-            @PathParam("triggerMode") final String triggerMode, String jsonConditions);
+            @PathParam("triggerMode") final String triggerMode, List<Condition> conditions);
 
     @PUT
     @Path("/triggers/groups/{groupId}/conditions/{triggerMode}")

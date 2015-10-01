@@ -38,6 +38,15 @@ public interface AlertsClient {
         }
     }
 
+    public enum TRIGGER_CONDITION_TYPE {
+        AVAILABILITY_CONDITION,
+        COMPARE_CONDITION,
+        EXTERNAL_CONDITION,
+        STRING_CONDITION,
+        THRESHOLD_CONDITION,
+        THRESHOLD_RANGE_CONDITION
+    }
+
     //Triggers
 
     public ClientResponse<List<Trigger>> findTriggers();
@@ -46,7 +55,7 @@ public interface AlertsClient {
 
     public ClientResponse<List<Trigger>> findGroupMembers(String groupId, boolean includeOrphans);
 
-    public ClientResponse<String> createTrigger(Trigger trigger);
+    public ClientResponse<Trigger> createTrigger(Trigger trigger);
 
     public ClientResponse<String> createGroupTrigger(Trigger groupTrigger);
 
@@ -84,11 +93,11 @@ public interface AlertsClient {
 
     public ClientResponse<String> deleteGroupDampening(String groupId, String dampeningId);
 
-    public ClientResponse<List<Condition>> getTriggerConditions(Trigger trigger);
+    public ClientResponse<List<Condition>> getTriggerConditions(Trigger trigger, TRIGGER_CONDITION_TYPE conditionType);
 
-    public ClientResponse<List<Condition>> getTriggerConditions(String triggerId);
+    public ClientResponse<List<Condition>> getTriggerConditions(String triggerId, TRIGGER_CONDITION_TYPE conditionType);
 
-    public ClientResponse<List<Condition>> setConditions(String triggerId, String triggerMode, String jsonConditions);
+    public ClientResponse<List<Condition>> setConditions(String triggerId, String triggerMode, List<Condition> conditions);
 
     public ClientResponse<List<Condition>> setGroupConditions(String groupId, String triggerMode,
             String jsonGroupConditionsInfo);
@@ -138,7 +147,7 @@ public interface AlertsClient {
 
     //Plugins
 
-    public ClientResponse<List<String>> findActionPlugins();
+    public ClientResponse<String[]> findActionPlugins();
 
-    public ClientResponse<List<String>> getActionPlugin(String actionPlugin);
+    public ClientResponse<String[]> getActionPlugin(String actionPlugin);
 }

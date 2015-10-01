@@ -8,7 +8,13 @@ import java.util.Set;
 import org.hawkular.alerts.api.json.GroupMemberInfo;
 import org.hawkular.alerts.api.json.UnorphanMemberInfo;
 import org.hawkular.alerts.api.model.condition.Alert;
+import org.hawkular.alerts.api.model.condition.AvailabilityCondition;
+import org.hawkular.alerts.api.model.condition.CompareCondition;
 import org.hawkular.alerts.api.model.condition.Condition;
+import org.hawkular.alerts.api.model.condition.ExternalCondition;
+import org.hawkular.alerts.api.model.condition.StringCondition;
+import org.hawkular.alerts.api.model.condition.ThresholdCondition;
+import org.hawkular.alerts.api.model.condition.ThresholdRangeCondition;
 import org.hawkular.alerts.api.model.dampening.Dampening;
 import org.hawkular.alerts.api.model.data.MixedData;
 import org.hawkular.alerts.api.model.trigger.Mode;
@@ -46,8 +52,8 @@ public class AlertsClientImpl extends BaseClient<AlertsRestApi> implements Alert
     }
 
     @Override
-    public ClientResponse<String> createTrigger(Trigger trigger) {
-        return new ClientResponse<String>(String.class, restApi().createTrigger(trigger),
+    public ClientResponse<Trigger> createTrigger(Trigger trigger) {
+        return new ClientResponse<Trigger>(Trigger.class, restApi().createTrigger(trigger),
                 RESPONSE_CODE.CREATE_SUCCESS.value());
     }
 
@@ -162,20 +168,44 @@ public class AlertsClientImpl extends BaseClient<AlertsRestApi> implements Alert
     }
 
     @Override
-    public ClientResponse<List<Condition>> getTriggerConditions(Trigger trigger) {
-        return getTriggerConditions(trigger.getId());
+    public ClientResponse<List<Condition>> getTriggerConditions(Trigger trigger, TRIGGER_CONDITION_TYPE conditionType) {
+        return getTriggerConditions(trigger.getId(), conditionType);
     }
 
     @Override
-    public ClientResponse<List<Condition>> getTriggerConditions(String triggerId) {
-        return new ClientResponse<List<Condition>>(Condition.class, restApi().getTriggerConditions(triggerId),
+    public ClientResponse<List<Condition>> getTriggerConditions(String triggerId, TRIGGER_CONDITION_TYPE conditionType) {
+        Class<?> condition = null;
+        switch (conditionType) {
+            case AVAILABILITY_CONDITION:
+                condition = AvailabilityCondition.class;
+                break;
+            case COMPARE_CONDITION:
+                condition = CompareCondition.class;
+                break;
+            case EXTERNAL_CONDITION:
+                condition = ExternalCondition.class;
+                break;
+            case STRING_CONDITION:
+                condition = StringCondition.class;
+                break;
+            case THRESHOLD_CONDITION:
+                condition = ThresholdCondition.class;
+                break;
+            case THRESHOLD_RANGE_CONDITION:
+                condition = ThresholdRangeCondition.class;
+                break;
+            default:
+                break;
+        }
+        return new ClientResponse<List<Condition>>(condition, restApi().getTriggerConditions(
+                triggerId),
                 RESPONSE_CODE.GET_SUCCESS.value(), true);
     }
 
     @Override
-    public ClientResponse<List<Condition>> setConditions(String triggerId, String triggerMode, String jsonConditions) {
+    public ClientResponse<List<Condition>> setConditions(String triggerId, String triggerMode, List<Condition> conditions) {
         return new ClientResponse<List<Condition>>(Condition.class, restApi().setConditions(triggerId, triggerMode,
-                jsonConditions),
+                conditions),
                 RESPONSE_CODE.GET_SUCCESS.value(), true);
     }
 
@@ -302,15 +332,15 @@ public class AlertsClientImpl extends BaseClient<AlertsRestApi> implements Alert
     //Plugins
 
     @Override
-    public ClientResponse<List<String>> findActionPlugins() {
-        return new ClientResponse<List<String>>(String.class, restApi().findActionPlugins(),
-                RESPONSE_CODE.GET_SUCCESS.value(), true);
+    public ClientResponse<String[]> findActionPlugins() {
+        return new ClientResponse<String[]>(String[].class, restApi().findActionPlugins(),
+                RESPONSE_CODE.GET_SUCCESS.value());
     }
 
     @Override
-    public ClientResponse<List<String>> getActionPlugin(String actionPlugin) {
-        return new ClientResponse<List<String>>(String.class, restApi().getActionPlugin(actionPlugin),
-                RESPONSE_CODE.GET_SUCCESS.value(), true);
+    public ClientResponse<String[]> getActionPlugin(String actionPlugin) {
+        return new ClientResponse<String[]>(String[].class, restApi().getActionPlugin(actionPlugin),
+                RESPONSE_CODE.GET_SUCCESS.value());
     }
 
 }

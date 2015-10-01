@@ -17,6 +17,7 @@
 package org.hawkular.client;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
@@ -83,7 +84,6 @@ public class ClientResponse<T> {
                     if (collectionType != null) {
                         this.setEntity(objectMapper.readValue(response.readEntity(String.class),
                                 objectMapper.getTypeFactory().constructCollectionType(collectionType, clazz)));
-
                     } else {
                         this.setEntity((T) objectMapper.readValue(response.readEntity(String.class), clazz));
                     }
@@ -134,12 +134,17 @@ public class ClientResponse<T> {
         this.errorMsg = errorMsg;
     }
 
+    @SuppressWarnings("unchecked")
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("Status Code:").append(this.statusCode);
         builder.append(", Is Success:").append(this.success);
-        builder.append(", Error Message:").append(this.errorMsg);
-        builder.append(", Entity:[").append(this.entity).append("]");
+        builder.append(", Error Message:").append(this.errorMsg == null ? "-" : this.errorMsg);
+        if (this.entity instanceof Object[]) {
+            builder.append(", Entity:").append(Arrays.toString((T[]) this.entity));
+        } else {
+            builder.append(", Entity:[").append(this.entity).append("]");
+        }
         return builder.toString();
     }
 }
