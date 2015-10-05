@@ -1,3 +1,19 @@
+/*
+ * Copyright 2015 Red Hat, Inc. and/or its affiliates
+ * and other contributors as indicated by the @author tags.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.hawkular.client.alert;
 
 import java.util.List;
@@ -33,7 +49,7 @@ public interface AlertsClient {
             this.code = code;
         }
 
-        public int value() {
+        int value() {
             return this.code;
         }
     }
@@ -49,106 +65,106 @@ public interface AlertsClient {
 
     //Triggers
 
-    public ClientResponse<List<Trigger>> findTriggers();
+    ClientResponse<List<Trigger>> findTriggers();
 
-    public ClientResponse<List<Trigger>> findTriggersByTag(String category, String name);
+    ClientResponse<List<Trigger>> findTriggersByTag(String category, String name);
 
-    public ClientResponse<List<Trigger>> findGroupMembers(String groupId, boolean includeOrphans);
+    ClientResponse<List<Trigger>> findGroupMembers(String groupId, boolean includeOrphans);
 
-    public ClientResponse<Trigger> createTrigger(Trigger trigger);
+    ClientResponse<Trigger> createTrigger(Trigger trigger);
 
-    public ClientResponse<String> createGroupTrigger(Trigger groupTrigger);
+    ClientResponse<String> createGroupTrigger(Trigger groupTrigger);
 
-    public ClientResponse<String> createGroupMember(GroupMemberInfo groupMember);
+    ClientResponse<String> createGroupMember(GroupMemberInfo groupMember);
 
-    public ClientResponse<Trigger> getTrigger(String triggerId);
+    ClientResponse<Trigger> getTrigger(String triggerId);
 
-    public ClientResponse<String> updateTrigger(String triggerId, Trigger trigger);
+    ClientResponse<String> updateTrigger(String triggerId, Trigger trigger);
 
-    public ClientResponse<String> updateGroupTrigger(String groupId, Trigger groupTrigger);
+    ClientResponse<String> updateGroupTrigger(String groupId, Trigger groupTrigger);
 
-    public ClientResponse<String> orphanMemberTrigger(String memberId);
+    ClientResponse<String> orphanMemberTrigger(String memberId);
 
-    public ClientResponse<String> unorphanMemberTrigger(String memberId, UnorphanMemberInfo unorphanMemberInfo);
+    ClientResponse<String> unorphanMemberTrigger(String memberId, UnorphanMemberInfo unorphanMemberInfo);
 
-    public ClientResponse<String> deleteTrigger(String triggerId);
+    ClientResponse<String> deleteTrigger(String triggerId);
 
-    public ClientResponse<String> deleteGroupTrigger(String groupId, boolean keepNonOrphans, boolean keepOrphans);
+    ClientResponse<String> deleteGroupTrigger(String groupId, boolean keepNonOrphans, boolean keepOrphans);
 
-    public ClientResponse<List<Dampening>> getTriggerDampenings(String triggerId);
+    ClientResponse<List<Dampening>> getTriggerDampenings(String triggerId);
 
-    public ClientResponse<List<Dampening>> getTriggerModeDampenings(String triggerId, Mode triggerMode);
+    ClientResponse<List<Dampening>> getTriggerModeDampenings(String triggerId, Mode triggerMode);
 
-    public ClientResponse<Dampening> getDampening(String triggerId, String dampeningId);
+    ClientResponse<Dampening> getDampening(String triggerId, String dampeningId);
 
-    public ClientResponse<Dampening> createDampening(String triggerId, Dampening dampening);
+    ClientResponse<Dampening> createDampening(String triggerId, Dampening dampening);
 
-    public ClientResponse<Dampening> createGroupDampening(String groupId, Dampening dampening);
+    ClientResponse<Dampening> createGroupDampening(String groupId, Dampening dampening);
 
-    public ClientResponse<Dampening> updateDampening(String triggerId, String dampeningId, Dampening dampening);
+    ClientResponse<Dampening> updateDampening(String triggerId, String dampeningId, Dampening dampening);
 
-    public ClientResponse<Dampening> updateGroupDampening(String groupId, String dampeningId, Dampening dampening);
+    ClientResponse<Dampening> updateGroupDampening(String groupId, String dampeningId, Dampening dampening);
 
-    public ClientResponse<String> deleteDampening(String triggerId, String dampeningId);
+    ClientResponse<String> deleteDampening(String triggerId, String dampeningId);
 
-    public ClientResponse<String> deleteGroupDampening(String groupId, String dampeningId);
+    ClientResponse<String> deleteGroupDampening(String groupId, String dampeningId);
 
-    public ClientResponse<List<Condition>> getTriggerConditions(Trigger trigger);
+    ClientResponse<List<Condition>> getTriggerConditions(Trigger trigger);
 
-    public ClientResponse<List<Condition>> getTriggerConditions(String triggerId);
+    ClientResponse<List<Condition>> getTriggerConditions(String triggerId);
 
-    public ClientResponse<List<Condition>> setConditions(String triggerId, String triggerMode,
+    ClientResponse<List<Condition>> setConditions(String triggerId, String triggerMode,
             List<Condition> conditions);
 
-    public ClientResponse<List<Condition>> setGroupConditions(String groupId, String triggerMode,
+    ClientResponse<List<Condition>> setGroupConditions(String groupId, String triggerMode,
             String jsonGroupConditionsInfo);
 
     //Alerts
 
-    public ClientResponse<List<Alert>> findAlerts(
+    ClientResponse<List<Alert>> findAlerts(
             Long startTime, Long endTime, String alertIds, String triggerIds,
             String statuses, String severities, String tags, Boolean thin);
 
-    public ClientResponse<String> findAlerts();
+    ClientResponse<String> findAlerts();
 
-    public ClientResponse<String> ackAlert(String alertId, String ackBy, String ackNotes);
+    ClientResponse<String> ackAlert(String alertId, String ackBy, String ackNotes);
 
-    public ClientResponse<String> ackAlerts(String alertIds, String ackBy, String ackNotes);
+    ClientResponse<String> ackAlerts(String alertIds, String ackBy, String ackNotes);
 
-    public ClientResponse<String> deleteAlert(String alertId);
+    ClientResponse<String> deleteAlert(String alertId);
 
-    public ClientResponse<Integer> deleteAlerts(
+    ClientResponse<Integer> deleteAlerts(
             Long startTime, Long endTime, String alertIds, String triggerIds,
             String statuses, String severities, String tags);
 
-    public ClientResponse<Alert> getAlert(String alertId, Boolean thin);
+    ClientResponse<Alert> getAlert(String alertId, Boolean thin);
 
-    public ClientResponse<String> resolveAlert(String alertId, String resolvedBy, String resolvedNotes);
+    ClientResponse<String> resolveAlert(String alertId, String resolvedBy, String resolvedNotes);
 
-    public ClientResponse<String> resolveAlerts(String alertIds, String resolvedBy, String resolvedNotes);
+    ClientResponse<String> resolveAlerts(String alertIds, String resolvedBy, String resolvedNotes);
 
-    public ClientResponse<String> sendData(MixedData mixedData);
+    ClientResponse<String> sendData(MixedData mixedData);
 
-    public ClientResponse<String> reloadAlerts();
+    ClientResponse<String> reloadAlerts();
 
-    public ClientResponse<String> reloadTrigger(String triggerId);
+    ClientResponse<String> reloadTrigger(String triggerId);
 
     //Actions
 
-    public ClientResponse<Map<String, Set<String>>> findActions();
+    ClientResponse<Map<String, Set<String>>> findActions();
 
-    public ClientResponse<List<String>> findActionsByPlugin(String actionPlugin);
+    ClientResponse<List<String>> findActionsByPlugin(String actionPlugin);
 
-    public ClientResponse<Map<String, String>> createAction(Map<String, String> actionProperties);
+    ClientResponse<Map<String, String>> createAction(Map<String, String> actionProperties);
 
-    public ClientResponse<Map<String, String>> updateAction(String actionPlugin, String actionId,
+    ClientResponse<Map<String, String>> updateAction(String actionPlugin, String actionId,
             Map<String, String> actionProperties);
 
-    public ClientResponse<String> deleteAction(String actionPlugin, String actionId);
+    ClientResponse<String> deleteAction(String actionPlugin, String actionId);
 
     //Plugins
 
-    public ClientResponse<String[]> findActionPlugins();
+    ClientResponse<String[]> findActionPlugins();
 
-    public ClientResponse<String[]> getActionPlugin(String actionPlugin);
+    ClientResponse<String[]> getActionPlugin(String actionPlugin);
 }

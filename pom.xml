@@ -167,7 +167,7 @@
       <artifactId>jboss-logging</artifactId>
       <version>${org.jboss.logging.version}</version>
     </dependency>
-    
+
   </dependencies>
 
   <profiles>
