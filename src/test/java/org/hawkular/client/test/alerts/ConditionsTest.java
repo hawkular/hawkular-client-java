@@ -37,7 +37,14 @@ public class ConditionsTest extends BaseTest {
         client().alerts().setConditions(triggerId, Mode.FIRING.name(), conditions);
 
         //Get Conditions
-        ClientResponse<List<Condition>> result = client().alerts().getTriggerConditions(triggerId);
-        Reporter.log("Conditions List: " + result, true);
+        ClientResponse<List<Condition>> conditionsResult = client().alerts().getTriggerConditions(triggerId);
+        Reporter.log("Conditions List: " + conditionsResult, true);
+        Assert.assertTrue(conditionsResult.isSuccess());
+
+        //Delete trigger
+        ClientResponse<String> deleteResult = client().alerts().deleteTrigger(triggerId);
+        Reporter.log("Trigger[" + triggerId + "] Delete Status: " + deleteResult, true);
+        Assert.assertTrue(deleteResult.isSuccess());
+
     }
 }
