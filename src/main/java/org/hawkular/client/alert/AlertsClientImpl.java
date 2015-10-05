@@ -8,13 +8,7 @@ import java.util.Set;
 import org.hawkular.alerts.api.json.GroupMemberInfo;
 import org.hawkular.alerts.api.json.UnorphanMemberInfo;
 import org.hawkular.alerts.api.model.condition.Alert;
-import org.hawkular.alerts.api.model.condition.AvailabilityCondition;
-import org.hawkular.alerts.api.model.condition.CompareCondition;
 import org.hawkular.alerts.api.model.condition.Condition;
-import org.hawkular.alerts.api.model.condition.ExternalCondition;
-import org.hawkular.alerts.api.model.condition.StringCondition;
-import org.hawkular.alerts.api.model.condition.ThresholdCondition;
-import org.hawkular.alerts.api.model.condition.ThresholdRangeCondition;
 import org.hawkular.alerts.api.model.dampening.Dampening;
 import org.hawkular.alerts.api.model.data.MixedData;
 import org.hawkular.alerts.api.model.trigger.Mode;
@@ -168,36 +162,13 @@ public class AlertsClientImpl extends BaseClient<AlertsRestApi> implements Alert
     }
 
     @Override
-    public ClientResponse<List<Condition>> getTriggerConditions(Trigger trigger, TRIGGER_CONDITION_TYPE conditionType) {
-        return getTriggerConditions(trigger.getId(), conditionType);
+    public ClientResponse<List<Condition>> getTriggerConditions(Trigger trigger) {
+        return getTriggerConditions(trigger.getId());
     }
 
     @Override
-    public ClientResponse<List<Condition>> getTriggerConditions(String triggerId, TRIGGER_CONDITION_TYPE conditionType) {
-        Class<?> condition = null;
-        switch (conditionType) {
-            case AVAILABILITY_CONDITION:
-                condition = AvailabilityCondition.class;
-                break;
-            case COMPARE_CONDITION:
-                condition = CompareCondition.class;
-                break;
-            case EXTERNAL_CONDITION:
-                condition = ExternalCondition.class;
-                break;
-            case STRING_CONDITION:
-                condition = StringCondition.class;
-                break;
-            case THRESHOLD_CONDITION:
-                condition = ThresholdCondition.class;
-                break;
-            case THRESHOLD_RANGE_CONDITION:
-                condition = ThresholdRangeCondition.class;
-                break;
-            default:
-                break;
-        }
-        return new ClientResponse<List<Condition>>(condition, restApi().getTriggerConditions(
+    public ClientResponse<List<Condition>> getTriggerConditions(String triggerId) {
+        return new ClientResponse<List<Condition>>(Condition.class, restApi().getTriggerConditions(
                 triggerId),
                 RESPONSE_CODE.GET_SUCCESS.value(), true);
     }
@@ -206,7 +177,7 @@ public class AlertsClientImpl extends BaseClient<AlertsRestApi> implements Alert
     public ClientResponse<List<Condition>> setConditions(String triggerId, String triggerMode, List<Condition> conditions) {
         return new ClientResponse<List<Condition>>(Condition.class, restApi().setConditions(triggerId, triggerMode,
                 conditions),
-                RESPONSE_CODE.GET_SUCCESS.value(), true);
+                RESPONSE_CODE.UPDATE_SUCCESS.value(), true);
     }
 
     @Override
@@ -214,7 +185,7 @@ public class AlertsClientImpl extends BaseClient<AlertsRestApi> implements Alert
             String jsonGroupConditionsInfo) {
         return new ClientResponse<List<Condition>>(Condition.class, restApi().setGroupConditions(groupId, triggerMode,
                 jsonGroupConditionsInfo),
-                RESPONSE_CODE.GET_SUCCESS.value(), true);
+                RESPONSE_CODE.UPDATE_SUCCESS.value(), true);
     }
 
     //Alert

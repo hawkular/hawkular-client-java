@@ -26,7 +26,7 @@ public class TriggerTest extends BaseTest {
         Reporter.log("Trigger Creation Status: " + creationResult, true);
         Assert.assertTrue(creationResult.isSuccess());
         Assert.assertEquals(creationResult.getEntity().getId(), sampleTrigger.getId());
-        Assert.assertEquals(creationResult.getEntity().getId(), sampleTrigger.getName());
+        Assert.assertEquals(creationResult.getEntity().getName(), sampleTrigger.getName());
 
         //Update Trigger
         sampleTrigger.setName("Sample Trigger - Edited");
@@ -62,6 +62,7 @@ public class TriggerTest extends BaseTest {
         //Create No Id Trigger
         Trigger noIdTrigger = new Trigger();
         noIdTrigger.setName("No Id Trigger");
+        noIdTrigger.setId(null);
         creationResult = client().alerts().createTrigger(noIdTrigger);
         Reporter.log("No Id Trigger Creation Status: " + creationResult, true);
         Assert.assertTrue(creationResult.isSuccess());

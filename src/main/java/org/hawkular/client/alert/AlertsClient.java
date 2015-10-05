@@ -20,11 +20,11 @@ import org.hawkular.client.ClientResponse;
 public interface AlertsClient {
     public enum RESPONSE_CODE {
         GET_SUCCESS(200),
-        CREATE_SUCCESS(201),
+        CREATE_SUCCESS(200),
         ADD_SUCCESS(201),
         REGISTER_SUCCESS(201),
-        UPDATE_SUCCESS(204),
-        DELETE_SUCCESS(204),
+        UPDATE_SUCCESS(200),
+        DELETE_SUCCESS(200),
         REMOVE_SUCCESS(204);
 
         private int code;
@@ -93,11 +93,12 @@ public interface AlertsClient {
 
     public ClientResponse<String> deleteGroupDampening(String groupId, String dampeningId);
 
-    public ClientResponse<List<Condition>> getTriggerConditions(Trigger trigger, TRIGGER_CONDITION_TYPE conditionType);
+    public ClientResponse<List<Condition>> getTriggerConditions(Trigger trigger);
 
-    public ClientResponse<List<Condition>> getTriggerConditions(String triggerId, TRIGGER_CONDITION_TYPE conditionType);
+    public ClientResponse<List<Condition>> getTriggerConditions(String triggerId);
 
-    public ClientResponse<List<Condition>> setConditions(String triggerId, String triggerMode, List<Condition> conditions);
+    public ClientResponse<List<Condition>> setConditions(String triggerId, String triggerMode,
+            List<Condition> conditions);
 
     public ClientResponse<List<Condition>> setGroupConditions(String groupId, String triggerMode,
             String jsonGroupConditionsInfo);

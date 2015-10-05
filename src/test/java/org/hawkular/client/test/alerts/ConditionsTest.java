@@ -30,10 +30,14 @@ public class ConditionsTest extends BaseTest {
         Reporter.log("Trigger Creation Status:" + triggerCreateResult, true);
         Assert.assertTrue(triggerCreateResult.isSuccess());
 
-        //Create Condition
+        //Create Conditions
         AvailabilityCondition availabilityCondition = new AvailabilityCondition(triggerId, dataId, Operator.DOWN);
         List<Condition> conditions = new ArrayList<Condition>();
         conditions.add(availabilityCondition);
         client().alerts().setConditions(triggerId, Mode.FIRING.name(), conditions);
+
+        //Get Conditions
+        ClientResponse<List<Condition>> result = client().alerts().getTriggerConditions(triggerId);
+        Reporter.log("Conditions List: " + result, true);
     }
 }

@@ -17,12 +17,15 @@
 package org.hawkular.client;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
 
+import org.hawkular.alerts.api.json.JacksonDeserializer;
+import org.hawkular.alerts.api.model.condition.Condition;
 import org.hawkular.inventory.api.model.CanonicalPath;
 import org.hawkular.inventory.api.model.Tenant;
 import org.hawkular.inventory.json.InventoryJacksonConfig;
@@ -33,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class ClientResponse<T> {
@@ -72,6 +76,23 @@ public class ClientResponse<T> {
                 this.setSuccess(true);
                 if (clazz.getName().equalsIgnoreCase(String.class.getName())) {
                     this.setEntity((T) response.readEntity(clazz));
+                } else if (clazz.getName().equalsIgnoreCase(Condition.class.getName())) {
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    String jsonConditions = response.readEntity(String.class);
+                    JsonNode rootNode = objectMapper.readTree(jsonConditions);
+                    List<Condition> conditions = new ArrayList<>();
+                    if (!(null == jsonConditions || jsonConditions.trim().isEmpty())) {
+                        for (JsonNode conditionNode : rootNode) {
+                            Condition condition = JacksonDeserializer.deserializeCondition(conditionNode);
+                            if (condition == null) {
+                                this.setSuccess(false);
+                                this.setErrorMsg("Bad json conditions: " + jsonConditions);
+                                return;
+                            }
+                            conditions.add(condition);
+                        }
+                    }
+                    this.setEntity((T) conditions);
                 } else {
                     ObjectMapper objectMapper = new ObjectMapper();
                     InventoryJacksonConfig.configure(objectMapper);
