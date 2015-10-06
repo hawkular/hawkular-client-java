@@ -51,7 +51,7 @@ public class ConditionsTest extends BaseTest {
         AvailabilityCondition availabilityCondition = new AvailabilityCondition(triggerId, dataId, Operator.DOWN);
         List<Condition> conditions = new ArrayList<Condition>();
         conditions.add(availabilityCondition);
-        testeCondition(triggerId, conditions, Mode.FIRING);
+        testCondition(triggerId, conditions, Mode.FIRING);
     }
 
     @Test
@@ -63,7 +63,7 @@ public class ConditionsTest extends BaseTest {
                 1.0, "no-data-id-2");
         List<Condition> conditions = new ArrayList<Condition>();
         conditions.add(compareCondition);
-        testeCondition(triggerId, conditions, Mode.AUTORESOLVE);
+        testCondition(triggerId, conditions, Mode.AUTORESOLVE);
     }
 
     @Test
@@ -75,7 +75,7 @@ public class ConditionsTest extends BaseTest {
                 "find-me", false);
         List<Condition> conditions = new ArrayList<Condition>();
         conditions.add(stringCondition);
-        testeCondition(triggerId, conditions, Mode.FIRING);
+        testCondition(triggerId, conditions, Mode.FIRING);
     }
 
     @Test
@@ -87,7 +87,7 @@ public class ConditionsTest extends BaseTest {
                 ThresholdCondition.Operator.LTE, 21.45);
         List<Condition> conditions = new ArrayList<Condition>();
         conditions.add(thresholdCondition);
-        testeCondition(triggerId, conditions, Mode.FIRING);
+        testCondition(triggerId, conditions, Mode.FIRING);
     }
 
     @Test
@@ -100,10 +100,10 @@ public class ConditionsTest extends BaseTest {
                 ThresholdRangeCondition.Operator.INCLUSIVE, 21.45, 10.45, true);
         List<Condition> conditions = new ArrayList<Condition>();
         conditions.add(thresholdRangeCondition);
-        testeCondition(triggerId, conditions, Mode.FIRING);
+        testCondition(triggerId, conditions, Mode.FIRING);
     }
 
-    private void testeCondition(String triggerId, List<Condition> conditions, Mode mode) {
+    private void testCondition(String triggerId, List<Condition> conditions, Mode mode) {
         //Create New trigger to add condition
         Trigger triggerNew = new Trigger(triggerId, "automation-unit-test");
         ClientResponse<Trigger> triggerCreateResult = client().alerts().createTrigger(triggerNew);
