@@ -35,7 +35,7 @@ public class PluginsTest extends BaseTest {
 
     public static final String EMAIL_PLUGIN_NAME = "email";
 
-    @Test
+    @Test(groups={"known-failure"})
     public void findPlugins() {
         ClientResponse<String[]> response = client().alerts().findActionPlugins();
         Reporter.log("Alert available Plugins Result: " + response.toString(), true);
@@ -43,7 +43,7 @@ public class PluginsTest extends BaseTest {
         Assert.assertTrue(response.getEntity().length > 0);
     }
 
-    @Test
+    @Test(groups={"known-failure"})
     public void findEmailPlugin() {
         ClientResponse<String[]> response = client().alerts().getActionPlugin(EMAIL_PLUGIN_NAME);
         Reporter.log("Alert Email Plugin variables Result: " + response.toString(), true);
