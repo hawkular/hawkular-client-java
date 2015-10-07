@@ -43,18 +43,31 @@ public class CollectionRateDetailTest extends OpenshiftBaseTest {
 
     @Test
     public void findZeroValuesTest() throws Exception {
-        String project = "default";
-        String container = "hawkular-metrics";
+        String project = "zproject9";
+        String container = "stress";
         String testID = "namespace: " + project + ", container: " + container;
 
+        // for easy identification in the log
         String metricID = super.getMetricID(project, container, METRIC_SUFFIX.CPU_USAGE);
 
+        // Get a lot of data in the last few days
         long now = Instant.now().toEpochMilli();
         long start = now - Duration.ofHours(36).toMillis();
-        long dur = start + Duration.ofHours(36).toMillis();
+        long end = start + Duration.ofHours(36).toMillis();
 
+        Duration timeBucket = Duration.ofHours(1);
+        getData(metricID, testID, start, end, timeBucket);
+
+        // get data in the last hour
+        start = now - Duration.ofHours(1).toMillis();
+        end = now;
+        timeBucket = Duration.ofMinutes(1);
+        getData(metricID, testID, start, end, timeBucket);
+    }
+
+    private void getData(String metricID, String testID, long start, long end, Duration timeBucket) {
         Reporter.log("Fetching large data set... may take a couple minutes", true);
-        List<GaugeDataPoint> rawData = client().metrics().getGaugeData(TENANT_ID, metricID,  start, dur);
+        List<GaugeDataPoint> rawData = client().metrics().getGaugeData(TENANT_ID, metricID,  start, end);
 
         Assert.assertNotNull(rawData, testID);
         Reporter.log("raw datapoints: " + rawData.size(), true);
@@ -62,8 +75,6 @@ public class CollectionRateDetailTest extends OpenshiftBaseTest {
         List<Long> zeroList = findZeroValues(rawData);
 
         Assert.assertTrue(zeroList == null || zeroList.size() == 0, testID);
-
-        Duration timeBucket = Duration.ofHours(1);
 
         Map<Long, Integer> hist = OpenshiftBaseTest.makeHistogram(rawData, timeBucket);
 
@@ -74,7 +85,8 @@ public class CollectionRateDetailTest extends OpenshiftBaseTest {
         double[] d = ArrayUtils.toPrimitive(result);
 
         // drop the first and last as they are usually outliers
-        DescriptiveStatistics stats = new DescriptiveStatistics(Arrays.copyOfRange(d,1, d.length-1));
+        double samples[] = Arrays.copyOfRange(d,1, d.length-1);
+        DescriptiveStatistics stats = new DescriptiveStatistics(samples);
 
         Reporter.log(hist.toString(), true);
         Reporter.log("size: " + stats.getN(), true);
