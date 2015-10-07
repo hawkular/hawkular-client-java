@@ -94,6 +94,15 @@ public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements Met
     }
 
     @Override
+    public List<GaugeDataPoint> getGaugeData(String tenantId, String metricId,
+            long startTime, long endTime) {
+        logger.debug("getGaugeData(): tenant={}, metricId={}, startTime={}, endTime={}",
+                        tenantId, metricId, startTime, endTime);
+        return restApi().getGaugeData(tenantId, metricId, startTime, endTime);
+    }
+
+
+    @Override
     public void createAvailabilityMetric(String tenantId,
             MetricDefinition metricDefinition) {
         restApi().createAvailability(tenantId, metricDefinition);
@@ -142,6 +151,12 @@ public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements Met
     public List<CounterDataPoint> getCounterData(String tenantId, String metricId) {
         logger.debug("getCounterData: tenantId={}, metricId={}", tenantId, metricId);
         return restApi().getCounterData(tenantId, metricId);
+    }
+
+    @Override
+    public List<MetricDefinition> findMetricDefinitions(String tenantId, String type, String tags) {
+        logger.debug("metrics();  tenantId={}, type={}, tags={}", tenantId, type, tags);
+        return restApi().metrics(tenantId, type, tags);
     }
 
 

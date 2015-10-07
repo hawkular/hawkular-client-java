@@ -49,6 +49,12 @@ public interface MetricsRestApi {
     @Path ("/tenants")
     Response createTenant(TenantParam tenant);
 
+    @GET
+    @Path("metrics")
+    List<MetricDefinition> metrics(@HeaderParam ("Hawkular-Tenant") String tenantId,
+                                   @QueryParam("type") String type,
+                                   @QueryParam("tags") String tags);
+
     @POST
     @Path ("/gauges")
     void createGaugeMetric(@HeaderParam ("Hawkular-Tenant") String tenantId,

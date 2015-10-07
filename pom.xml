@@ -51,6 +51,7 @@
     <hawkular.inventory.json.helper.version>0.3.2.Final</hawkular.inventory.json.helper.version>
     <resteasy.version>3.0.8.Final</resteasy.version>
     <excluded.tests>nothing-to-exclude</excluded.tests>
+    <excluded.groups>none</excluded.groups>
   </properties>
 
   <dependencies>
@@ -161,7 +162,7 @@
     <profile>
       <id>ci</id>
       <properties>
-        <excluded.tests></excluded.tests>
+        <excluded.groups>openshift,known-failure</excluded.groups>
       </properties>
     </profile>
     <profile>
@@ -177,8 +178,10 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
+          <groups></groups>
+          <excludedGroups>${excluded.groups}</excludedGroups>
           <excludes>
-            <exclude>${excluded.tests}</exclude>
+            <excluded.tests>${excluded.tests}</excluded.tests>
           </excludes>
         </configuration>
       </plugin>
