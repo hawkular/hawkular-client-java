@@ -40,6 +40,11 @@ public interface MetricsClient {
     boolean createTenant(Tenant tenant);
 
     /**
+     * Find metric definitions
+     */
+    List<MetricDefinition> findMetricDefinitions(String tenantId, String type, String tags);
+
+    /**
      * Create a Gauge metric definition
      */
     void createGaugeMetric(String tenantId, MetricDefinition metricDefinition);
@@ -58,6 +63,11 @@ public interface MetricsClient {
      * Retrieve Gauge metric data
      */
     List<GaugeDataPoint> getGaugeData(String tenantId, String metricId);
+
+    /**
+     * Retrieve Gauge metric data with range
+     */
+    List<GaugeDataPoint> getGaugeData(String tenantId, String metricId, long startTime, long Endtime);
 
 //    /**
 //     * Retrieve most recent numeric metric data. See implementation for default time range.

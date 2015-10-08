@@ -26,8 +26,6 @@ import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Lists;
-
 public class CounterMetricTest extends BaseTest {
 
     private final MetricDefinition expectedDefinition = CounterDataGenerator.genDef();
@@ -62,6 +60,6 @@ public class CounterMetricTest extends BaseTest {
         List<CounterDataPoint> actual =
                 client().metrics().getCounterData(expectedDefinition.getTenantId(), expectedDefinition.getId());
         Reporter.log("Got: " + actual.toString(), true);
-        Assert.assertEquals(Lists.reverse(actual), expectedData);
+        Assert.assertEquals(actual, expectedData);
     }
 }
