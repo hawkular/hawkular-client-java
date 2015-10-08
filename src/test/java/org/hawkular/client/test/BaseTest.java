@@ -33,6 +33,7 @@ public class BaseTest {
     public BaseTest() throws Exception {
         init();
     }
+
     public void init() throws Exception {
         URI endpoint = getEndpointFromEnv();
         Reporter.log(endpoint.toString());
@@ -59,17 +60,20 @@ public class BaseTest {
     }
 
     public static Tenant randomTenant() {
-        Tenant tenant = new Tenant(RandomStringUtils.randomAlphanumeric(8).toLowerCase());
-        return tenant;
+        return new Tenant(getRandomId());
     }
 
     public static MetricId randomMetricId() {
-        return new MetricId(RandomStringUtils.randomAlphanumeric(8).toLowerCase());
+        return new MetricId(getRandomId());
     }
 
-//    public static AvailabilityMetric randomAvailabilityMetric() {
-//        MetricId id = new MetricId(RandomStringUtils.randomAlphanumeric(8));
-//        AvailabilityMetric avail = new AvailabilityMetric(id);
-//        return avail;
-//    }
+    public static String getRandomId() {
+        return RandomStringUtils.randomAlphanumeric(8).toLowerCase();
+    }
+
+    //    public static AvailabilityMetric randomAvailabilityMetric() {
+    //        MetricId id = new MetricId(RandomStringUtils.randomAlphanumeric(8));
+    //        AvailabilityMetric avail = new AvailabilityMetric(id);
+    //        return avail;
+    //    }
 }

@@ -85,7 +85,7 @@ public class CollectionRateDetailTest extends OpenshiftBaseTest {
         double[] d = ArrayUtils.toPrimitive(result);
 
         // drop the first and last as they are usually outliers
-        double samples[] = Arrays.copyOfRange(d,1, d.length-1);
+        double[] samples = Arrays.copyOfRange(d,1, d.length-1);
         DescriptiveStatistics stats = new DescriptiveStatistics(samples);
 
         Reporter.log(hist.toString(), true);

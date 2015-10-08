@@ -28,7 +28,6 @@ import org.hawkular.client.ClientResponse;
 import org.hawkular.client.RestFactory;
 import org.hawkular.client.inventory.json.Endpoints;
 import org.hawkular.client.inventory.json.IdJSON;
-import org.hawkular.client.inventory.json.StringValue;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Metric;
@@ -60,8 +59,8 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     }
 
     @Override
-    public ClientResponse<StringValue> pingTime() {
-        return new ClientResponse<StringValue>(StringValue.class,
+    public ClientResponse<String> pingTime() {
+        return new ClientResponse<String>(String.class,
                 restApi().pingTime(),
                 RESPONSE_CODE.GET_SUCCESS.value());
     }

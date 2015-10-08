@@ -23,7 +23,6 @@ import java.util.Map;
 import org.hawkular.client.ClientResponse;
 import org.hawkular.client.inventory.json.Endpoints;
 import org.hawkular.client.inventory.json.IdJSON;
-import org.hawkular.client.inventory.json.StringValue;
 import org.hawkular.inventory.api.model.Environment;
 import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.Metric;
@@ -63,7 +62,7 @@ public interface InventoryClient {
     //PingHandler/Ping
     ClientResponse<Endpoints> pingHello();
 
-    ClientResponse<StringValue> pingTime();
+    ClientResponse<String> pingTime();
 
     //Tenant
     ClientResponse<Tenant> getTenant();
