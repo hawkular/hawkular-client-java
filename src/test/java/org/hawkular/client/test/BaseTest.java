@@ -68,6 +68,10 @@ public class BaseTest {
     }
 
     public static String getRandomId() {
+        return getRandomId(8);
+    }
+
+    public static String getRandomId(int count) {
         return RandomStringUtils.randomAlphanumeric(8).toLowerCase();
     }
 

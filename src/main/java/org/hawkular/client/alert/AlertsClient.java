@@ -125,7 +125,7 @@ public interface AlertsClient {
             Long startTime, Long endTime, String alertIds, String triggerIds,
             String statuses, String severities, String tags, Boolean thin);
 
-    ClientResponse<String> findAlerts();
+    ClientResponse<List<Alert>> findAlerts();
 
     ClientResponse<String> ackAlert(String alertId, String ackBy, String ackNotes);
 
