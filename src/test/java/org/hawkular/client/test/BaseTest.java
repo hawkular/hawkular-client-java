@@ -72,7 +72,7 @@ public class BaseTest {
     }
 
     public static String getRandomId(int count) {
-        return RandomStringUtils.randomAlphanumeric(8).toLowerCase();
+        return RandomStringUtils.randomAlphanumeric(count).toLowerCase();
     }
 
     //    public static AvailabilityMetric randomAvailabilityMetric() {
