@@ -32,6 +32,7 @@ import org.hawkular.alerts.api.model.trigger.Trigger;
 import org.hawkular.client.BaseClient;
 import org.hawkular.client.ClientResponse;
 import org.hawkular.client.RestFactory;
+import org.hawkular.client.alert.model.FindAlertsParam;
 
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
@@ -216,10 +217,24 @@ public class AlertsClientImpl extends BaseClient<AlertsRestApi> implements Alert
     }
 
     @Override
-    public ClientResponse<String> findAlerts() {
-        return new ClientResponse<String>(String.class, restApi().findAlerts(null, null, null,
+    public ClientResponse<List<Alert>> findAlerts() {
+        return new ClientResponse<List<Alert>>(Alert.class, restApi().findAlerts(null, null, null,
                 null, null, null, null, null),
-                RESPONSE_CODE.GET_SUCCESS.value());
+                RESPONSE_CODE.GET_SUCCESS.value(), List.class);
+    }
+
+    @Override
+    public ClientResponse<List<Alert>> findAlerts(FindAlertsParam findAlertsParam) {
+        return new ClientResponse<List<Alert>>(Alert.class, restApi().findAlerts(
+                findAlertsParam.getStartTime(),
+                findAlertsParam.getEndTime(),
+                findAlertsParam.getAlertIds(),
+                findAlertsParam.getTriggerIds(),
+                findAlertsParam.getStatuses(),
+                findAlertsParam.getSeverities(),
+                findAlertsParam.getTags(),
+                findAlertsParam.getThin()),
+                RESPONSE_CODE.GET_SUCCESS.value(), List.class);
     }
 
     @Override
