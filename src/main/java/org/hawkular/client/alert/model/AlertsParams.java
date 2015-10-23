@@ -19,7 +19,7 @@ package org.hawkular.client.alert.model;
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
-public class FindAlertsParam {
+public class AlertsParams {
 
     Long startTime;
     Long endTime;
@@ -30,19 +30,19 @@ public class FindAlertsParam {
     String tags;
     Boolean thin;
 
-    public FindAlertsParam() {
+    public AlertsParams() {
 
     }
 
-    public FindAlertsParam(Long startTime, Long endTime) {
+    public AlertsParams(Long startTime, Long endTime) {
         this(startTime, endTime, null, null, null, null, null, null);
     }
 
-    public FindAlertsParam(String tags) {
+    public AlertsParams(String tags) {
         this(null, null, null, null, null, null, tags, null);
     }
 
-    public FindAlertsParam(Long startTime, Long endTime, String alertIds, String triggerIds, String statuses,
+    public AlertsParams(Long startTime, Long endTime, String alertIds, String triggerIds, String statuses,
             String severities, String tags, Boolean thin) {
         this.startTime = startTime;
         this.endTime = endTime;

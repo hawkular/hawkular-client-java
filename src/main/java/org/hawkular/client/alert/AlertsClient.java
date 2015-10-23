@@ -29,7 +29,7 @@ import org.hawkular.alerts.api.model.data.MixedData;
 import org.hawkular.alerts.api.model.trigger.Mode;
 import org.hawkular.alerts.api.model.trigger.Trigger;
 import org.hawkular.client.ClientResponse;
-import org.hawkular.client.alert.model.FindAlertsParam;
+import org.hawkular.client.alert.model.AlertsParams;
 
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
@@ -128,7 +128,7 @@ public interface AlertsClient {
 
     ClientResponse<List<Alert>> findAlerts();
 
-    ClientResponse<List<Alert>> findAlerts(FindAlertsParam findAlertsParam);
+    ClientResponse<List<Alert>> findAlerts(AlertsParams alertsParams);
 
     ClientResponse<String> ackAlert(String alertId, String ackBy, String ackNotes);
 
@@ -139,6 +139,8 @@ public interface AlertsClient {
     ClientResponse<Integer> deleteAlerts(
             Long startTime, Long endTime, String alertIds, String triggerIds,
             String statuses, String severities, String tags);
+
+    ClientResponse<Integer> deleteAlerts(AlertsParams alertsParams);
 
     ClientResponse<Alert> getAlert(String alertId, Boolean thin);
 

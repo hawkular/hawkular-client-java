@@ -32,7 +32,7 @@ import org.hawkular.alerts.api.model.trigger.Trigger;
 import org.hawkular.client.BaseClient;
 import org.hawkular.client.ClientResponse;
 import org.hawkular.client.RestFactory;
-import org.hawkular.client.alert.model.FindAlertsParam;
+import org.hawkular.client.alert.model.AlertsParams;
 
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
@@ -224,16 +224,16 @@ public class AlertsClientImpl extends BaseClient<AlertsRestApi> implements Alert
     }
 
     @Override
-    public ClientResponse<List<Alert>> findAlerts(FindAlertsParam findAlertsParam) {
+    public ClientResponse<List<Alert>> findAlerts(AlertsParams alertsParams) {
         return new ClientResponse<List<Alert>>(Alert.class, restApi().findAlerts(
-                findAlertsParam.getStartTime(),
-                findAlertsParam.getEndTime(),
-                findAlertsParam.getAlertIds(),
-                findAlertsParam.getTriggerIds(),
-                findAlertsParam.getStatuses(),
-                findAlertsParam.getSeverities(),
-                findAlertsParam.getTags(),
-                findAlertsParam.getThin()),
+                alertsParams.getStartTime(),
+                alertsParams.getEndTime(),
+                alertsParams.getAlertIds(),
+                alertsParams.getTriggerIds(),
+                alertsParams.getStatuses(),
+                alertsParams.getSeverities(),
+                alertsParams.getTags(),
+                alertsParams.getThin()),
                 RESPONSE_CODE.GET_SUCCESS.value(), List.class);
     }
 
@@ -260,6 +260,19 @@ public class AlertsClientImpl extends BaseClient<AlertsRestApi> implements Alert
             String statuses, String severities, String tags) {
         return new ClientResponse<Integer>(Integer.class, restApi().deleteAlerts(startTime, endTime, alertIds,
                 triggerIds, statuses, severities, tags),
+                RESPONSE_CODE.DELETE_SUCCESS.value());
+    }
+
+    @Override
+    public ClientResponse<Integer> deleteAlerts(AlertsParams alertsParams) {
+        return new ClientResponse<Integer>(Integer.class, restApi().deleteAlerts(
+                alertsParams.getStartTime(),
+                alertsParams.getEndTime(),
+                alertsParams.getAlertIds(),
+                alertsParams.getTriggerIds(),
+                alertsParams.getStatuses(),
+                alertsParams.getSeverities(),
+                alertsParams.getTags()),
                 RESPONSE_CODE.DELETE_SUCCESS.value());
     }
 
