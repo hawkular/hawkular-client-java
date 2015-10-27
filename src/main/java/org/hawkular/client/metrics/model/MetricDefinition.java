@@ -19,40 +19,56 @@ package org.hawkular.client.metrics.model;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableMap;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import java.util.Map;
-import java.util.Objects;
 
 import org.hawkular.metrics.core.api.Metric;
+import org.hawkular.metrics.core.api.MetricType;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion;
 
 /**
- * @author jsanda
+ * @author John Sanda
  */
 public class MetricDefinition {
+    private final String tenantId;
+    private final String id;
+    private final Map<String, String> tags;
+    private final Integer dataRetention;
+    private final MetricType<?> type;
 
-    // TODO Do we need this?
-    @JsonProperty
-    private String tenantId;
-
-    @JsonProperty
-    private String id;
-
-    @JsonProperty
-    private Map<String, String> tags;
-
-    @JsonProperty
-    private Integer dataRetention;
-
-    @JsonCreator
+    @JsonCreator(mode = Mode.PROPERTIES)
     public MetricDefinition(
-            @JsonProperty("id") String id,
-            @JsonProperty(value = "tags") Map<String, String> tags,
-            @JsonProperty("dataRetention") Integer dataRetention) {
+            @JsonProperty("id")
+            String id,
+            @JsonProperty(value = "tags")
+            Map<String, String> tags,
+            @JsonProperty("dataRetention")
+            Integer dataRetention,
+            @JsonProperty("type")
+            @JsonDeserialize(using = MetricTypeDeserializer.class)
+            MetricType<?> type
+    ) {
+        checkArgument(id != null, "Metric id is null");
+        this.tenantId = null;
         this.id = id;
         this.tags = tags == null ? emptyMap() : unmodifiableMap(tags);
         this.dataRetention = dataRetention;
+        this.type = type;
+    }
+
+    public MetricDefinition(Metric<?> metric) {
+        this.tenantId = metric.getId().getTenantId();
+        this.id = metric.getId().getName();
+        this.type = metric.getId().getType();
+        this.tags = metric.getTags();
+        this.dataRetention = metric.getDataRetention();
     }
 
     public String getTenantId() {
@@ -63,6 +79,7 @@ public class MetricDefinition {
         return id;
     }
 
+    @JsonSerialize(include = Inclusion.NON_EMPTY)
     public Map<String, String> getTags() {
         return tags;
     }
@@ -71,34 +88,39 @@ public class MetricDefinition {
         return dataRetention;
     }
 
-    @SuppressWarnings("unchecked")
-    public MetricDefinition(Metric metric) {
-        this.tenantId = metric.getTenantId();
-        this.id = metric.getId().getName();
-        this.tags = metric.getTags();
-        this.dataRetention = metric.getDataRetention();
+    @JsonSerialize(using = MetricTypeSerializer.class)
+    public MetricType<?> getType() {
+        return type;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MetricDefinition gauge = (MetricDefinition) o;
-        return Objects.equals(id, gauge.id);
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        MetricDefinition that = (MetricDefinition) o;
+        return id.equals(that.id) && type == that.type;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        int result = id.hashCode();
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        return result;
     }
 
     @Override
     public String toString() {
-        return "MetricDefinition{" +
-                "tenantId='" + tenantId + '\'' +
-                ", id='" + id + '\'' +
-                ", tags=" + tags +
-                ", dataRetention=" + dataRetention +
-                '}';
+        return com.google.common.base.Objects.toStringHelper(this)
+                .add("tenantId", tenantId)
+                .add("id", id)
+                .add("tags", tags)
+                .add("dataRetention", dataRetention)
+                .add("type", type)
+                .omitNullValues()
+                .toString();
     }
 }

@@ -21,20 +21,29 @@ import org.hawkular.client.test.BaseTest;
 import org.hawkular.metrics.core.api.Metric;
 import org.hawkular.metrics.core.api.MetricId;
 import org.hawkular.metrics.core.api.MetricType;
-import org.hawkular.metrics.core.api.Tenant;
 
-public class DataGenerator {
+/**
+ * Random MetricDefinition generator
+ * @author vnguyen
+ *
+ */
+public class MetricDefGenerator {
 
-    public static <T> MetricDefinition genDef(MetricType metricType) {
-        Tenant tenant = BaseTest.randomTenant();
-        MetricId metricId = BaseTest.randomMetricId();
-        return DataGenerator.<T>genDef(metricType, tenant.getId(), metricId);
+    public static MetricDefinition genGaugeDef() {
+        return genDef(MetricType.GAUGE);
     }
 
-    public static <T> MetricDefinition genDef(MetricType metricType, String tenantId, MetricId metricId) {
-        Metric<T> metric = new Metric<>(tenantId,
-                                        metricType,
-                                        metricId);
+    public static MetricDefinition genCounterDef() {
+        return genDef(MetricType.COUNTER);
+    }
+
+    public static MetricDefinition genAvailDef() {
+        return genDef(MetricType.AVAILABILITY);
+    }
+
+    public static <T> MetricDefinition genDef(MetricType<T> metricType) {
+        MetricId<?> id = new MetricId<>(BaseTest.getRandomId(), metricType, BaseTest.getRandomId());
+        Metric<?> metric = new Metric<>(id);
         return new MetricDefinition(metric);
     }
 }

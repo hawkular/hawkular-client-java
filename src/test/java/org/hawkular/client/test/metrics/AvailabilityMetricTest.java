@@ -22,6 +22,7 @@ import org.hawkular.client.metrics.model.AvailabilityDataPoint;
 import org.hawkular.client.metrics.model.MetricDefinition;
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.client.test.utils.AvailabilityDataGenerator;
+import org.hawkular.client.test.utils.MetricDefGenerator;
 import org.hawkular.metrics.core.api.AvailabilityType;
 import org.testng.Assert;
 import org.testng.Reporter;
@@ -35,9 +36,9 @@ import org.testng.annotations.Test;
  */
 public class AvailabilityMetricTest extends BaseTest {
 
-    private final MetricDefinition expectedDefinition = AvailabilityDataGenerator.genDef();
+    private final MetricDefinition expectedDefinition = MetricDefGenerator.genAvailDef();
 
-    private final MetricDefinition metric2 = AvailabilityDataGenerator.genDef();
+    private final MetricDefinition metric2 = MetricDefGenerator.genAvailDef();
     private final List<AvailabilityDataPoint> expectedData
             = AvailabilityDataGenerator.gen(
                     AvailabilityType.DOWN,
@@ -51,7 +52,7 @@ public class AvailabilityMetricTest extends BaseTest {
     @Test
     public void createDefinition() throws Exception {
         Reporter.log("Creating: " + expectedDefinition.toString(), true);
-        client().metrics().createAvailabilityMetric(expectedDefinition.getTenantId(), expectedDefinition);
+        client().metrics().createAvailabilityMetric("vnguyen12223", expectedDefinition);
     }
 
     // Known failure.  See https://issues.jboss.org/browse/HWKMETRICS-169
@@ -65,7 +66,7 @@ public class AvailabilityMetricTest extends BaseTest {
 
     }
 
-    @Test
+    @Test(dependsOnMethods="createDefinition")
     public void addData() throws Exception {
         Reporter.log("Adding: " + expectedData.toString(), true);
         client().metrics().addAvailabilityData(metric2.getTenantId(), metric2.getId(), expectedData);

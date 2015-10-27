@@ -22,13 +22,14 @@ import org.hawkular.client.metrics.model.CounterDataPoint;
 import org.hawkular.client.metrics.model.MetricDefinition;
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.client.test.utils.CounterDataGenerator;
+import org.hawkular.client.test.utils.MetricDefGenerator;
 import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
 
 public class CounterMetricTest extends BaseTest {
 
-    private final MetricDefinition expectedDefinition = CounterDataGenerator.genDef();
+    private final MetricDefinition expectedDefinition = MetricDefGenerator.genCounterDef();
     private final List<CounterDataPoint> expectedData = CounterDataGenerator.gen(10);
 
     public CounterMetricTest() throws Exception {

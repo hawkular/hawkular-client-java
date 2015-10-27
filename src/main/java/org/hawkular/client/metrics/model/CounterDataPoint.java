@@ -16,72 +16,76 @@
  */
 package org.hawkular.client.metrics.model;
 
-import java.util.Collections;
+import static org.hawkular.metrics.core.api.MetricType.COUNTER;
+
+import static com.google.common.base.Preconditions.checkArgument;
+
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.hawkular.metrics.core.api.DataPoint;
+import org.hawkular.metrics.core.api.Metric;
+import org.hawkular.metrics.core.api.MetricId;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Lists;
+
+import rx.Observable;
 
 /**
- * @author jsanda
+ * @author John Sanda
  */
 public class CounterDataPoint {
+    private final long timestamp;
+    private final long value;
 
-    @JsonProperty
-    private long timestamp;
-
-    @JsonProperty
-    private Long value;
-
-    @JsonProperty
-    private Map<String, String> tags = Collections.emptyMap();
-
-    /**
-     * Used by JAX-RS/Jackson to deserialize HTTP request data
-     */
-    private CounterDataPoint() {
+    @JsonCreator(mode = Mode.PROPERTIES)
+    public CounterDataPoint(
+            @JsonProperty("timestamp")
+            Long timestamp,
+            @JsonProperty("value")
+            Long value,
+            @JsonProperty("tags")
+            Map<String, String> tags
+    ) {
+        checkArgument(timestamp != null, "Data point timestamp is null");
+        checkArgument(value != null, "Data point value is null");
+        this.timestamp = timestamp;
+        this.value = value;
     }
 
-    /**
-     * Used to prepared data for serialization into the HTTP response
-     *
-     * @param dataPoint
-     */
     public CounterDataPoint(DataPoint<Long> dataPoint) {
         timestamp = dataPoint.getTimestamp();
         value = dataPoint.getValue();
-        tags = dataPoint.getTags();
-    }
-
-    public Long getValue() {
-        return value;
     }
 
     public long getTimestamp() {
         return timestamp;
     }
 
-    public Map<String, String> getTags() {
-        return ImmutableMap.copyOf(tags);
+    public long getValue() {
+        return value;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         CounterDataPoint that = (CounterDataPoint) o;
-        // TODO should tags be included in equals?
-        return Objects.equals(timestamp, that.timestamp) &&
-                Objects.equals(value, that.value);
+        return timestamp == that.timestamp && value == that.value;
     }
 
     @Override
     public int hashCode() {
-        // TODO should tags be included?
-        return Objects.hash(timestamp, value);
+        int result = (int) (timestamp ^ (timestamp >>> 32));
+        result = 31 * result + (int) (value ^ (value >>> 32));
+        return result;
     }
 
     @Override
@@ -89,7 +93,17 @@ public class CounterDataPoint {
         return com.google.common.base.Objects.toStringHelper(this)
                 .add("timestamp", timestamp)
                 .add("value", value)
-                .add("tags", tags)
                 .toString();
+    }
+
+    public static List<DataPoint<Long>> asDataPoints(List<CounterDataPoint> points) {
+        return Lists.transform(points, p -> new DataPoint<>(p.getTimestamp(), p.getValue()));
+    }
+
+    public static Observable<Metric<Long>> toObservable(String tenantId, String metricId, List<CounterDataPoint>
+            points) {
+        List<DataPoint<Long>> dataPoints = asDataPoints(points);
+        Metric<Long> metric = new Metric<>(new MetricId<>(tenantId, COUNTER, metricId), dataPoints);
+        return Observable.just(metric);
     }
 }

@@ -16,46 +16,72 @@
  */
 package org.hawkular.client.metrics.model;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
-import java.util.List;
-import java.util.Objects;
+import static org.hawkular.metrics.core.api.MetricType.COUNTER;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
+import java.util.List;
+
+import org.hawkular.metrics.core.api.DataPoint;
+import org.hawkular.metrics.core.api.Metric;
+import org.hawkular.metrics.core.api.MetricId;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize.Inclusion;
+
+import rx.Observable;
 
 /**
  * A container for data points for a single counter metric.
  *
- * @author jsanda
+ * @author John Sanda
  */
 public class Counter {
+    private final String id;
+    private final List<CounterDataPoint> data;
 
-    @JsonProperty
-    private String id;
-
-    @JsonProperty
-    private List<CounterDataPoint> data;
+    @JsonCreator(mode = Mode.PROPERTIES)
+    public Counter(
+            @JsonProperty("id")
+            String id,
+            @JsonProperty("data")
+            List<CounterDataPoint> data
+    ) {
+        checkArgument(id != null, "Counter id is null");
+        this.id = id;
+        this.data = data == null || data.isEmpty() ? emptyList() : unmodifiableList(data);
+    }
 
     public String getId() {
         return id;
     }
 
+    @JsonSerialize(include = Inclusion.NON_EMPTY)
     public List<CounterDataPoint> getData() {
-        return unmodifiableList(data);
+        return data;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Counter gauge = (Counter) o;
-        return Objects.equals(id, gauge.id) &&
-                Objects.equals(data, gauge.data);
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Counter counter = (Counter) o;
+        return id.equals(counter.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, data);
+        return id.hashCode();
     }
 
     @Override
@@ -63,7 +89,14 @@ public class Counter {
         return com.google.common.base.Objects.toStringHelper(this)
                 .add("id", id)
                 .add("data", data)
+                .omitNullValues()
                 .toString();
     }
 
+    public static Observable<Metric<Long>> toObservable(String tenantId, List<Counter> counters) {
+        return Observable.from(counters).map(c -> {
+            List<DataPoint<Long>> dataPoints = CounterDataPoint.asDataPoints(c.getData());
+            return new Metric<>(new MetricId<>(tenantId, COUNTER, c.getId()), dataPoints);
+        });
+    }
 }

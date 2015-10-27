@@ -22,6 +22,7 @@ import org.hawkular.client.metrics.model.GaugeDataPoint;
 import org.hawkular.client.metrics.model.MetricDefinition;
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.client.test.utils.GaugeDataGenerator;
+import org.hawkular.client.test.utils.MetricDefGenerator;
 import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
@@ -29,7 +30,7 @@ import org.testng.annotations.Test;
 @Test(groups={"known-failure"}, description="HWKMETRICS-51")
 public class GaugeMetricTest extends BaseTest {
 
-    private final MetricDefinition expectedMetric = GaugeDataGenerator.genDef();
+    private final MetricDefinition expectedMetric = MetricDefGenerator.genGaugeDef();
 
     private final List<GaugeDataPoint> expectedData1 = GaugeDataGenerator.gen(4);
 

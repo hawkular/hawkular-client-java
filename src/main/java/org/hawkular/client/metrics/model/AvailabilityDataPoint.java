@@ -16,72 +16,79 @@
  */
 package org.hawkular.client.metrics.model;
 
-import static java.util.Collections.emptyMap;
+import static org.hawkular.metrics.core.api.MetricType.AVAILABILITY;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.hawkular.metrics.core.api.AvailabilityType;
 import org.hawkular.metrics.core.api.DataPoint;
+import org.hawkular.metrics.core.api.Metric;
+import org.hawkular.metrics.core.api.MetricId;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.ImmutableMap;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.collect.Lists;
+
+import rx.Observable;
 
 /**
- * @author jsanda
+ * @author John Sanda
  */
 public class AvailabilityDataPoint {
+    private final long timestamp;
+    private final AvailabilityType value;
 
-    @JsonProperty
-    private long timestamp;
-
-    @JsonProperty
-    private String value;
-
-    @JsonProperty
-    private Map<String, String> tags = emptyMap();
-
-    /**
-     * Used by JAX-RS/Jackson to deserialize HTTP request data
-     */
-    private AvailabilityDataPoint() {
+    @JsonCreator(mode = Mode.PROPERTIES)
+    public AvailabilityDataPoint(
+            @JsonProperty("timestamp")
+            Long timestamp,
+            @JsonProperty("value")
+            String value,
+            @JsonProperty("tags")
+            Map<String, String> tags
+    ) {
+        checkArgument(timestamp != null, "Data point timestamp is null");
+        checkArgument(value != null, "Data point value is null");
+        this.timestamp = timestamp;
+        this.value = AvailabilityType.fromString(value);
     }
 
-    /**
-     * Used to prepared data for serialization into the HTTP response
-     *
-     * @param dataPoint
-     */
     public AvailabilityDataPoint(DataPoint<AvailabilityType> dataPoint) {
         timestamp = dataPoint.getTimestamp();
-        value = dataPoint.getValue().getText().toLowerCase();
-        tags = dataPoint.getTags();
+        value = dataPoint.getValue();
     }
 
     public long getTimestamp() {
         return timestamp;
     }
 
-    public String getValue() {
-        return value.toLowerCase();
-    }
-
-    public Map<String, String> getTags() {
-        return ImmutableMap.copyOf(tags);
+    @JsonSerialize(using = AvailabilityTypeSerializer.class)
+    public AvailabilityType getValue() {
+        return value;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AvailabilityDataPoint dataPoint = (AvailabilityDataPoint) o;
-        return Objects.equals(timestamp, dataPoint.timestamp) &&
-                Objects.equals(value, dataPoint.value);
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        AvailabilityDataPoint that = (AvailabilityDataPoint) o;
+        return timestamp == that.timestamp && value == that.value;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(timestamp, value);
+        int result = (int) (timestamp ^ (timestamp >>> 32));
+        result = 31 * result + value.hashCode();
+        return result;
     }
 
     @Override
@@ -89,7 +96,18 @@ public class AvailabilityDataPoint {
         return com.google.common.base.Objects.toStringHelper(this)
                 .add("timestamp", timestamp)
                 .add("value", value)
-                .add("tags", tags)
+                .omitNullValues()
                 .toString();
+    }
+
+    public static List<DataPoint<AvailabilityType>> asDataPoints(List<AvailabilityDataPoint> points) {
+        return Lists.transform(points, p -> new DataPoint<>(p.getTimestamp(), p.getValue()));
+    }
+
+    public static Observable<Metric<AvailabilityType>> toObservable(String tenantId, String
+            metricId, List<AvailabilityDataPoint> points) {
+        List<DataPoint<AvailabilityType>> dataPoints = asDataPoints(points);
+        Metric<AvailabilityType> metric = new Metric<>(new MetricId<>(tenantId, AVAILABILITY, metricId), dataPoints);
+        return Observable.just(metric);
     }
 }

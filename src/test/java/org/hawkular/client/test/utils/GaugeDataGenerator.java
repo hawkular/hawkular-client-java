@@ -19,12 +19,9 @@ package org.hawkular.client.test.utils;
 import java.util.List;
 import java.util.Random;
 
-import org.hawkular.client.metrics.model.Gauge;
 import org.hawkular.client.metrics.model.GaugeDataPoint;
-import org.hawkular.client.metrics.model.MetricDefinition;
 import org.hawkular.client.test.BTG;
 import org.hawkular.metrics.core.api.DataPoint;
-import org.hawkular.metrics.core.api.MetricType;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
@@ -47,10 +44,6 @@ public class GaugeDataGenerator {
 
     public static List<GaugeDataPoint> gen(int size, int interval) {
         return new GaugeDataGenerator(size).data();
-    }
-
-    public static MetricDefinition genDef() {
-        return DataGenerator.<Gauge>genDef(MetricType.GAUGE);
     }
 
     public List<GaugeDataPoint> data() {
