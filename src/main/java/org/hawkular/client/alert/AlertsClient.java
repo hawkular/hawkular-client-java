@@ -22,10 +22,10 @@ import java.util.Set;
 
 import org.hawkular.alerts.api.json.GroupMemberInfo;
 import org.hawkular.alerts.api.json.UnorphanMemberInfo;
-import org.hawkular.alerts.api.model.condition.Alert;
 import org.hawkular.alerts.api.model.condition.Condition;
 import org.hawkular.alerts.api.model.dampening.Dampening;
-import org.hawkular.alerts.api.model.data.MixedData;
+import org.hawkular.alerts.api.model.data.Data;
+import org.hawkular.alerts.api.model.event.Alert;
 import org.hawkular.alerts.api.model.trigger.Mode;
 import org.hawkular.alerts.api.model.trigger.Trigger;
 import org.hawkular.client.ClientResponse;
@@ -148,7 +148,7 @@ public interface AlertsClient {
 
     ClientResponse<String> resolveAlerts(String alertIds, String resolvedBy, String resolvedNotes);
 
-    ClientResponse<String> sendData(MixedData mixedData);
+    ClientResponse<String> sendData(Data data);
 
     ClientResponse<String> reloadAlerts();
 

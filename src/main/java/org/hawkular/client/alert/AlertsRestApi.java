@@ -35,7 +35,7 @@ import org.hawkular.alerts.api.json.GroupMemberInfo;
 import org.hawkular.alerts.api.json.UnorphanMemberInfo;
 import org.hawkular.alerts.api.model.condition.Condition;
 import org.hawkular.alerts.api.model.dampening.Dampening;
-import org.hawkular.alerts.api.model.data.MixedData;
+import org.hawkular.alerts.api.model.data.Data;
 import org.hawkular.alerts.api.model.trigger.Mode;
 import org.hawkular.alerts.api.model.trigger.Trigger;
 
@@ -229,7 +229,7 @@ public interface AlertsRestApi {
 
     @POST
     @Path("/data")
-    Response sendData(final MixedData mixedData);
+    Response sendData(final Data mixedData);
 
     @GET
     @Path("/reload")
