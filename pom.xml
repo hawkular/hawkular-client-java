@@ -46,10 +46,10 @@
   </licenses>
 
   <properties>
-    <hawkular.metrics.version>0.8.0.Final</hawkular.metrics.version>
-    <hawkular.inventory.version>0.3.2.Final</hawkular.inventory.version>
-    <hawkular.inventory.json.helper.version>0.3.2.Final</hawkular.inventory.json.helper.version>
-    <hawkular.alerts.version>0.5.0-SNAPSHOT</hawkular.alerts.version>
+    <hawkular.metrics.version>0.9.0.Final</hawkular.metrics.version>
+    <hawkular.inventory.version>0.8.1.Final</hawkular.inventory.version>
+    <hawkular.inventory.json.helper.version>0.8.1.Final</hawkular.inventory.json.helper.version>
+    <hawkular.alerts.version>0.6.0.Final</hawkular.alerts.version>
     <resteasy.version>3.0.8.Final</resteasy.version>
     <resteasy.jackson2.provider.version>3.0.8.Final</resteasy.jackson2.provider.version>
     <org.jboss.logging.version>3.3.0.Final</org.jboss.logging.version>

@@ -23,10 +23,10 @@ import java.util.Set;
 
 import org.hawkular.alerts.api.json.GroupMemberInfo;
 import org.hawkular.alerts.api.json.UnorphanMemberInfo;
-import org.hawkular.alerts.api.model.condition.Alert;
 import org.hawkular.alerts.api.model.condition.Condition;
 import org.hawkular.alerts.api.model.dampening.Dampening;
-import org.hawkular.alerts.api.model.data.MixedData;
+import org.hawkular.alerts.api.model.data.Data;
+import org.hawkular.alerts.api.model.event.Alert;
 import org.hawkular.alerts.api.model.trigger.Mode;
 import org.hawkular.alerts.api.model.trigger.Trigger;
 import org.hawkular.client.BaseClient;
@@ -295,8 +295,8 @@ public class AlertsClientImpl extends BaseClient<AlertsRestApi> implements Alert
     }
 
     @Override
-    public ClientResponse<String> sendData(MixedData mixedData) {
-        return new ClientResponse<String>(String.class, restApi().sendData(mixedData),
+    public ClientResponse<String> sendData(List<Data> datums) {
+        return new ClientResponse<String>(String.class, restApi().sendData(datums),
                 RESPONSE_CODE.UPDATE_SUCCESS.value());
     }
 

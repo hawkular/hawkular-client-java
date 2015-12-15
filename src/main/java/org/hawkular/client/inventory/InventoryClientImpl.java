@@ -119,17 +119,18 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> createEnvironment(String environmentId) {
-        return createEnvironment(new Environment.Blueprint(environmentId));
+        return createEnvironment(new Environment.Blueprint(environmentId, environmentId, null, null, null));
     }
 
     @Override
     public ClientResponse<String> createEnvironment(String environmentId, Map<String, Object> properties) {
-        return createEnvironment(new Environment.Blueprint(environmentId, properties));
+        return createEnvironment(new Environment.Blueprint(environmentId, environmentId, properties, null, null));
     }
 
     @Override
     public ClientResponse<String> createEnvironment(Environment environment) {
-        return createEnvironment(new Environment.Blueprint(environment.getId(), environment.getProperties()));
+        return createEnvironment(new Environment.Blueprint(environment.getId(), environment.getId(),
+                environment.getProperties(), null, null));
     }
 
     @Override
@@ -239,8 +240,9 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> createMetric(Metric metric) {
-        return createMetric(metric.getEnvironmentId(), metric.getFeedId(), new Metric.Blueprint(metric.getType()
-                .getPath().toString(), metric.getId(), metric.getProperties()));
+        return createMetric(metric.getPath().ids().getEnvironmentId(), metric.getPath().ids().getFeedId(),
+                new Metric.Blueprint(metric.getType()
+                        .getPath().toString(), metric.getId(), metric.getProperties()));
     }
 
     @Override
@@ -261,7 +263,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<Metric> getMetric(Metric metric) {
-        return getMetric(metric.getEnvironmentId(), metric.getFeedId(), metric.getId());
+        return getMetric(metric.getPath().ids().getEnvironmentId(), metric.getPath().ids().getFeedId(), metric.getId());
     }
 
     @Override
@@ -296,7 +298,8 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> updateMetric(Metric metric) {
-        return updateMetric(metric.getEnvironmentId(), metric.getFeedId(), metric.getId(),
+        return updateMetric(metric.getPath().ids().getEnvironmentId(), metric.getPath().ids().getFeedId(),
+                metric.getId(),
                 new Metric.Update(metric.getProperties()));
     }
 
@@ -318,7 +321,8 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> deleteMetric(Metric metric) {
-        return this.deleteMetric(metric.getEnvironmentId(), metric.getFeedId(), metric.getId());
+        return this.deleteMetric(metric.getPath().ids().getEnvironmentId(), metric.getPath().ids().getFeedId(),
+                metric.getId());
     }
 
     //Get Resource Types
@@ -420,8 +424,8 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     @Override
     public ClientResponse<String> addResource(Resource resource) {
         return addResource(
-                resource.getEnvironmentId(),
-                resource.getFeedId(),
+                resource.getPath().ids().getEnvironmentId(),
+                resource.getPath().ids().getFeedId(),
                 new Resource.Blueprint(resource.getId(),
                         resource.getType().getPath().toString(),
                         resource.getProperties()));
@@ -470,7 +474,8 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<Resource> getResource(Resource resource) {
-        return getResource(resource.getEnvironmentId(), resource.getFeedId(), resource.getId());
+        return getResource(resource.getPath().ids().getEnvironmentId(), resource.getPath().ids().getFeedId(),
+                resource.getId());
     }
 
     @Override
@@ -492,7 +497,8 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> updateResource(Resource resource) {
-        return updateResource(resource.getEnvironmentId(), resource.getFeedId(), resource.getId(),
+        return updateResource(resource.getPath().ids().getEnvironmentId(), resource.getPath().ids().getFeedId(),
+                resource.getId(),
                 new Resource.Update(resource.getProperties()));
     }
 
@@ -514,7 +520,8 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> deleteResource(Resource resource) {
-        return deleteResource(resource.getEnvironmentId(), resource.getFeedId(), resource.getId());
+        return deleteResource(resource.getPath().ids().getEnvironmentId(), resource.getPath().ids().getFeedId(),
+                resource.getId());
     }
 
     @Override
@@ -571,52 +578,52 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     //Feed
     @Override
-    public ClientResponse<String> registerFeed(String environmentId, Feed.Blueprint feed) {
-        return new ClientResponse<String>(String.class, restApi().registerFeed(environmentId, feed),
+    public ClientResponse<String> registerFeed(Feed.Blueprint feed) {
+        return new ClientResponse<String>(String.class, restApi().registerFeed(feed),
                 RESPONSE_CODE.REGISTER_SUCCESS.value());
     }
 
     @Override
     public ClientResponse<String> registerFeed(Feed feed) {
-        return this.registerFeed(feed.getEnvironmentId(), new Feed.Blueprint(feed.getId(), feed.getProperties()));
+        return this.registerFeed(new Feed.Blueprint(feed.getId(), feed.getProperties()));
     }
 
     @Override
-    public ClientResponse<List<Feed>> getAllFeeds(String environmentId) {
-        return new ClientResponse<List<Feed>>(Feed.class, restApi().getAllFeeds(environmentId),
+    public ClientResponse<List<Feed>> getAllFeeds() {
+        return new ClientResponse<List<Feed>>(Feed.class, restApi().getAllFeeds(),
                 RESPONSE_CODE.GET_SUCCESS.value(), getTenantId(), true);
     }
 
     @Override
-    public ClientResponse<Feed> getFeed(String environmentId, String feedId) {
-        return new ClientResponse<Feed>(Feed.class, restApi().getFeed(environmentId, feedId),
+    public ClientResponse<Feed> getFeed(String feedId) {
+        return new ClientResponse<Feed>(Feed.class, restApi().getFeed(feedId),
                 RESPONSE_CODE.GET_SUCCESS.value(), getTenantId());
     }
 
     @Override
     public ClientResponse<Feed> getFeed(Feed feed) {
-        return getFeed(feed.getEnvironmentId(), feed.getId());
+        return getFeed(feed.getId());
     }
 
     @Override
-    public ClientResponse<String> updateFeed(String environmentId, String feedId, Feed.Update update) {
-        return new ClientResponse<String>(String.class, restApi().updateFeed(environmentId, feedId, update),
+    public ClientResponse<String> updateFeed(String feedId, Feed.Update update) {
+        return new ClientResponse<String>(String.class, restApi().updateFeed(feedId, update),
                 RESPONSE_CODE.UPDATE_SUCCESS.value());
     }
 
     @Override
     public ClientResponse<String> updateFeed(Feed feed) {
-        return this.updateFeed(feed.getEnvironmentId(), feed.getId(), new Feed.Update(feed.getProperties()));
+        return this.updateFeed(feed.getId(), new Feed.Update(feed.getProperties()));
     }
 
     @Override
-    public ClientResponse<String> deleteFeed(String environmentId, String feedId) {
-        return new ClientResponse<String>(String.class, restApi().deleteFeed(environmentId, feedId),
+    public ClientResponse<String> deleteFeed(String feedId) {
+        return new ClientResponse<String>(String.class, restApi().deleteFeed(feedId),
                 RESPONSE_CODE.DELETE_SUCCESS.value());
     }
 
     @Override
     public ClientResponse<String> deleteFeed(Feed feed) {
-        return deleteFeed(feed.getEnvironmentId(), feed.getId());
+        return deleteFeed(feed.getId());
     }
 }

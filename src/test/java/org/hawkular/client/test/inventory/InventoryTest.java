@@ -49,16 +49,16 @@ public class InventoryTest extends BaseTest {
     @BeforeClass
     public void loadVariables() {
         TENANT_ID = client().inventory().getTenant().getEntity().getId();
-        FEED = new Feed(CanonicalPath.of().tenant(TENANT_ID).environment(ENVIRONMENT_ID)
+        FEED = new Feed(CanonicalPath.of().tenant(TENANT_ID)
                 .feed("feed_" + RandomStringUtils.randomAlphabetic(8)).get());
         RESOURCE_TYPE = new ResourceType(CanonicalPath.of().tenant(TENANT_ID)
                 .resourceType("resource_type_" + RandomStringUtils.randomAlphabetic(8)).get());
-        RESOURCE = new Resource(CanonicalPath.of().tenant(TENANT_ID).environment(ENVIRONMENT_ID).feed(FEED.getId())
+        RESOURCE = new Resource(CanonicalPath.of().tenant(TENANT_ID).feed(FEED.getId())
                 .resource("resource_" + RandomStringUtils.randomAlphabetic(8)).get(), RESOURCE_TYPE);
         METRIC_TYPE = new MetricType(CanonicalPath.of().tenant(TENANT_ID)
                 .metricType("metri_type_" + RandomStringUtils.randomAlphabetic(8)).get(), MetricUnit.NONE,
                 MetricDataType.GAUGE);
-        METRIC = new Metric(CanonicalPath.of().tenant(TENANT_ID).environment(ENVIRONMENT_ID).feed(FEED.getId())
+        METRIC = new Metric(CanonicalPath.of().tenant(TENANT_ID).environment(ENVIRONMENT_ID)
                 .metric("metric_" + RandomStringUtils.randomAlphabetic(8)).get(), METRIC_TYPE);
     }
 
@@ -96,13 +96,13 @@ public class InventoryTest extends BaseTest {
         //ResourceType Test
         ResourceType resourceTypeRx = client().inventory().getResourceType(RESOURCE_TYPE).getEntity();
         Assert.assertEquals(resourceTypeRx.getId(), RESOURCE_TYPE.getId());
-        Assert.assertEquals(resourceTypeRx.getTenantId(), RESOURCE_TYPE.getTenantId());
+        Assert.assertEquals(resourceTypeRx.getPath().ids().getTenantId(), RESOURCE_TYPE.getPath().ids().getTenantId());
         Assert.assertEquals(resourceTypeRx.getProperties(), RESOURCE_TYPE.getProperties());
 
         //Resource Test
         Resource resourceRx = client().inventory().getResource(RESOURCE).getEntity();
-        Assert.assertEquals(resourceRx.getTenantId(), RESOURCE.getTenantId());
-        Assert.assertEquals(resourceRx.getEnvironmentId(), RESOURCE.getEnvironmentId());
+        Assert.assertEquals(resourceRx.getPath().ids().getTenantId(), RESOURCE.getPath().ids().getTenantId());
+        Assert.assertEquals(resourceRx.getPath().ids().getEnvironmentId(), RESOURCE.getPath().ids().getEnvironmentId());
         /** Feed id returns null, disabled for now*/
         //Assert.assertEquals(resourceRx.getFeedId(), RESOURCE.getFeedId());
         Assert.assertEquals(resourceRx.getId(), RESOURCE.getId());
@@ -111,15 +111,15 @@ public class InventoryTest extends BaseTest {
 
         //MetricType Test
         MetricType metricTypeRx = client().inventory().getMetricType(METRIC_TYPE).getEntity();
-        Assert.assertEquals(metricTypeRx.getTenantId(), METRIC_TYPE.getTenantId());
+        Assert.assertEquals(metricTypeRx.getPath().ids().getTenantId(), METRIC_TYPE.getPath().ids().getTenantId());
         Assert.assertEquals(metricTypeRx.getProperties(), METRIC_TYPE.getProperties());
         Assert.assertEquals(metricTypeRx.getId(), METRIC_TYPE.getId());
         Assert.assertEquals(metricTypeRx.getUnit(), METRIC_TYPE.getUnit());
 
         //Metric Test
         Metric metricRx = client().inventory().getMetric(METRIC).getEntity();
-        Assert.assertEquals(metricRx.getTenantId(), METRIC.getTenantId());
-        Assert.assertEquals(metricRx.getEnvironmentId(), METRIC.getEnvironmentId());
+        Assert.assertEquals(metricRx.getPath().ids().getTenantId(), METRIC.getPath().ids().getTenantId());
+        Assert.assertEquals(metricRx.getPath().ids().getEnvironmentId(), METRIC.getPath().ids().getEnvironmentId());
         /** Feed id returns null, disabled for now*/
         //Assert.assertEquals(metricRx.getFeedId(), METRIC.getFeedId());
         Assert.assertEquals(metricRx.getId(), METRIC.getId());
