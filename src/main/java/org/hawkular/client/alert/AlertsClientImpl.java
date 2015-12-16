@@ -194,8 +194,7 @@ public class AlertsClientImpl extends BaseClient<AlertsRestApi> implements Alert
     public ClientResponse<List<Condition>> setConditions(String triggerId, String triggerMode,
             List<Condition> conditions) {
         return new ClientResponse<List<Condition>>(Condition.class, restApi().setConditions(triggerId, triggerMode,
-                conditions),
-                RESPONSE_CODE.UPDATE_SUCCESS.value(), true);
+                conditions), RESPONSE_CODE.UPDATE_SUCCESS.value(), true);
     }
 
     @Override

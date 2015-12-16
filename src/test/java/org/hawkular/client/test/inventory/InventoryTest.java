@@ -53,7 +53,7 @@ public class InventoryTest extends BaseTest {
                 .feed("feed_" + RandomStringUtils.randomAlphabetic(8)).get());
         RESOURCE_TYPE = new ResourceType(CanonicalPath.of().tenant(TENANT_ID)
                 .resourceType("resource_type_" + RandomStringUtils.randomAlphabetic(8)).get());
-        RESOURCE = new Resource(CanonicalPath.of().tenant(TENANT_ID).feed(FEED.getId())
+        RESOURCE = new Resource(CanonicalPath.of().tenant(TENANT_ID).environment(ENVIRONMENT_ID)
                 .resource("resource_" + RandomStringUtils.randomAlphabetic(8)).get(), RESOURCE_TYPE);
         METRIC_TYPE = new MetricType(CanonicalPath.of().tenant(TENANT_ID)
                 .metricType("metri_type_" + RandomStringUtils.randomAlphabetic(8)).get(), MetricUnit.NONE,
@@ -66,8 +66,8 @@ public class InventoryTest extends BaseTest {
     public void createTest() {
         Assert.assertTrue(client().inventory().createEnvironment(ENVIRONMENT_ID).isSuccess());
         Assert.assertTrue(client().inventory().registerFeed(FEED).isSuccess());
-        Reporter.log(
-                "Resource Type before creation: " + RESOURCE_TYPE.getId() + ", " + RESOURCE_TYPE.getProperties(), true);
+        Reporter.log("Resource Type before creation: " + RESOURCE_TYPE.getId() + ", "
+                + RESOURCE_TYPE.getProperties(), true);
         Assert.assertTrue(client().inventory().createResourceType(RESOURCE_TYPE).isSuccess());
         Assert.assertTrue(client().inventory().addResource(RESOURCE).isSuccess());
         Assert.assertTrue(client().inventory().createMetricType(METRIC_TYPE).isSuccess());
@@ -87,11 +87,11 @@ public class InventoryTest extends BaseTest {
 
         /** Feed returns null, disabled for now, https://github.com/hawkular/hawkular-inventory/pull/60*/
         //Feed Test
-        /*Feed feedRx = client().inventory().getFeed(FEED);
-        Assert.assertEquals(feedRx.getTenantId(), FEED.getTenantId());
-        Assert.assertEquals(feedRx.getEnvironmentId(), FEED.getEnvironmentId());
+        Feed feedRx = client().inventory().getFeed(FEED).getEntity();
+        Assert.assertEquals(feedRx.getPath().ids().getTenantId(), FEED.getPath().ids().getTenantId());
+        Assert.assertEquals(feedRx.getPath().ids().getEnvironmentId(), FEED.getPath().ids().getEnvironmentId());
         Assert.assertEquals(feedRx.getId(), FEED.getId());
-        Assert.assertEquals(feedRx.getProperties(), FEED.getProperties());*/
+        Assert.assertEquals(feedRx.getProperties(), FEED.getProperties());
 
         //ResourceType Test
         ResourceType resourceTypeRx = client().inventory().getResourceType(RESOURCE_TYPE).getEntity();
