@@ -39,6 +39,7 @@ public class RequestLogger implements ClientRequestFilter {
         if (LOG.isDebugEnabled()) {
             LOG.debug(">> HTTP: {}", requestContext.getMethod());
             LOG.debug("   URI: {}", requestContext.getUri());
+            LOG.debug("   Headers: {}", requestContext.getHeaders());
             LOG.debug("   Data: {}", mapper.writerWithDefaultPrettyPrinter()
                                     .writeValueAsString(requestContext.getEntity()));
         }

@@ -28,9 +28,9 @@ import org.hawkular.alerts.api.json.JacksonDeserializer;
 import org.hawkular.alerts.api.model.condition.Condition;
 import org.hawkular.inventory.api.model.CanonicalPath;
 import org.hawkular.inventory.api.model.Tenant;
+import org.hawkular.inventory.json.DetypedPathDeserializer;
 import org.hawkular.inventory.json.InventoryJacksonConfig;
-import org.hawkular.inventory.json.PathDeserializer;
-import org.hawkular.inventory.json.mixins.CanonicalPathWithTenantMixin;
+import org.hawkular.inventory.json.mixins.CanonicalPathMixin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,9 +97,9 @@ public class ClientResponse<T> {
                     ObjectMapper objectMapper = new ObjectMapper();
                     InventoryJacksonConfig.configure(objectMapper);
                     if (clazz.getName().equalsIgnoreCase(Tenant.class.getName())) {
-                        objectMapper.addMixIn(CanonicalPath.class, CanonicalPathWithTenantMixin.class);
+                        objectMapper.addMixIn(CanonicalPath.class, CanonicalPathMixin.class);
                     } else if (tenantId != null) {
-                        PathDeserializer.setCurrentCanonicalOrigin(CanonicalPath.of()
+                        DetypedPathDeserializer.setCurrentCanonicalOrigin(CanonicalPath.of()
                                 .tenant(tenantId).get());
                     }
                     if (collectionType != null) {

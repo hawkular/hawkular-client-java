@@ -343,26 +343,22 @@ public interface InventoryRestApi {    //PingHandler
 
     //Feed
     @POST
-    @Path("/{environmentId}/feeds")
-    Response registerFeed(@PathParam("environmentId") String environmentId,
-            Feed.Blueprint feed);
+    @Path("/feeds")
+    Response registerFeed(Feed.Blueprint feed);
 
     @GET
-    @Path("/{environmentId}/feeds")
-    Response getAllFeeds(@PathParam("environmentId") String environmentId);
+    @Path("/feeds")
+    Response getAllFeeds();
 
     @GET
-    @Path("/{environmentId}/feeds/{feedId}")
-    Response getFeed(@PathParam("environmentId") String environmentId,
-            @PathParam("feedId") String feedId);
+    @Path("/feeds/{feedId}")
+    Response getFeed(@PathParam("feedId") String feedId);
 
     @PUT
-    @Path("/{environmentId}/feeds/{feedId}")
-    Response updateFeed(
-            @PathParam("environmentId") String environmentId, @PathParam("feedId") String feedId, Feed.Update update);
+    @Path("/feeds/{feedId}")
+    Response updateFeed(@PathParam("feedId") String feedId, Feed.Update update);
 
     @DELETE
-    @Path("/{environmentId}/feeds/{feedId}")
-    Response deleteFeed(
-            @PathParam("environmentId") String environmentId, @PathParam("feedId") String feedId);
+    @Path("/feeds/{feedId}")
+    Response deleteFeed(@PathParam("feedId") String feedId);
 }

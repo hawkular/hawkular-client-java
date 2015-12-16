@@ -231,21 +231,21 @@ public interface InventoryClient {
     ClientResponse<Metric> getMetricOfResource(String environmentId, String resourceId, String metricId);
 
     //Feed
-    ClientResponse<String> registerFeed(String environmentId, Feed.Blueprint feed);
+    ClientResponse<String> registerFeed(Feed.Blueprint feed);
 
     ClientResponse<String> registerFeed(Feed feed);
 
-    ClientResponse<List<Feed>> getAllFeeds(String environmentId);
+    ClientResponse<List<Feed>> getAllFeeds();
 
-    ClientResponse<Feed> getFeed(String environmentId, String feedId);
+    ClientResponse<Feed> getFeed(String feedId);
 
     ClientResponse<Feed> getFeed(Feed feed);
 
-    ClientResponse<String> updateFeed(String environmentId, String feedId, Feed.Update update);
+    ClientResponse<String> updateFeed(String feedId, Feed.Update update);
 
     ClientResponse<String> updateFeed(Feed feed);
 
-    ClientResponse<String> deleteFeed(String environmentId, String feedId);
+    ClientResponse<String> deleteFeed(String feedId);
 
     ClientResponse<String> deleteFeed(Feed feed);
 }
