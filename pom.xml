@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2015 Red Hat, Inc. and/or its affiliates
+    Copyright 2015-2016 Red Hat, Inc. and/or its affiliates
     and other contributors as indicated by the @author tags.
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,7 +17,6 @@
     limitations under the License.
 
 -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
@@ -46,10 +45,10 @@
   </licenses>
 
   <properties>
-    <hawkular.metrics.version>0.9.0.Final</hawkular.metrics.version>
-    <hawkular.inventory.version>0.8.1.Final</hawkular.inventory.version>
-    <hawkular.inventory.json.helper.version>0.8.1.Final</hawkular.inventory.json.helper.version>
-    <hawkular.alerts.version>0.6.0.Final</hawkular.alerts.version>
+    <hawkular.metrics.version>0.10.0.Final</hawkular.metrics.version>
+    <hawkular.inventory.version>0.10.1.Final</hawkular.inventory.version>
+    <hawkular.inventory.json.helper.version>0.10.1.Final</hawkular.inventory.json.helper.version>
+    <hawkular.alerts.version>0.7.1.Final</hawkular.alerts.version>
     <resteasy.version>3.0.8.Final</resteasy.version>
     <resteasy.jackson2.provider.version>3.0.8.Final</resteasy.jackson2.provider.version>
     <org.jboss.logging.version>3.3.0.Final</org.jboss.logging.version>
