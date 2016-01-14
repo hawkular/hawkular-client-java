@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates
+ * Copyright 2015-2016 Red Hat, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,6 +30,7 @@ import org.testng.Reporter;
 public class BaseTest {
 
     private HawkularClient client;
+    public static final long MINUTE = 1000 * 60;
 
     public BaseTest() throws Exception {
         init();

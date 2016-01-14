@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates
+ * Copyright 2015-2016 Red Hat, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -57,7 +57,7 @@ public class InventoryTest extends BaseTest {
                 .resource("resource_" + RandomStringUtils.randomAlphabetic(8)).get(), RESOURCE_TYPE);
         METRIC_TYPE = new MetricType(CanonicalPath.of().tenant(TENANT_ID)
                 .metricType("metri_type_" + RandomStringUtils.randomAlphabetic(8)).get(), MetricUnit.NONE,
-                MetricDataType.GAUGE);
+                MetricDataType.GAUGE, MINUTE * 30);
         METRIC = new Metric(CanonicalPath.of().tenant(TENANT_ID).environment(ENVIRONMENT_ID)
                 .metric("metric_" + RandomStringUtils.randomAlphabetic(8)).get(), METRIC_TYPE);
     }

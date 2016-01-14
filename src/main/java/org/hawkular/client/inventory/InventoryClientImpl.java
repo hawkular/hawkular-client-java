@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates
+ * Copyright 2015-2016 Red Hat, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -45,6 +45,7 @@ import org.hawkular.inventory.api.model.Tenant.Update;
 public class InventoryClientImpl extends BaseClient<InventoryRestApi>
         implements InventoryClient {
     private String tenantId = null;
+    private static final long MINUTE = 1000 * 60;
 
     public InventoryClientImpl(URI endpointUri, String username,
             String password) throws Exception {
@@ -188,13 +189,14 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     @Override
     public ClientResponse<String> createMetricType(String metricTypeId, MetricUnit unit,
             MetricDataType metricDataType) {
-        return createMetricType(new MetricType.Blueprint(metricTypeId, unit, metricDataType));
+        return createMetricType(new MetricType.Blueprint(metricTypeId, unit, metricDataType, MINUTE * 30));
+        //Take default collection interval as 30 minutes
     }
 
     @Override
     public ClientResponse<String> createMetricType(MetricType metricType) {
         return createMetricType(new MetricType.Blueprint(metricType.getId(), metricType.getUnit(),
-                metricType.getType(), metricType.getProperties()));
+                metricType.getType(), metricType.getProperties(), metricType.getCollectionInterval()));
     }
 
     @Override
@@ -206,7 +208,8 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> updateMetricType(String metricTypeId, MetricType metricType) {
-        return updateMetricType(metricTypeId, new MetricType.Update(metricType.getProperties(), metricType.getUnit()));
+        return updateMetricType(metricTypeId, new MetricType.Update(metricType.getProperties(), metricType.getUnit(),
+                metricType.getCollectionInterval()));
     }
 
     @Override
@@ -300,7 +303,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     public ClientResponse<String> updateMetric(Metric metric) {
         return updateMetric(metric.getPath().ids().getEnvironmentId(), metric.getPath().ids().getFeedId(),
                 metric.getId(),
-                new Metric.Update(metric.getProperties()));
+                new Metric.Update(metric.getProperties(), MINUTE * 30));
     }
 
     @Override
