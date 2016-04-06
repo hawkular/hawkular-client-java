@@ -33,6 +33,7 @@ import org.testng.Reporter;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+@Test(groups = { "inventory" })
 public class InventoryTest extends BaseTest {
     private static String TENANT_ID;
     private static final String ENVIRONMENT_ID = "environment_" + RandomStringUtils.randomAlphabetic(8);

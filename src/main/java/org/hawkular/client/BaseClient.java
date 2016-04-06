@@ -29,4 +29,12 @@ public abstract class BaseClient<T> {
     public T restApi() {
         return this.restAPI;
     }
+
+    public void addHeader(String key, Object value) {
+        RestRequestFilter.addHeader(key, value);
+    }
+
+    public void removeHeader(String key) {
+        RestRequestFilter.removeHeader(key);
+    }
 }

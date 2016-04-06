@@ -27,17 +27,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Provider
-public class ResponseLogger implements ClientResponseFilter {
-    private Logger LOG = LoggerFactory.getLogger(ResponseLogger.class);
+public class RestResponseFilter implements ClientResponseFilter {
+    private static final Logger _logger = LoggerFactory.getLogger(RestResponseFilter.class);
 
     @Override
-    public void filter(ClientRequestContext arg0, ClientResponseContext responseContext)
+    public void filter(ClientRequestContext requestContext, ClientResponseContext responseContext)
             throws IOException {
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("<< Response headers: " + responseContext.getHeaders());
-        }
+        logResponses(responseContext);
     }
 
+    private void logResponses(ClientResponseContext responseContext) {
+        if (_logger.isDebugEnabled()) {
+            _logger.debug("<< Response headers: " + responseContext.getHeaders());
+        }
+    }
 
 }

@@ -23,6 +23,7 @@ import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
 
+@Test(groups = { "inventory" })
 public class TenantTest extends BaseTest {
 
     public TenantTest() throws Exception {

@@ -37,6 +37,7 @@ import org.testng.annotations.Test;
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
+@Test(groups = { "alerts" })
 public class ConditionsTest extends BaseTest {
 
     public ConditionsTest() throws Exception {
@@ -48,7 +49,8 @@ public class ConditionsTest extends BaseTest {
         String triggerId = "New-Trigger-" + getRandomId();
         String dataId = "no-data-id";
         //Make Conditions
-        AvailabilityCondition availabilityCondition = new AvailabilityCondition(triggerId, dataId, Operator.DOWN);
+        AvailabilityCondition availabilityCondition = new AvailabilityCondition(
+                triggerId, Mode.FIRING, dataId, Operator.DOWN);
         List<Condition> conditions = new ArrayList<Condition>();
         conditions.add(availabilityCondition);
         testCondition(triggerId, conditions, Mode.FIRING);
@@ -59,7 +61,8 @@ public class ConditionsTest extends BaseTest {
         String triggerId = "New-Trigger-" + getRandomId();
         String dataId = "no-data-id";
         //Make Conditions
-        CompareCondition compareCondition = new CompareCondition(triggerId, dataId, CompareCondition.Operator.GTE,
+        CompareCondition compareCondition = new CompareCondition(
+                triggerId, Mode.AUTORESOLVE, dataId, CompareCondition.Operator.GTE,
                 1.0, "no-data-id-2");
         List<Condition> conditions = new ArrayList<Condition>();
         conditions.add(compareCondition);
@@ -71,8 +74,8 @@ public class ConditionsTest extends BaseTest {
         String triggerId = "New-Trigger-" + getRandomId();
         String dataId = "no-data-id";
         //Make Conditions
-        StringCondition stringCondition = new StringCondition(triggerId, dataId, StringCondition.Operator.CONTAINS,
-                "find-me", false);
+        StringCondition stringCondition = new StringCondition(
+                triggerId, Mode.FIRING, dataId, StringCondition.Operator.CONTAINS, "find-me", false);
         List<Condition> conditions = new ArrayList<Condition>();
         conditions.add(stringCondition);
         testCondition(triggerId, conditions, Mode.FIRING);
@@ -83,8 +86,8 @@ public class ConditionsTest extends BaseTest {
         String triggerId = "New-Trigger-" + getRandomId();
         String dataId = "no-data-id";
         //Make Conditions
-        ThresholdCondition thresholdCondition = new ThresholdCondition(triggerId, dataId,
-                ThresholdCondition.Operator.LTE, 21.45);
+        ThresholdCondition thresholdCondition = new ThresholdCondition(
+                triggerId, Mode.FIRING, dataId, ThresholdCondition.Operator.LTE, 21.45);
         List<Condition> conditions = new ArrayList<Condition>();
         conditions.add(thresholdCondition);
         testCondition(triggerId, conditions, Mode.FIRING);
@@ -96,7 +99,7 @@ public class ConditionsTest extends BaseTest {
         String dataId = "no-data-id";
         //Make Conditions
         ThresholdRangeCondition thresholdRangeCondition = new ThresholdRangeCondition(
-                triggerId, dataId, ThresholdRangeCondition.Operator.INCLUSIVE,
+                triggerId, Mode.FIRING, dataId, ThresholdRangeCondition.Operator.INCLUSIVE,
                 ThresholdRangeCondition.Operator.INCLUSIVE, 21.45, 10.45, true);
         List<Condition> conditions = new ArrayList<Condition>();
         conditions.add(thresholdRangeCondition);

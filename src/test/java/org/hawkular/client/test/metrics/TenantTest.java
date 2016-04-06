@@ -19,13 +19,11 @@ package org.hawkular.client.test.metrics;
 import java.util.List;
 import java.util.Optional;
 
-import org.hawkular.client.metrics.model.TenantParam;
 import org.hawkular.client.test.BaseTest;
-import org.hawkular.metrics.core.api.Tenant;
+import org.hawkular.metrics.model.Tenant;
 import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
-
 
 public class TenantTest extends BaseTest {
 
@@ -33,20 +31,20 @@ public class TenantTest extends BaseTest {
         super();
     }
 
-    @Test(priority=5)
+    @Test(priority = 5)
     public void createTenants() throws Exception {
-        List<TenantParam> tenantsBefore = client().metrics().getTenants();
+        List<Tenant> tenantsBefore = client().metrics().getTenants().getEntity();
         Reporter.log("Teant list Before: " + tenantsBefore.toString(), true);
 
         final Tenant expectedTenant = randomTenant();
         client().metrics().createTenant(expectedTenant);
 
-        List<TenantParam> tenantsAfter = client().metrics().getTenants();
+        List<Tenant> tenantsAfter = client().metrics().getTenants().getEntity();
         Reporter.log("Tenant list After: " + tenantsAfter.toString(), true);
 
-        Assert.assertTrue(tenantsBefore.size() == tenantsAfter.size()-1);
+        Assert.assertTrue(tenantsBefore.size() == tenantsAfter.size() - 1);
 
-        Optional<TenantParam> value = tenantsAfter
+        Optional<Tenant> value = tenantsAfter
                 .stream()
                 .filter(a -> a.getId().equals(expectedTenant.getId()))
                 .findFirst();

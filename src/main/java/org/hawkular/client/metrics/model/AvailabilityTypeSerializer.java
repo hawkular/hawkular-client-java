@@ -18,7 +18,7 @@ package org.hawkular.client.metrics.model;
 
 import java.io.IOException;
 
-import org.hawkular.metrics.core.api.AvailabilityType;
+import org.hawkular.metrics.model.AvailabilityType;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;

@@ -72,8 +72,8 @@ public class RestFactory<T> {
         ResteasyClient client = new ResteasyClientBuilder().httpEngine(engine).build();
         client.register(JacksonJaxbJsonProvider.class);
         client.register(JacksonObjectMapperProvider.class);
-        client.register(RequestLogger.class);
-        client.register(ResponseLogger.class);
+        client.register(RestRequestFilter.class);
+        client.register(RestResponseFilter.class);
         ProxyBuilder<T> proxyBuilder = client.target(uri).proxyBuilder(apiClassType);
         if (classLoader != null) {
             proxyBuilder = proxyBuilder.classloader(classLoader);

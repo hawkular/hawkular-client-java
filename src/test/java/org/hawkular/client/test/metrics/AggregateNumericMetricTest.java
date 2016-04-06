@@ -18,7 +18,7 @@ package org.hawkular.client.test.metrics;
 
 import org.hawkular.client.test.BaseTest;
 //import org.hawkular.metrics.core.api.NumericData;
-import org.hawkular.metrics.core.api.Tenant;
+import org.hawkular.metrics.model.Tenant;
 
 public class AggregateNumericMetricTest extends BaseTest {
     public AggregateNumericMetricTest() throws Exception {

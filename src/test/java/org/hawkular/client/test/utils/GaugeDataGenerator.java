@@ -19,9 +19,8 @@ package org.hawkular.client.test.utils;
 import java.util.List;
 import java.util.Random;
 
-import org.hawkular.client.metrics.model.GaugeDataPoint;
 import org.hawkular.client.test.BTG;
-import org.hawkular.metrics.core.api.DataPoint;
+import org.hawkular.metrics.model.DataPoint;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
@@ -31,34 +30,33 @@ public class GaugeDataGenerator {
     private BTG ts = new BTG();
     private Random random = new Random();
     private int size;
-    private final List<GaugeDataPoint> data;
+    private final List<DataPoint<Double>> data;
 
     public GaugeDataGenerator(int size) {
         this.size = size;
         data = build(size);
     }
 
-    public static List<GaugeDataPoint> gen(int size) {
+    public static List<DataPoint<Double>> gen(int size) {
         return new GaugeDataGenerator(size).data();
     }
 
-    public static List<GaugeDataPoint> gen(int size, int interval) {
+    public static List<DataPoint<Double>> gen(int size, int interval) {
         return new GaugeDataGenerator(size).data();
     }
 
-    public List<GaugeDataPoint> data() {
+    public List<DataPoint<Double>> data() {
         return data;
     }
 
-    private List<GaugeDataPoint> build(int size) {
-        Builder<GaugeDataPoint> builder = new ImmutableList.Builder<>();
-        for(int i=0; i< size; i++) {
+    private List<DataPoint<Double>> build(int size) {
+        Builder<DataPoint<Double>> builder = new ImmutableList.Builder<>();
+        for (int i = 0; i < size; i++) {
             DataPoint<Double> point = new DataPoint<>(ts.nextMilli(), random.nextDouble());
-            builder.add(new GaugeDataPoint(point));
+            builder.add(point);
         }
         return builder.build();
     }
-
 
     @Override
     public String toString() {

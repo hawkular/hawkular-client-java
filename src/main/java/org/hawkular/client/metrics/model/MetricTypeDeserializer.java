@@ -18,7 +18,7 @@ package org.hawkular.client.metrics.model;
 
 import java.io.IOException;
 
-import org.hawkular.metrics.core.api.MetricType;
+import org.hawkular.metrics.model.MetricType;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;

@@ -17,10 +17,12 @@
 package org.hawkular.client.test.metrics.openshift;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.hawkular.client.metrics.model.MetricDefinition;
+import org.hawkular.metrics.model.Metric;
+import org.hawkular.metrics.model.param.Tags;
 import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
@@ -33,7 +35,7 @@ import com.google.common.collect.ImmutableList;
  * @author vnguyen
  *
  */
-@Test(groups={"openshift"})
+@Test(groups = { "openshift" })
 public class MetricDefinitionTest extends OpenshiftBaseTest {
 
     private static final List<String> expectedMetricIDs = ImmutableList.of(
@@ -55,12 +57,10 @@ public class MetricDefinitionTest extends OpenshiftBaseTest {
         String project = "default";
         String container = "hawkular-metrics";
 
-        String type = null; // ignore metric type
-        String tags = "container_name:" + container + ",pod_namespace:" + project;
-        List<MetricDefinition> defs = client().metrics().findMetricDefinitions(
-                                                OpenshiftBaseTest.TENANT_ID,
-                                                type,
-                                                tags);
+        Tags tags = new Tags(new HashMap<String, String>());
+        tags.getTags().put("container_name", container);
+        tags.getTags().put("pod_namespace", project);
+        List<Metric<?>> defs = client().metrics().findMetrics(null, tags, null).getEntity();
         Reporter.log(defs.toString(), true);
 
         Assert.assertTrue(defs != null && defs.size() == expectedMetricIDs.size());
@@ -76,9 +76,9 @@ public class MetricDefinitionTest extends OpenshiftBaseTest {
         String podId = defs.get(0).getTags().get("pod_id");
         String idPrefix = container + "/" + podId + "/";
         List<String> expectedIDs = expectedMetricIDs
-                                        .stream()
-                                        .map(item -> idPrefix + item)
-                                        .collect(Collectors.toList());
+                .stream()
+                .map(item -> idPrefix + item)
+                .collect(Collectors.toList());
         Collections.sort(metricIDs);
         Collections.sort(expectedIDs);
 
