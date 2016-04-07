@@ -46,7 +46,7 @@ public class CounterMetricTest extends BaseTest {
     public void getDefinition() throws Exception {
         Metric<Long> actual =
                 client().metrics().getCounter(expectedDefinition.getId()).getEntity();
-        Reporter.log("Got: " + actual.toString(), true);
+        Reporter.log("Got: " + actual, true);
         Assert.assertEquals(actual, expectedDefinition);
     }
 

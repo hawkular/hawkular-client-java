@@ -31,6 +31,7 @@ import org.hawkular.inventory.api.model.Tenant;
 import org.hawkular.inventory.json.DetypedPathDeserializer;
 import org.hawkular.inventory.json.InventoryJacksonConfig;
 import org.hawkular.inventory.json.mixins.model.CanonicalPathMixin;
+import org.hawkular.client.metrics.mixins.MetricsJacksonConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -96,6 +97,7 @@ public class ClientResponse<T> {
                 } else {
                     ObjectMapper objectMapper = new ObjectMapper();
                     InventoryJacksonConfig.configure(objectMapper);
+                    MetricsJacksonConfig.configure(objectMapper);
                     if (clazz.getName().equalsIgnoreCase(Tenant.class.getName())) {
                         objectMapper.addMixIn(CanonicalPath.class, CanonicalPathMixin.class);
                     } else if (tenantId != null) {
@@ -120,6 +122,9 @@ public class ClientResponse<T> {
             _logger.error("Error, ", e);
         } finally {
             response.close();
+            if (_logger.isDebugEnabled()) {
+                _logger.debug("Client response:{}", this.toString());
+            }
         }
     }
 

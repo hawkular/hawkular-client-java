@@ -43,6 +43,10 @@ public class AlertsClientImpl extends BaseClient<AlertsRestApi> implements Alert
         super(endpointUri, username, password, new RestFactory<AlertsRestApi>(AlertsRestApi.class));
     }
 
+    public AlertsClientImpl(URI endpointUri) throws Exception {
+        super(endpointUri, new RestFactory<AlertsRestApi>(AlertsRestApi.class));
+    }
+
     //Triggers
     @Override
     public ClientResponse<List<Trigger>> findTriggers() {

@@ -41,25 +41,13 @@ import org.hawkular.metrics.model.param.Tags;
  *
  */
 public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements MetricsClient {
-    private static final String KEY_TENANT_HEADER = "Hawkular-Tenant";
 
     public MetricsClientImpl(URI endpointUri, String username, String password) throws Exception {
         super(endpointUri, username, password, new RestFactory<MetricsRestApi>(MetricsRestApi.class));
     }
 
-    public MetricsClientImpl(URI endpointUri, String username, String password, String tenantId) throws Exception {
-        super(endpointUri, username, password, new RestFactory<MetricsRestApi>(MetricsRestApi.class));
-        addHeader(KEY_TENANT_HEADER, tenantId);
-    }
-
-    @Override
-    public void updateTenantHeader(String tenantId) {
-        addHeader(KEY_TENANT_HEADER, tenantId);
-    }
-
-    @Override
-    public void removeTenantHeader() {
-        removeHeader(KEY_TENANT_HEADER);
+    public MetricsClientImpl(URI endpointUri) throws Exception {
+        super(endpointUri, new RestFactory<MetricsRestApi>(MetricsRestApi.class));
     }
 
     @Override

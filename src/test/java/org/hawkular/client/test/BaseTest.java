@@ -67,7 +67,7 @@ public class BaseTest {
 
     public static MetricId<?> randomMetricId(MetricType<?> type) {
         String name = getRandomId();
-        return new MetricId(name, type, name);
+        return new MetricId<>(name, type, name);
     }
 
     public static String getRandomId() {

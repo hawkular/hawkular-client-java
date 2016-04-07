@@ -30,6 +30,8 @@ import org.slf4j.LoggerFactory;
 public class RestResponseFilter implements ClientResponseFilter {
     private static final Logger _logger = LoggerFactory.getLogger(RestResponseFilter.class);
 
+    //private static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
     @Override
     public void filter(ClientRequestContext requestContext, ClientResponseContext responseContext)
             throws IOException {
@@ -38,7 +40,21 @@ public class RestResponseFilter implements ClientResponseFilter {
 
     private void logResponses(ClientResponseContext responseContext) {
         if (_logger.isDebugEnabled()) {
-            _logger.debug("<< Response headers: " + responseContext.getHeaders());
+            _logger.debug("<< Response headers:{}", responseContext.getHeaders());
+            _logger.debug("<< Status -> code:{}, message:{}",
+                    responseContext.getStatusInfo().getStatusCode(),
+                    responseContext.getStatusInfo().getReasonPhrase());
+            /*
+            try {
+                String data = null;
+                if (responseContext.getEntityStream() != null) {
+                    data = IOUtils.toString(responseContext.getEntityStream());
+                }
+                _logger.debug("<< Data:{}", data);
+            } catch (Exception ex) {
+                _logger.error("Exception,", ex);
+            }
+            */
         }
     }
 

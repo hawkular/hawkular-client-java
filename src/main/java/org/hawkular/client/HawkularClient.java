@@ -17,6 +17,7 @@
 package org.hawkular.client;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Objects;
 
 import org.hawkular.client.alert.AlertsClient;
@@ -29,16 +30,44 @@ import org.hawkular.client.metrics.MetricsClientImpl;
 import com.google.common.base.MoreObjects;
 
 public class HawkularClient {
+    public static final String KEY_HEADER_TENANT = "Hawkular-Tenant";
+    public static final String KEY_HEADER_AUTHORIZATION = "Authorization";
+
     private MetricsClient metricsClient;
     private InventoryClient inventoryClient;
     private AlertsClient alertsClient;
     private URI endpointUri;
 
     public HawkularClient(URI endpointUri, String username, String password) throws Exception {
+        this(endpointUri, username, password, null);
+    }
+
+    public HawkularClient(URI endpointUri) throws Exception {
+        this(endpointUri, null, null, null);
+    }
+
+    public HawkularClient(URI endpointUri, HashMap<String, Object> headers) throws Exception {
+        this(endpointUri, null, null, headers);
+    }
+
+    public HawkularClient(URI endpointUri, String username, String password, HashMap<String, Object> headers)
+            throws Exception {
         this.endpointUri = endpointUri;
-        metricsClient = new MetricsClientImpl(endpointUri, username, password);
-        inventoryClient = new InventoryClientImpl(endpointUri, username, password);
-        alertsClient = new AlertsClientImpl(endpointUri, username, password);
+        if (username != null) {
+            metricsClient = new MetricsClientImpl(endpointUri, username, password);
+            inventoryClient = new InventoryClientImpl(endpointUri, username, password);
+            alertsClient = new AlertsClientImpl(endpointUri, username, password);
+        } else {
+            metricsClient = new MetricsClientImpl(endpointUri);
+            inventoryClient = new InventoryClientImpl(endpointUri);
+            alertsClient = new AlertsClientImpl(endpointUri);
+        }
+        //Load headers
+        if (headers != null && !headers.isEmpty()) {
+            for (String key : headers.keySet()) {
+                updateHeader(key, headers.get(key));
+            }
+        }
     }
 
     public MetricsClient metrics() {
@@ -55,6 +84,14 @@ public class HawkularClient {
 
     public int hashcode() {
         return Objects.hash(endpointUri.hashCode());
+    }
+
+    public void updateHeader(String key, Object value) {
+        RestRequestFilter.updateHeader(key, value);
+    }
+
+    public void removeHeader(String key) {
+        RestRequestFilter.removeHeader(key);
     }
 
     public String toString() {

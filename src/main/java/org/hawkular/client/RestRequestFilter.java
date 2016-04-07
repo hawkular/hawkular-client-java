@@ -47,14 +47,14 @@ public class RestRequestFilter implements ClientRequestFilter {
     private void logRequests(ClientRequestContext requestContext) throws JsonProcessingException {
         if (_logger.isDebugEnabled()) {
             _logger.debug(">> HTTP: {}", requestContext.getMethod());
-            _logger.debug("   URI: {}", requestContext.getUri());
-            _logger.debug("   Headers: {}", requestContext.getHeaders());
-            _logger.debug("   Data: {}", OBJECT_MAPPER.writerWithDefaultPrettyPrinter()
+            _logger.debug(">> URI: {}", requestContext.getUri());
+            _logger.debug(">> Headers: {}", requestContext.getHeaders());
+            _logger.debug(">> Data: {}", OBJECT_MAPPER.writerWithDefaultPrettyPrinter()
                     .writeValueAsString(requestContext.getEntity()));
         }
     }
 
-    public static void addHeader(String key, Object value) {
+    public static void updateHeader(String key, Object value) {
         additionalHeaders.put(key, value);
     }
 

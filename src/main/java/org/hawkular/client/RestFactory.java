@@ -51,29 +51,41 @@ public class RestFactory<T> {
         this.classLoader = classLoader;
     }
 
+    public T createAPI(URI uri) {
+        return this.createAPI(uri, null, null);
+    }
+
     public T createAPI(URI uri, String userName, String password) {
         CloseableHttpClient httpclient = HttpClientBuilder.create().build();
-        HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort());
-        CredentialsProvider credsProvider = new BasicCredentialsProvider();
-        credsProvider.setCredentials(
-                new AuthScope(targetHost.getHostName(), targetHost.getPort()),
-                new UsernamePasswordCredentials(userName, password));
-        // Create AuthCache instance
-        AuthCache authCache = new BasicAuthCache();
-        // Generate BASIC scheme object and add it to the local auth cache
-        BasicScheme basicAuth = new BasicScheme();
-        authCache.put(targetHost, basicAuth);
-        // Add AuthCache to the execution context
-        HttpClientContext context = HttpClientContext.create();
-        context.setCredentialsProvider(credsProvider);
-        context.setAuthCache(authCache);
-        ApacheHttpClient4Engine engine = new ApacheHttpClient4Engine(httpclient, context);
+        ResteasyClient client = null;
+        if (userName != null) {
+            HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort());
+            CredentialsProvider credsProvider = new BasicCredentialsProvider();
+            credsProvider.setCredentials(
+                    new AuthScope(targetHost.getHostName(), targetHost.getPort()),
+                    new UsernamePasswordCredentials(userName, password));
+            // Create AuthCache instance
+            AuthCache authCache = new BasicAuthCache();
+            // Generate BASIC scheme object and add it to the local auth cache
+            BasicScheme basicAuth = new BasicScheme();
+            authCache.put(targetHost, basicAuth);
+            // Add AuthCache to the execution context
+            HttpClientContext context = HttpClientContext.create();
+            context.setCredentialsProvider(credsProvider);
+            context.setAuthCache(authCache);
+            ApacheHttpClient4Engine engine = new ApacheHttpClient4Engine(httpclient, context);
 
-        ResteasyClient client = new ResteasyClientBuilder().httpEngine(engine).build();
+            client = new ResteasyClientBuilder().httpEngine(engine).build();
+        } else {
+            ApacheHttpClient4Engine engine = new ApacheHttpClient4Engine(httpclient);
+            client = new ResteasyClientBuilder().httpEngine(engine).build();
+        }
+
         client.register(JacksonJaxbJsonProvider.class);
         client.register(JacksonObjectMapperProvider.class);
         client.register(RestRequestFilter.class);
         client.register(RestResponseFilter.class);
+        client.register(HCJacksonJson2Provider.class);
         ProxyBuilder<T> proxyBuilder = client.target(uri).proxyBuilder(apiClassType);
         if (classLoader != null) {
             proxyBuilder = proxyBuilder.classloader(classLoader);

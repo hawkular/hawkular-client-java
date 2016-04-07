@@ -54,11 +54,6 @@ public interface MetricsClient {
         }
     }
 
-    /* add/remove tenant in to header*/
-    void updateTenantHeader(String tenantId);
-
-    void removeTenantHeader();
-
     /* Availability Api*/
 
     ClientResponse<String> createAvailabilityMetric(Metric<AvailabilityType> metric);
@@ -198,6 +193,7 @@ public interface MetricsClient {
 
     ClientResponse<String> ping();
 
+    /* tenant API*/
     ClientResponse<List<Tenant>> getTenants();
 
     ClientResponse<String> createTenant(Tenant tenant);

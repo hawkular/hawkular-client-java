@@ -26,15 +26,11 @@ public abstract class BaseClient<T> {
         restAPI = (T) restFactory.createAPI(endpointUri, username, password);
     }
 
+    public BaseClient(URI endpointUri, RestFactory<T> restFactory) throws Exception {
+        restAPI = (T) restFactory.createAPI(endpointUri);
+    }
+
     public T restApi() {
         return this.restAPI;
-    }
-
-    public void addHeader(String key, Object value) {
-        RestRequestFilter.addHeader(key, value);
-    }
-
-    public void removeHeader(String key) {
-        RestRequestFilter.removeHeader(key);
     }
 }
