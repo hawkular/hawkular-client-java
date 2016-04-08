@@ -41,8 +41,7 @@ class TenantDeserializer extends JsonDeserializer<Tenant> {
     @Override
     public Tenant deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException,
             JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        TenantDefinition tenantDefinition = objectMapper.readValue(jp, TenantDefinition.class);
+        TenantDefinition tenantDefinition = jp.getCodec().readValue(jp, TenantDefinition.class);
         if (tenantDefinition != null) {
             return tenantDefinition.toTenant();
         }

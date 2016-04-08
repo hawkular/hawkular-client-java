@@ -27,7 +27,7 @@ import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
 
-@Test(groups = { "known-failure" }, description = "HWKMETRICS-51")
+//@Test(groups = { "known-failure" }, description = "HWKMETRICS-51")
 public class GaugeMetricTest extends BaseTest {
 
     private final Metric<Double> expectedMetric = MetricDefGenerator.genGaugeDef();

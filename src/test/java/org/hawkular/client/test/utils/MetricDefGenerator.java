@@ -16,6 +16,9 @@
  */
 package org.hawkular.client.test.utils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.metrics.model.AvailabilityType;
 import org.hawkular.metrics.model.Metric;
@@ -28,6 +31,8 @@ import org.hawkular.metrics.model.MetricType;
  *
  */
 public class MetricDefGenerator {
+    private static final int DATA_RETENTION = 21;
+    private static final Map<String, String> TAGS = new HashMap<String, String>();
 
     @SuppressWarnings("unchecked")
     public static Metric<Double> genGaugeDef() {
@@ -46,6 +51,6 @@ public class MetricDefGenerator {
 
     public static <T> Metric<?> genDef(MetricType<T> metricType) {
         MetricId<?> id = new MetricId<>(BaseTest.getRandomId(), metricType, BaseTest.getRandomId());
-        return new Metric<>(id);
+        return new Metric<>(id, TAGS, DATA_RETENTION);
     }
 }
