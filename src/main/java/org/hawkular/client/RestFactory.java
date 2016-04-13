@@ -18,26 +18,37 @@ package org.hawkular.client;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.KeyStore;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
 import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.BasicAuthCache;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.jboss.resteasy.client.jaxrs.ProxyBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
 public class RestFactory<T> {
+    private static final Logger _logger = LoggerFactory.getLogger(RestFactory.class);
 
     private final ClassLoader classLoader;
     private Class<T> apiClassType;
@@ -56,7 +67,12 @@ public class RestFactory<T> {
     }
 
     public T createAPI(URI uri, String userName, String password) {
-        CloseableHttpClient httpclient = HttpClientBuilder.create().build();
+        HttpClient httpclient = null;
+        if (uri.toString().startsWith("https")) {
+            httpclient = getHttpClient();
+        } else {
+            httpclient = HttpClientBuilder.create().build();
+        }
         ResteasyClient client = null;
         if (userName != null) {
             HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort());
@@ -77,7 +93,7 @@ public class RestFactory<T> {
 
             client = new ResteasyClientBuilder().httpEngine(engine).build();
         } else {
-            ApacheHttpClient4Engine engine = new ApacheHttpClient4Engine(httpclient);
+            ApacheHttpClient4Engine engine = new ApacheHttpClient4Engine(getHttpClient());
             client = new ResteasyClientBuilder().httpEngine(engine).build();
         }
 
@@ -97,4 +113,28 @@ public class RestFactory<T> {
         URI uri = new URI(url);
         return createAPI(uri, userName, password);
     }
+
+    //trust any host
+    public HttpClient getHttpClient() {
+        SSLContextBuilder builder = new SSLContextBuilder();
+        try {
+            KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            builder.loadTrustMaterial(keyStore, new TrustStrategy() {
+                @Override
+                public boolean isTrusted(X509Certificate[] trustedCert, String nameConstraints)
+                        throws CertificateException {
+                    return true;
+                }
+            });
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build());
+            CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(
+                    sslsf).build();
+            return httpclient;
+
+        } catch (Exception ex) {
+            _logger.error("Exception, ", ex);
+            return null;
+        }
+    }
+
 }
