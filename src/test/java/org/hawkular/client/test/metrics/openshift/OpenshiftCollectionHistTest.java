@@ -23,14 +23,17 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
 
 import org.apache.commons.io.IOUtils;
-import org.hawkular.client.metrics.model.GaugeDataPoint;
-import org.hawkular.client.metrics.model.MetricDefinition;
 import org.hawkular.client.test.BaseTest;
+import org.hawkular.metrics.model.DataPoint;
+import org.hawkular.metrics.model.Metric;
+import org.hawkular.metrics.model.MetricType;
+import org.hawkular.metrics.model.param.Tags;
 import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
@@ -40,9 +43,9 @@ import org.testng.annotations.Test;
  * slot to see metric collection rates over a period of time
  * @author vnguyen
  */
-@Test(groups={"openshift"})
+@Test(groups = { "openshift" })
 public class OpenshiftCollectionHistTest extends BaseTest {
-    public static final String TENANT_ID="heapster";
+    public static final String TENANT_ID = "heapster";
 
     public OpenshiftCollectionHistTest() throws Exception {
         super();
@@ -52,8 +55,8 @@ public class OpenshiftCollectionHistTest extends BaseTest {
     public void getMetricDefs() throws Exception {
 
         printHist("stress_cpu",
-                  getHistogram("zproject9", "stress", "cpu/usage"),
-                  false);
+                getHistogram("zproject9", "stress", "cpu/usage"),
+                false);
 
         printHist("stress_mem",
                 getHistogram("zproject9", "stress", "memory/usage"),
@@ -64,22 +67,24 @@ public class OpenshiftCollectionHistTest extends BaseTest {
                 false);
 
         printHist("cass_mem",
-              getHistogram("default", "hawkular-cassandra", "memory/usage"),
-              false);
+                getHistogram("default", "hawkular-cassandra", "memory/usage"),
+                false);
 
         printHist("hawk_cpu",
                 getHistogram("default", "hawkular-metrics", "cpu/usage"),
                 false);
 
         printHist("hawk_mem",
-              getHistogram("default", "hawkular-metrics", "memory/usage"),
-              false);
+                getHistogram("default", "hawkular-metrics", "memory/usage"),
+                false);
     }
 
     public String getPodUID(String podNamespace, String containerName) {
-        List<MetricDefinition> defs = super.client().metrics().findMetricDefinitions(TENANT_ID,
-                "gauge",
-                "container_name:" + containerName + ",pod_namespace:" + podNamespace);
+        Tags tags = new Tags(new HashMap<String, String>());
+        tags.getTags().put("container_name", containerName);
+        tags.getTags().put("pod_namespace", podNamespace);
+
+        List<Metric<?>> defs = super.client().metrics().findMetrics(MetricType.GAUGE, tags, null).getEntity();
         Assert.assertNotNull(defs, "namespace: " + podNamespace + ", container: " + containerName);
         Assert.assertTrue(defs.size() > 1);
         return defs.get(0).getTags().get("pod_id");
@@ -93,7 +98,8 @@ public class OpenshiftCollectionHistTest extends BaseTest {
         long start = now - Duration.ofHours(36).toMillis();
         long dur = start + Duration.ofHours(36).toMillis();
 
-        List<GaugeDataPoint> rawData = client().metrics().getGaugeData(TENANT_ID, metricID,  start, dur);
+        List<DataPoint<Double>> rawData = client().metrics().findGaugeDataWithId(metricID, start, dur, null, null,
+                null, null, null, null).getEntity();
 
         Assert.assertNotNull(rawData, "namespace: " + podNamespace + ", container: " + containerName);
 
@@ -101,7 +107,6 @@ public class OpenshiftCollectionHistTest extends BaseTest {
 
         return OpenshiftBaseTest.makeHistogram(rawData, timeBucket);
     }
-
 
     /**
      * Save histogram data to file in csv format
@@ -112,15 +117,17 @@ public class OpenshiftCollectionHistTest extends BaseTest {
     public static void printHist(String filename, Map<Long, Integer> histogram, boolean printToStdout) {
         DateFormat format = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone("America/New_York"));
-        PrintStream out=null;
+        PrintStream out = null;
         try {
             out = new PrintStream(new FileOutputStream(filename + ".csv"));
 
-            for(Map.Entry<Long, Integer> e : histogram.entrySet()) {
+            for (Map.Entry<Long, Integer> e : histogram.entrySet()) {
                 Date date = new Date(e.getKey());
                 String s = format.format(date) + "," + e.getValue();
                 out.println(s);
-                if (printToStdout) { Reporter.log(s, true); }
+                if (printToStdout) {
+                    Reporter.log(s, true);
+                }
             }
         } catch (Exception e) {
             Assert.fail("File IO error", e);

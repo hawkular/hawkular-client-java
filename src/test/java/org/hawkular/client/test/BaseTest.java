@@ -22,9 +22,9 @@ import java.net.URISyntaxException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.hawkular.client.HawkularClient;
-import org.hawkular.metrics.core.api.MetricId;
-import org.hawkular.metrics.core.api.MetricType;
-import org.hawkular.metrics.core.api.Tenant;
+import org.hawkular.metrics.model.MetricId;
+import org.hawkular.metrics.model.MetricType;
+import org.hawkular.metrics.model.Tenant;
 import org.testng.Reporter;
 
 public class BaseTest {
@@ -67,7 +67,7 @@ public class BaseTest {
 
     public static MetricId<?> randomMetricId(MetricType<?> type) {
         String name = getRandomId();
-        return new MetricId(name, type, name);
+        return new MetricId<>(name, type, name);
     }
 
     public static String getRandomId() {

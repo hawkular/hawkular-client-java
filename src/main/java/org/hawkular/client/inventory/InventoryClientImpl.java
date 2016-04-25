@@ -52,6 +52,10 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
         super(endpointUri, username, password, new RestFactory<InventoryRestApi>(InventoryRestApi.class));
     }
 
+    public InventoryClientImpl(URI endpointUri) throws Exception {
+        super(endpointUri, new RestFactory<InventoryRestApi>(InventoryRestApi.class));
+    }
+
     public String getTenantId() {
         if (tenantId == null) {
             tenantId = getTenant().getEntity().getId();

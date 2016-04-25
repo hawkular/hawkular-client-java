@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
-import org.hawkular.client.metrics.model.GaugeDataPoint;
+import org.hawkular.metrics.model.DataPoint;
 import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
  *Find value=0 datapoints
  * @author vnguyen
  */
-@Test(groups={"openshift"})
+@Test(groups = { "openshift" })
 public class CollectionRateDetailTest extends OpenshiftBaseTest {
 
     public CollectionRateDetailTest() throws Exception {
@@ -67,7 +67,9 @@ public class CollectionRateDetailTest extends OpenshiftBaseTest {
 
     private void getData(String metricID, String testID, long start, long end, Duration timeBucket) {
         Reporter.log("Fetching large data set... may take a couple minutes", true);
-        List<GaugeDataPoint> rawData = client().metrics().getGaugeData(TENANT_ID, metricID,  start, end);
+        List<DataPoint<Double>> rawData = client().metrics()
+                .findGaugeDataWithId(metricID, start, end, null, null, null,
+                        null, null, null).getEntity();
 
         Assert.assertNotNull(rawData, testID);
         Reporter.log("raw datapoints: " + rawData.size(), true);
@@ -85,7 +87,7 @@ public class CollectionRateDetailTest extends OpenshiftBaseTest {
         double[] d = ArrayUtils.toPrimitive(result);
 
         // drop the first and last as they are usually outliers
-        double[] samples = Arrays.copyOfRange(d,1, d.length-1);
+        double[] samples = Arrays.copyOfRange(d, 1, d.length - 1);
         DescriptiveStatistics stats = new DescriptiveStatistics(samples);
 
         Reporter.log(hist.toString(), true);
@@ -96,7 +98,7 @@ public class CollectionRateDetailTest extends OpenshiftBaseTest {
         Reporter.log("stddev: " + stats.getStandardDeviation(), true);
     }
 
-    private  List<Long> findZeroValues(List<GaugeDataPoint> rawData) {
+    private List<Long> findZeroValues(List<DataPoint<Double>> rawData) {
         List<Long> zeroList = rawData
                 .stream()
                 .filter(p -> !(p.getValue() != 0))

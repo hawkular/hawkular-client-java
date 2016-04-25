@@ -18,12 +18,12 @@ package org.hawkular.client.test.metrics;
 
 import java.util.List;
 
-import org.hawkular.client.metrics.model.AvailabilityDataPoint;
-import org.hawkular.client.metrics.model.MetricDefinition;
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.client.test.utils.AvailabilityDataGenerator;
 import org.hawkular.client.test.utils.MetricDefGenerator;
-import org.hawkular.metrics.core.api.AvailabilityType;
+import org.hawkular.metrics.model.AvailabilityType;
+import org.hawkular.metrics.model.DataPoint;
+import org.hawkular.metrics.model.Metric;
 import org.testng.Assert;
 import org.testng.Reporter;
 //import org.hawkular.metrics.core.api.Availability;
@@ -36,14 +36,13 @@ import org.testng.annotations.Test;
  */
 public class AvailabilityMetricTest extends BaseTest {
 
-    private final MetricDefinition expectedDefinition = MetricDefGenerator.genAvailDef();
+    private final Metric<AvailabilityType> expectedDefinition = MetricDefGenerator.genAvailDef();
 
-    private final MetricDefinition metric2 = MetricDefGenerator.genAvailDef();
-    private final List<AvailabilityDataPoint> expectedData
-            = AvailabilityDataGenerator.gen(
-                    AvailabilityType.DOWN,
-                    AvailabilityType.UP,
-                    AvailabilityType.UNKNOWN);
+    private final Metric<AvailabilityType> metric2 = MetricDefGenerator.genAvailDef();
+    private final List<DataPoint<AvailabilityType>> expectedData = AvailabilityDataGenerator.gen(
+            AvailabilityType.DOWN,
+            AvailabilityType.UP,
+            AvailabilityType.UNKNOWN);
 
     public AvailabilityMetricTest() throws Exception {
         super();
@@ -52,31 +51,29 @@ public class AvailabilityMetricTest extends BaseTest {
     @Test
     public void createDefinition() throws Exception {
         Reporter.log("Creating: " + expectedDefinition.toString(), true);
-        client().metrics().createAvailabilityMetric("vnguyen12223", expectedDefinition);
+        client().metrics().createAvailabilityMetric(expectedDefinition);
     }
 
     // Known failure.  See https://issues.jboss.org/browse/HWKMETRICS-169
-    @Test (dependsOnMethods="createDefinition", enabled=false)
+    @Test(dependsOnMethods = "createDefinition", enabled = false)
     public void getDefinition() throws Exception {
-        MetricDefinition actual =
-                client().metrics().getAvailabilityMetric(expectedDefinition.getTenantId(),
-                                                         expectedDefinition.getId());
+        Metric<AvailabilityType> actual =
+                client().metrics().getAvailabilityMetric(expectedDefinition.getId()).getEntity();
         Reporter.log("Got: " + actual.toString(), true);
         Assert.assertEquals(actual, expectedDefinition);
 
     }
 
-    @Test(dependsOnMethods="createDefinition")
+    @Test(dependsOnMethods = "createDefinition")
     public void addData() throws Exception {
         Reporter.log("Adding: " + expectedData.toString(), true);
-        client().metrics().addAvailabilityData(metric2.getTenantId(), metric2.getId(), expectedData);
+        client().metrics().addAvailabilityDataForMetric(metric2.getId(), expectedData);
     }
 
-
-    @Test(dependsOnMethods="addData")
+    @Test(dependsOnMethods = "addData")
     public void getData() throws Exception {
-        List<AvailabilityDataPoint> actual =
-                client().metrics().getAvailabilityData(metric2.getTenantId(), metric2.getId());
+        List<DataPoint<AvailabilityType>> actual =
+                client().metrics().findAvailabilityData(metric2.getId()).getEntity();
 
         Assert.assertEquals(actual.size(), expectedData.size());
 

@@ -16,11 +16,14 @@
  */
 package org.hawkular.client.test.utils;
 
-import org.hawkular.client.metrics.model.MetricDefinition;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.hawkular.client.test.BaseTest;
-import org.hawkular.metrics.core.api.Metric;
-import org.hawkular.metrics.core.api.MetricId;
-import org.hawkular.metrics.core.api.MetricType;
+import org.hawkular.metrics.model.AvailabilityType;
+import org.hawkular.metrics.model.Metric;
+import org.hawkular.metrics.model.MetricId;
+import org.hawkular.metrics.model.MetricType;
 
 /**
  * Random MetricDefinition generator
@@ -28,22 +31,26 @@ import org.hawkular.metrics.core.api.MetricType;
  *
  */
 public class MetricDefGenerator {
+    private static final int DATA_RETENTION = 21;
+    private static final Map<String, String> TAGS = new HashMap<String, String>();
 
-    public static MetricDefinition genGaugeDef() {
-        return genDef(MetricType.GAUGE);
+    @SuppressWarnings("unchecked")
+    public static Metric<Double> genGaugeDef() {
+        return (Metric<Double>) genDef(MetricType.GAUGE);
     }
 
-    public static MetricDefinition genCounterDef() {
-        return genDef(MetricType.COUNTER);
+    @SuppressWarnings("unchecked")
+    public static Metric<Long> genCounterDef() {
+        return (Metric<Long>) genDef(MetricType.COUNTER);
     }
 
-    public static MetricDefinition genAvailDef() {
-        return genDef(MetricType.AVAILABILITY);
+    @SuppressWarnings("unchecked")
+    public static Metric<AvailabilityType> genAvailDef() {
+        return (Metric<AvailabilityType>) genDef(MetricType.AVAILABILITY);
     }
 
-    public static <T> MetricDefinition genDef(MetricType<T> metricType) {
+    public static <T> Metric<?> genDef(MetricType<T> metricType) {
         MetricId<?> id = new MetricId<>(BaseTest.getRandomId(), metricType, BaseTest.getRandomId());
-        Metric<?> metric = new Metric<>(id);
-        return new MetricDefinition(metric);
+        return new Metric<>(id, TAGS, DATA_RETENTION);
     }
 }

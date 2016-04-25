@@ -16,18 +16,26 @@
  */
 package org.hawkular.client.test.metrics.openshift;
 
-import org.hawkular.client.metrics.model.MetricDefinition;
+import java.io.File;
+
+import org.apache.commons.io.FileUtils;
 import org.hawkular.client.test.utils.JSONHelper;
+import org.hawkular.metrics.model.Metric;
 import org.testng.annotations.Test;
 
-@Test(groups={"openshift"})
+@Test(groups = { "openshift" })
 public class ContainerTagsTest extends OpenshiftBaseTest {
 
-    private final MetricDefinition expectedDef ;
+    private final Metric<?> expectedDef;
 
     public ContainerTagsTest() throws Exception {
         super();
-        expectedDef = JSONHelper.load(MetricDefinition.class, "/openshift/single-container-metric-tags.json");
+        File jsonFile = FileUtils.getFile("/openshift/single-container-metric-tags.json");
+        if (jsonFile.exists()) {
+            expectedDef = JSONHelper.load(Metric.class, jsonFile);
+        } else {
+            expectedDef = null;
+        }
     }
 
     @Test

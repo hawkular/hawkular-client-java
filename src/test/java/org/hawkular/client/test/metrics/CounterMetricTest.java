@@ -18,19 +18,19 @@ package org.hawkular.client.test.metrics;
 
 import java.util.List;
 
-import org.hawkular.client.metrics.model.CounterDataPoint;
-import org.hawkular.client.metrics.model.MetricDefinition;
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.client.test.utils.CounterDataGenerator;
 import org.hawkular.client.test.utils.MetricDefGenerator;
+import org.hawkular.metrics.model.DataPoint;
+import org.hawkular.metrics.model.Metric;
 import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
 
 public class CounterMetricTest extends BaseTest {
 
-    private final MetricDefinition expectedDefinition = MetricDefGenerator.genCounterDef();
-    private final List<CounterDataPoint> expectedData = CounterDataGenerator.gen(10);
+    private final Metric<Long> expectedDefinition = MetricDefGenerator.genCounterDef();
+    private final List<DataPoint<Long>> expectedData = CounterDataGenerator.gen(10);
 
     public CounterMetricTest() throws Exception {
         super();
@@ -39,27 +39,27 @@ public class CounterMetricTest extends BaseTest {
     @Test
     public void createDefinition() throws Exception {
         Reporter.log("Creating: " + expectedDefinition.toString(), true);
-        client().metrics().createCounter(expectedDefinition.getTenantId(), expectedDefinition);
+        client().metrics().createCounter(expectedDefinition);
     }
 
-    @Test (dependsOnMethods="createDefinition")
+    @Test(dependsOnMethods = "createDefinition")
     public void getDefinition() throws Exception {
-        MetricDefinition actual =
-                client().metrics().getCounter(expectedDefinition.getTenantId(), expectedDefinition.getId());
-        Reporter.log("Got: " + actual.toString(), true);
+        Metric<Long> actual =
+                client().metrics().getCounter(expectedDefinition.getId()).getEntity();
+        Reporter.log("Got: " + actual, true);
         Assert.assertEquals(actual, expectedDefinition);
     }
 
-    @Test(dependsOnMethods="getDefinition")
+    @Test(dependsOnMethods = "getDefinition")
     public void addData() throws Exception {
         Reporter.log("Adding: " + expectedData, true);
-        client().metrics().addCounterData(expectedDefinition.getTenantId(),expectedDefinition.getId(), expectedData);
+        client().metrics().addCounterDataForMetric(expectedDefinition.getId(), expectedData);
     }
 
-    @Test(dependsOnMethods="addData")
+    @Test(dependsOnMethods = "addData")
     public void getData() throws Exception {
-        List<CounterDataPoint> actual =
-                client().metrics().getCounterData(expectedDefinition.getTenantId(), expectedDefinition.getId());
+        List<DataPoint<Long>> actual =
+                client().metrics().findCounterData(expectedDefinition.getId()).getEntity();
         Reporter.log("Got: " + actual.toString(), true);
         Assert.assertEquals(actual, expectedData);
     }

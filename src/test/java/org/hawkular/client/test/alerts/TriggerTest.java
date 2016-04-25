@@ -27,6 +27,7 @@ import org.testng.annotations.Test;
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
+@Test(groups = { "alerts" })
 public class TriggerTest extends BaseTest {
 
     public TriggerTest() throws Exception {

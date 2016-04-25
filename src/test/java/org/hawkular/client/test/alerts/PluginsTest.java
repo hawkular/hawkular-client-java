@@ -28,6 +28,7 @@ import org.testng.annotations.Test;
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
+@Test(groups = { "alerts" })
 public class PluginsTest extends BaseTest {
     public PluginsTest() throws Exception {
         super();

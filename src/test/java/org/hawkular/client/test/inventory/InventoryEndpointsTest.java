@@ -20,6 +20,7 @@ import org.hawkular.client.test.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+@Test(groups = { "inventory" })
 public class InventoryEndpointsTest extends BaseTest {
 
     public InventoryEndpointsTest() throws Exception {
