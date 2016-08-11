@@ -44,6 +44,8 @@ import org.hawkular.inventory.api.model.Tenant;
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
 
+//https://github.com/hawkular/hawkular-inventory/tree/9d68378657733ce006484824cc359aeca7f4938d/hawkular-inventory-rest-api/src/main/java/org/hawkular/inventory/rest/deprecated
+@Deprecated()
 @Path("/hawkular/inventory")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

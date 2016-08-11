@@ -42,6 +42,8 @@ import org.hawkular.inventory.api.model.Tenant.Update;
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
+//https://github.com/hawkular/hawkular-inventory/tree/9d68378657733ce006484824cc359aeca7f4938d/hawkular-inventory-rest-api/src/main/java/org/hawkular/inventory/rest/deprecated
+@Deprecated()
 public class InventoryClientImpl extends BaseClient<InventoryRestApi>
         implements InventoryClient {
     private String tenantId = null;

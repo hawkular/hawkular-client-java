@@ -33,7 +33,8 @@ import org.testng.Reporter;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-@Test(groups = { "inventory" })
+//https://github.com/hawkular/hawkular-inventory/tree/9d68378657733ce006484824cc359aeca7f4938d/hawkular-inventory-rest-api/src/main/java/org/hawkular/inventory/rest/deprecated
+@Test(groups = { "inventory" }, enabled = false)
 public class InventoryTest extends BaseTest {
     private static String TENANT_ID;
     private static final String ENVIRONMENT_ID = "environment_" + RandomStringUtils.randomAlphabetic(8);
@@ -63,7 +64,7 @@ public class InventoryTest extends BaseTest {
                 .metric("metric_" + RandomStringUtils.randomAlphabetic(8)).get(), null, METRIC_TYPE);
     }
 
-    @Test(priority = 1)
+    @Test(priority = 1, enabled = false)
     public void createTest() {
         Assert.assertTrue(client().inventory().createEnvironment(ENVIRONMENT_ID).isSuccess());
         Assert.assertTrue(client().inventory().registerFeed(FEED).isSuccess());
@@ -75,7 +76,7 @@ public class InventoryTest extends BaseTest {
         Assert.assertTrue(client().inventory().createMetric(METRIC).isSuccess());
     }
 
-    @Test(priority = 2)
+    @Test(priority = 2, enabled = false)
     public void listTest() {
         //Tenant test
         Tenant tenant = client().inventory().getTenant().getEntity();
