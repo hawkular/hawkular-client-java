@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/Hawkular-QE/hawkular-java-client.svg?branch=master)](https://travis-ci.org/Hawkular-QE/hawkular-java-client)
-# Java client for [Hawkular](https://github.com/hawkular/hawkular)
+[![Build Status](https://travis-ci.org/hawkular/hawkular-client-java.svg?branch=master)](https://travis-ci.org/hawkular/hawkular-client-java)
+# Java client for [Hawkular](https://github.com/hawkular)
 Example,
 ```java
 HawkularClient hawkular = new HawkularClient("http://209.132.178.218:18080/", "", "");
