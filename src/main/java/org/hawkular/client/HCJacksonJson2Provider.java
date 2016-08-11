@@ -27,13 +27,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
 
+import org.hawkular.client.metrics.mixins.MetricsJacksonConfig;
+import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
+
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
-
-import org.hawkular.client.metrics.mixins.MetricsJacksonConfig;
-import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
 
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)

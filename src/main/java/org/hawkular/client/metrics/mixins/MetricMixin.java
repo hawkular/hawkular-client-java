@@ -16,6 +16,9 @@
  */
 package org.hawkular.client.metrics.mixins;
 
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.unmodifiableMap;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +38,6 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import static java.util.Collections.emptyMap;
-import static java.util.Collections.unmodifiableMap;
-
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
@@ -55,7 +55,7 @@ class MetricDeserializer extends JsonDeserializer<Metric<?>> {
     @Override
     public Metric<?> deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException,
             JsonProcessingException {
-        //Sample input: 
+        //Sample input:
         //{"id":"sjmja23q","dataRetention":7,"type":"counter","tenantId":"28026b36-8fe4-4332-84c8-524e173a68bf"}
         ObjectCodec objectCodec = jp.getCodec();
         JsonNode node = objectCodec.readTree(jp);
