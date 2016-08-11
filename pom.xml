@@ -24,6 +24,7 @@
     <groupId>org.hawkular</groupId>
     <artifactId>hawkular-parent</artifactId>
     <version>43</version>
+    <relativePath/>
   </parent>
   <groupId>org.hawkular.client</groupId>
   <artifactId>hawkular-java-client</artifactId>
