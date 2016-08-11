@@ -50,7 +50,7 @@ public class MetricDefGenerator {
     }
 
     public static <T> Metric<?> genDef(MetricType<T> metricType) {
-        MetricId<?> id = new MetricId<>(BaseTest.getRandomId(), metricType, BaseTest.getRandomId());
+        MetricId<?> id = new MetricId<>("unit-testing", metricType, BaseTest.getRandomId());
         return new Metric<>(id, TAGS, DATA_RETENTION);
     }
 }
