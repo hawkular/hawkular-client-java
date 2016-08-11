@@ -16,6 +16,8 @@
  */
 package org.hawkular.client.test.metrics;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.hawkular.client.test.BaseTest;
@@ -58,9 +60,18 @@ public class CounterMetricTest extends BaseTest {
 
     @Test(dependsOnMethods = "addData")
     public void getData() throws Exception {
-        List<DataPoint<Long>> actual =
-                client().metrics().findCounterData(expectedDefinition.getId()).getEntity();
+        List<DataPoint<Long>> actual = client().metrics().findCounterData(expectedDefinition.getId()).getEntity();
+
+        //Sort so that equals can match
+        Collections.sort(actual, new Comparator<DataPoint<Long>>() {
+            @Override
+            public int compare(DataPoint<Long> o1, DataPoint<Long> o2) {
+                return new Long(o1.getTimestamp()).compareTo(new Long(o2.getTimestamp()));
+            }
+        });
+
         Reporter.log("Got: " + actual.toString(), true);
+
         Assert.assertEquals(actual, expectedData);
     }
 }

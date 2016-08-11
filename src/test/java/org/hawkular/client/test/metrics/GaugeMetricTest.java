@@ -16,6 +16,8 @@
  */
 package org.hawkular.client.test.metrics;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.hawkular.client.test.BaseTest;
@@ -64,7 +66,16 @@ public class GaugeMetricTest extends BaseTest {
 
     @Test(dependsOnMethods = "addData")
     public void getData() throws Exception {
-        List<?> actual = client().metrics().findGaugeDataWithId(expectedMetric.getId()).getEntity();
+        List<DataPoint<Double>> actual = client().metrics().findGaugeDataWithId(expectedMetric.getId()).getEntity();
+
+        //Sort so that equals can match
+        Collections.sort(actual, new Comparator<DataPoint<Double>>() {
+            @Override
+            public int compare(DataPoint<Double> o1, DataPoint<Double> o2) {
+                return new Long(o1.getTimestamp()).compareTo(new Long(o2.getTimestamp()));
+            }
+        });
+
         Reporter.log("Got: " + actual.toString(), true);
         Assert.assertEquals(actual, expectedData1);
     }
