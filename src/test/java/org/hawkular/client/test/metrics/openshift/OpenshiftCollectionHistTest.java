@@ -80,9 +80,11 @@ public class OpenshiftCollectionHistTest extends BaseTest {
     }
 
     public String getPodUID(String podNamespace, String containerName) {
-        Tags tags = new Tags(new HashMap<String, String>());
-        tags.getTags().put("container_name", containerName);
-        tags.getTags().put("pod_namespace", podNamespace);
+        Map<String, String> tagsMap = new HashMap<String, String>();
+        tagsMap.put("container_name", containerName);
+        tagsMap.put("pod_namespace", podNamespace);
+
+        Tags tags = new Tags(tagsMap);
 
         List<Metric<?>> defs = super.client().metrics().findMetrics(MetricType.GAUGE, tags, null).getEntity();
         Assert.assertNotNull(defs, "namespace: " + podNamespace + ", container: " + containerName);
