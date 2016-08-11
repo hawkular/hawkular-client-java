@@ -26,19 +26,21 @@ import javax.ws.rs.core.Response;
 
 import org.hawkular.alerts.api.json.JacksonDeserializer;
 import org.hawkular.alerts.api.model.condition.Condition;
+import org.hawkular.client.metrics.mixins.MetricsJacksonConfig;
 import org.hawkular.inventory.api.model.Tenant;
 import org.hawkular.inventory.json.DetypedPathDeserializer;
 import org.hawkular.inventory.json.InventoryJacksonConfig;
 import org.hawkular.inventory.json.mixins.model.CanonicalPathMixin;
-import org.hawkular.client.metrics.mixins.MetricsJacksonConfig;
 import org.hawkular.inventory.paths.CanonicalPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 
 public class ClientResponse<T> {
     private static final Logger _logger = LoggerFactory.getLogger(ClientResponse.class);
@@ -48,28 +50,36 @@ public class ClientResponse<T> {
     private boolean success = false;
 
     public ClientResponse(Class<?> clazz, Response response, int statusCode) {
-        this(clazz, response, statusCode, null, null);
+        this(clazz, null, response, statusCode, null, null);
+    }
+
+    public ClientResponse(Class<?> clazz, Class<?> parametrizedClazz, Response response, int statusCode) {
+        this(clazz, parametrizedClazz, response, statusCode, null, null);
     }
 
     public ClientResponse(Class<?> clazz, Response response, int statusCode, String tenantId) {
-        this(clazz, response, statusCode, tenantId, null);
+        this(clazz, null, response, statusCode, tenantId, null);
     }
 
     public ClientResponse(Class<?> clazz, Response response, int statusCode, boolean isEntityList) {
-        this(clazz, response, statusCode, null, isEntityList == true ? List.class : null);
+        this(clazz, null, response, statusCode, null, isEntityList == true ? List.class : null);
+    }
+
+    public ClientResponse(Class<?> clazz, Class<?> parametrizedClazz, Response response, int statusCode, boolean isEntityList) {
+        this(clazz, parametrizedClazz, response, statusCode, null, isEntityList == true ? List.class : null);
     }
 
     public ClientResponse(Class<?> clazz, Response response, int statusCode, String tenantId, boolean isEntityList) {
-        this(clazz, response, statusCode, tenantId, isEntityList == true ? List.class : null);
+        this(clazz, null, response, statusCode, tenantId, isEntityList == true ? List.class : null);
     }
 
     public ClientResponse(Class<?> clazz, Response response, int statusCode,
-            @SuppressWarnings("rawtypes") Class<? extends Collection> collectionType) {
-        this(clazz, response, statusCode, null, collectionType);
+                          @SuppressWarnings("rawtypes") Class<? extends Collection> collectionType) {
+        this(clazz, null, response, statusCode, null, collectionType);
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public ClientResponse(Class<?> clazz, Response response, int statusCode, String tenantId,
+    public ClientResponse(Class<?> clazz, Class<?> parametrizedClazz, Response response, int statusCode, String tenantId,
             Class<? extends Collection> collectionType) {
         try {
             this.setStatusCode(response.getStatus());
@@ -104,9 +114,18 @@ public class ClientResponse<T> {
                         DetypedPathDeserializer.setCurrentCanonicalOrigin(CanonicalPath.of()
                                 .tenant(tenantId).get());
                     }
+
                     if (collectionType != null) {
-                        this.setEntity(objectMapper.readValue(response.readEntity(String.class),
-                                objectMapper.getTypeFactory().constructCollectionType(collectionType, clazz)));
+                        String entity = response.readEntity(String.class);
+                        if (parametrizedClazz == null) {
+                            this.setEntity(objectMapper.readValue(entity, objectMapper.getTypeFactory().constructCollectionType(collectionType, clazz)));
+                        } else {
+                            JavaType javaTypeObj = objectMapper.getTypeFactory().constructParametrizedType(clazz, clazz, parametrizedClazz);
+                            CollectionType collectionTypeObj = objectMapper.getTypeFactory().constructCollectionType(collectionType, javaTypeObj);
+
+                            this.setEntity(objectMapper.readValue(entity, collectionTypeObj));
+                        }
+
                     } else {
                         this.setEntity((T) objectMapper.readValue(response.readEntity(String.class), clazz));
                     }

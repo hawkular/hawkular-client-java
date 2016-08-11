@@ -94,13 +94,13 @@ public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements Met
 
     @Override
     public ClientResponse<List<Metric<AvailabilityType>>> findAvailabilityMetrics(Tags tags) {
-        return new ClientResponse<List<Metric<AvailabilityType>>>(Metric.class, restApi()
+        return new ClientResponse<List<Metric<AvailabilityType>>>(Metric.class, AvailabilityType.class, restApi()
                 .findAvailabilityMetrics(tags), RESPONSE_CODE.GET_SUCCESS.value(), true);
     }
 
     @Override
     public ClientResponse<Metric<AvailabilityType>> getAvailabilityMetric(String id) {
-        return new ClientResponse<Metric<AvailabilityType>>(Metric.class, restApi().getAvailabilityMetric(id),
+        return new ClientResponse<Metric<AvailabilityType>>(Metric.class, AvailabilityType.class, restApi().getAvailabilityMetric(id),
                 RESPONSE_CODE.GET_SUCCESS.value());
     }
 
@@ -137,7 +137,7 @@ public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements Met
     @Override
     public ClientResponse<List<DataPoint<AvailabilityType>>> findAvailabilityData(String id, Long start, Long end,
             Integer bucketsCount, Duration bucketDuration, Boolean distinct, Integer limit, Order order) {
-        return new ClientResponse<List<DataPoint<AvailabilityType>>>(DataPoint.class, restApi().findAvailabilityData(
+        return new ClientResponse<List<DataPoint<AvailabilityType>>>(DataPoint.class, AvailabilityType.class, restApi().findAvailabilityData(
                 id, start, end,
                 bucketsCount, bucketDuration, distinct, limit, order), RESPONSE_CODE.GET_SUCCESS.value(), true);
     }
@@ -199,7 +199,7 @@ public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements Met
     public ClientResponse<List<DataPoint<Long>>> findCounterData(String id, Long start, Long end,
             Boolean fromEarliest,
             Integer bucketsCount, Duration bucketDuration, Percentiles percentiles, Integer limit, Order order) {
-        return new ClientResponse<List<DataPoint<Long>>>(DataPoint.class, restApi().findCounterData(id, start, end,
+        return new ClientResponse<List<DataPoint<Long>>>(DataPoint.class, Long.class, restApi().findCounterData(id, start, end,
                 fromEarliest, bucketsCount, bucketDuration, percentiles, limit, order),
                 RESPONSE_CODE.GET_SUCCESS.value(), true);
     }
@@ -212,7 +212,7 @@ public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements Met
     @Override
     public ClientResponse<List<DataPoint<Long>>> findCounterRate(String id, Long start, Long end,
             Integer bucketsCount, Duration bucketDuration, Percentiles percentiles) {
-        return new ClientResponse<List<DataPoint<Long>>>(DataPoint.class, restApi().findCounterRate(id, start, end,
+        return new ClientResponse<List<DataPoint<Long>>>(DataPoint.class, Long.class, restApi().findCounterRate(id, start, end,
                 bucketsCount, bucketDuration, percentiles), RESPONSE_CODE.GET_SUCCESS.value(), true);
     }
 
@@ -241,13 +241,13 @@ public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements Met
 
     @Override
     public ClientResponse<List<Metric<Double>>> findGaugeMetrics(Tags tags) {
-        return new ClientResponse<List<Metric<Double>>>(Metric.class, restApi()
+        return new ClientResponse<List<Metric<Double>>>(Metric.class, Double.class, restApi()
                 .findGaugeMetrics(tags), RESPONSE_CODE.GET_SUCCESS.value(), true);
     }
 
     @Override
     public ClientResponse<Metric<Double>> getGaugeMetric(String id) {
-        return new ClientResponse<Metric<Double>>(Metric.class, restApi().getGaugeMetric(id),
+        return new ClientResponse<Metric<Double>>(Metric.class, Double.class, restApi().getGaugeMetric(id),
                 RESPONSE_CODE.GET_SUCCESS.value());
     }
 
@@ -285,7 +285,7 @@ public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements Met
     public ClientResponse<List<DataPoint<Double>>> findGaugeDataWithId(String id, Long start, Long end,
             Boolean fromEarliest, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles,
             Integer limit, Order order) {
-        return new ClientResponse<List<DataPoint<Double>>>(DataPoint.class, restApi().findGaugeDataWithId(id, start,
+        return new ClientResponse<List<DataPoint<Double>>>(DataPoint.class, Double.class, restApi().findGaugeDataWithId(id, start,
                 end,
                 fromEarliest, bucketsCount, bucketDuration, percentiles, limit, order),
                 RESPONSE_CODE.GET_SUCCESS.value(), true);
@@ -300,7 +300,7 @@ public class MetricsClientImpl extends BaseClient<MetricsRestApi> implements Met
     public ClientResponse<List<DataPoint<Double>>> findGaugeData(Long start, Long end, Integer bucketsCount,
             Duration bucketDuration,
             Percentiles percentiles, Tags tags, List<String> metricNames, Boolean stacked) {
-        return new ClientResponse<List<DataPoint<Double>>>(DataPoint.class, restApi().findGaugeData(start, end,
+        return new ClientResponse<List<DataPoint<Double>>>(DataPoint.class, Double.class, restApi().findGaugeData(start, end,
                 bucketsCount, bucketDuration, percentiles, tags, metricNames, stacked),
                 RESPONSE_CODE.GET_SUCCESS.value(), true);
     }
