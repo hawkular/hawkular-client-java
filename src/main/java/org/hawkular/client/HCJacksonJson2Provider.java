@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -32,6 +33,7 @@ import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
@@ -54,6 +56,17 @@ public class HCJacksonJson2Provider extends ResteasyJackson2Provider {
 
         //AddMixIns
         MetricsJacksonConfig.configure(mapper);
+
+        //FIXES: AlertsCondition tests failing
+        //If its a List, try to get the GenericType back, as the 'genericType' might be the interface,
+        //but we want the concrete back so Jackson can marshal correctly
+        if (value instanceof List) {
+            List valueItems = (List)value;
+            if (valueItems.size() > 0) {
+                JavaType javaTypeObj = mapper.getTypeFactory().constructType(valueItems.get(0).getClass());
+                genericType = javaTypeObj.getRawClass();
+            }
+        }
 
         super.writeTo(value, type, genericType, annotations, mediaType, httpHeaders, entityStream);
     }

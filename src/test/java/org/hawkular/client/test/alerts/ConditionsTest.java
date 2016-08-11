@@ -51,7 +51,7 @@ public class ConditionsTest extends BaseTest {
         //Make Conditions
         AvailabilityCondition availabilityCondition = new AvailabilityCondition(
                 triggerId, Mode.FIRING, dataId, Operator.DOWN);
-        List<Condition> conditions = new ArrayList<Condition>();
+        List<AvailabilityCondition> conditions = new ArrayList<AvailabilityCondition>();
         conditions.add(availabilityCondition);
         testCondition(triggerId, conditions, Mode.FIRING);
     }
@@ -64,7 +64,7 @@ public class ConditionsTest extends BaseTest {
         CompareCondition compareCondition = new CompareCondition(
                 triggerId, Mode.AUTORESOLVE, dataId, CompareCondition.Operator.GTE,
                 1.0, "no-data-id-2");
-        List<Condition> conditions = new ArrayList<Condition>();
+        List<CompareCondition> conditions = new ArrayList<CompareCondition>();
         conditions.add(compareCondition);
         testCondition(triggerId, conditions, Mode.AUTORESOLVE);
     }
@@ -76,7 +76,7 @@ public class ConditionsTest extends BaseTest {
         //Make Conditions
         StringCondition stringCondition = new StringCondition(
                 triggerId, Mode.FIRING, dataId, StringCondition.Operator.CONTAINS, "find-me", false);
-        List<Condition> conditions = new ArrayList<Condition>();
+        List<StringCondition> conditions = new ArrayList<StringCondition>();
         conditions.add(stringCondition);
         testCondition(triggerId, conditions, Mode.FIRING);
     }
@@ -88,7 +88,7 @@ public class ConditionsTest extends BaseTest {
         //Make Conditions
         ThresholdCondition thresholdCondition = new ThresholdCondition(
                 triggerId, Mode.FIRING, dataId, ThresholdCondition.Operator.LTE, 21.45);
-        List<Condition> conditions = new ArrayList<Condition>();
+        List<ThresholdCondition> conditions = new ArrayList<ThresholdCondition>();
         conditions.add(thresholdCondition);
         testCondition(triggerId, conditions, Mode.FIRING);
     }
@@ -101,12 +101,12 @@ public class ConditionsTest extends BaseTest {
         ThresholdRangeCondition thresholdRangeCondition = new ThresholdRangeCondition(
                 triggerId, Mode.FIRING, dataId, ThresholdRangeCondition.Operator.INCLUSIVE,
                 ThresholdRangeCondition.Operator.INCLUSIVE, 21.45, 10.45, true);
-        List<Condition> conditions = new ArrayList<Condition>();
+        List<ThresholdRangeCondition> conditions = new ArrayList<ThresholdRangeCondition>();
         conditions.add(thresholdRangeCondition);
         testCondition(triggerId, conditions, Mode.FIRING);
     }
 
-    private void testCondition(String triggerId, List<Condition> conditions, Mode mode) {
+    private void testCondition(String triggerId, List<? extends Condition> conditions, Mode mode) {
         //Create New trigger to add condition
         Trigger triggerNew = new Trigger(triggerId, "automation-unit-test");
         ClientResponse<Trigger> triggerCreateResult = client().alerts().createTrigger(triggerNew);

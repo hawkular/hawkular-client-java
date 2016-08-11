@@ -156,7 +156,7 @@ public interface AlertsRestApi {
     @PUT
     @Path("/triggers/{triggerId}/conditions/{triggerMode}")
     Response setConditions(@PathParam("triggerId") final String triggerId,
-            @PathParam("triggerMode") final String triggerMode, List<Condition> conditions);
+            @PathParam("triggerMode") final String triggerMode, List<? extends Condition> conditions);
 
     @PUT
     @Path("/triggers/groups/{groupId}/conditions/{triggerMode}")

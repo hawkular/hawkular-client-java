@@ -115,7 +115,7 @@ public interface AlertsClient {
     ClientResponse<List<Condition>> getTriggerConditions(String triggerId);
 
     ClientResponse<List<Condition>> setConditions(String triggerId, String triggerMode,
-            List<Condition> conditions);
+            List<? extends Condition> conditions);
 
     ClientResponse<List<Condition>> setGroupConditions(String groupId, String triggerMode,
             String jsonGroupConditionsInfo);
