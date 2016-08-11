@@ -51,16 +51,16 @@ public class InventoryTest extends BaseTest {
     public void loadVariables() {
         TENANT_ID = client().inventory().getTenant().getEntity().getId();
         FEED = new Feed(CanonicalPath.of().tenant(TENANT_ID)
-                .feed("feed_" + RandomStringUtils.randomAlphabetic(8)).get());
+                .feed("feed_" + RandomStringUtils.randomAlphabetic(8)).get(), null);
         RESOURCE_TYPE = new ResourceType(CanonicalPath.of().tenant(TENANT_ID)
-                .resourceType("resource_type_" + RandomStringUtils.randomAlphabetic(8)).get());
+                .resourceType("resource_type_" + RandomStringUtils.randomAlphabetic(8)).get(), null);
         RESOURCE = new Resource(CanonicalPath.of().tenant(TENANT_ID).environment(ENVIRONMENT_ID)
-                .resource("resource_" + RandomStringUtils.randomAlphabetic(8)).get(), RESOURCE_TYPE);
+                .resource("resource_" + RandomStringUtils.randomAlphabetic(8)).get(), null, RESOURCE_TYPE);
         METRIC_TYPE = new MetricType(CanonicalPath.of().tenant(TENANT_ID)
-                .metricType("metri_type_" + RandomStringUtils.randomAlphabetic(8)).get(), MetricUnit.NONE,
+                .metricType("metri_type_" + RandomStringUtils.randomAlphabetic(8)).get(), null, MetricUnit.NONE,
                 MetricDataType.GAUGE, MINUTE * 30);
         METRIC = new Metric(CanonicalPath.of().tenant(TENANT_ID).environment(ENVIRONMENT_ID)
-                .metric("metric_" + RandomStringUtils.randomAlphabetic(8)).get(), METRIC_TYPE);
+                .metric("metric_" + RandomStringUtils.randomAlphabetic(8)).get(), null, METRIC_TYPE);
     }
 
     @Test(priority = 1)
