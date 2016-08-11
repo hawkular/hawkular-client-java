@@ -52,9 +52,12 @@ public class OpenshiftBaseTest extends BaseTest {
     }
 
     public String getMetricID(String podNamespace, String containerName, METRIC_SUFFIX metricSuffix) {
-        Tags tags = new Tags(new HashMap<String, String>());
-        tags.getTags().put("container_name", containerName);
-        tags.getTags().put("pod_namespace", podNamespace);
+        Map<String, String> tagsMap = new HashMap<String, String>();
+        tagsMap.put("container_name", containerName);
+        tagsMap.put("pod_namespace", podNamespace);
+
+        Tags tags = new Tags(tagsMap);
+
         List<Metric<?>> defs = client().metrics().findMetrics(MetricType.GAUGE, tags, null).getEntity();
         Assert.assertNotNull(defs, "namespace: " + podNamespace + ", container: " + containerName);
         Assert.assertTrue(defs.size() > 1);

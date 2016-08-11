@@ -19,6 +19,7 @@ package org.hawkular.client.test.metrics.openshift;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.hawkular.metrics.model.Metric;
@@ -57,9 +58,12 @@ public class MetricDefinitionTest extends OpenshiftBaseTest {
         String project = "default";
         String container = "hawkular-metrics";
 
-        Tags tags = new Tags(new HashMap<String, String>());
-        tags.getTags().put("container_name", container);
-        tags.getTags().put("pod_namespace", project);
+        Map<String, String> tagsMap = new HashMap<String, String>();
+        tagsMap.put("container_name", container);
+        tagsMap.put("pod_namespace", project);
+
+        Tags tags = new Tags(tagsMap);
+
         List<Metric<?>> defs = client().metrics().findMetrics(null, tags, null).getEntity();
         Reporter.log(defs.toString(), true);
 
