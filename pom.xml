@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.hawkular</groupId>
     <artifactId>hawkular-parent</artifactId>
-    <version>25</version>
+    <version>43</version>
   </parent>
   <groupId>org.hawkular.client</groupId>
   <artifactId>hawkular-java-client</artifactId>
@@ -45,13 +45,15 @@
   </licenses>
 
   <properties>
-    <hawkular.metrics.version>0.13.0.Final</hawkular.metrics.version>
-    <hawkular.inventory.version>0.13.0.Final</hawkular.inventory.version>
-    <hawkular.inventory.json.helper.version>0.13.0.Final</hawkular.inventory.json.helper.version>
-    <hawkular.alerts.version>1.0.2.Final</hawkular.alerts.version>
-    <resteasy.version>3.0.8.Final</resteasy.version>
-    <resteasy.jackson2.provider.version>3.0.8.Final</resteasy.jackson2.provider.version>
+    <hawkular.metrics.version>0.18.0.Final</hawkular.metrics.version>
+    <hawkular.inventory.version>0.17.3.Final</hawkular.inventory.version>
+    <hawkular.inventory.json.helper.version>0.17.3.Final</hawkular.inventory.json.helper.version>
+    <hawkular.alerts.version>1.1.2.Final</hawkular.alerts.version>
+
+    <resteasy.version>3.0.12.Final</resteasy.version>
+    <resteasy.jackson2.provider.version>3.0.12.Final</resteasy.jackson2.provider.version>
     <org.jboss.logging.version>3.3.0.Final</org.jboss.logging.version>
+
     <excluded.tests>nothing-to-exclude</excluded.tests>
     <excluded.groups>none</excluded.groups>
   </properties>

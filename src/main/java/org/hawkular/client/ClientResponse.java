@@ -26,12 +26,12 @@ import javax.ws.rs.core.Response;
 
 import org.hawkular.alerts.api.json.JacksonDeserializer;
 import org.hawkular.alerts.api.model.condition.Condition;
-import org.hawkular.inventory.api.model.CanonicalPath;
 import org.hawkular.inventory.api.model.Tenant;
 import org.hawkular.inventory.json.DetypedPathDeserializer;
 import org.hawkular.inventory.json.InventoryJacksonConfig;
 import org.hawkular.inventory.json.mixins.model.CanonicalPathMixin;
 import org.hawkular.client.metrics.mixins.MetricsJacksonConfig;
+import org.hawkular.inventory.paths.CanonicalPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
