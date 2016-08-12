@@ -40,7 +40,7 @@ public class BaseTest {
     public void init() throws Exception {
         URI endpoint = getEndpointFromEnv();
         Reporter.log(endpoint.toString());
-        
+
         HashMap<String, Object> headers = new HashMap<String, Object>();
         headers.put(HawkularClient.KEY_HEADER_TENANT, "unit-testing");
 
