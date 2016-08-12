@@ -53,6 +53,7 @@ public class MetricDefinitionTest extends OpenshiftBaseTest {
         super();
     }
 
+    //TODO: Test currently fails due to no metrics found...
     @Test
     public void verifyMetricDefinitionForPod() {
         String project = "default";

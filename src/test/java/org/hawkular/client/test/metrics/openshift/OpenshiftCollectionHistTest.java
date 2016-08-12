@@ -51,6 +51,7 @@ public class OpenshiftCollectionHistTest extends BaseTest {
         super();
     }
 
+    //TODO: Test currently fails due to no metrics found...
     @Test
     public void getMetricDefs() throws Exception {
 
