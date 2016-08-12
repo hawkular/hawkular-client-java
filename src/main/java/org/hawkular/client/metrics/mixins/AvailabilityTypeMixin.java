@@ -16,25 +16,13 @@
  */
 package org.hawkular.client.metrics.mixins;
 
-import org.hawkular.metrics.model.AvailabilityType;
-import org.hawkular.metrics.model.Metric;
-import org.hawkular.metrics.model.MetricType;
-import org.hawkular.metrics.model.Tenant;
+import org.hawkular.metrics.model.fasterxml.jackson.AvailabilityTypeDeserializer;
+import org.hawkular.metrics.model.fasterxml.jackson.AvailabilityTypeSerializer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-/**
- * @author jkandasa@redhat.com (Jeeva Kandasamy)
- */
-public class MetricsJacksonConfig {
-    private MetricsJacksonConfig() {
-
-    }
-
-    public static void configure(ObjectMapper objectMapper) {
-        objectMapper.addMixIn(Tenant.class, TenantMixin.class);
-        objectMapper.addMixIn(MetricType.class, MetricTypeMixin.class);
-        objectMapper.addMixIn(Metric.class, MetricMixin.class);
-        objectMapper.addMixIn(AvailabilityType.class, AvailabilityTypeMixin.class);
-    }
+@JsonDeserialize(using = AvailabilityTypeDeserializer.class)
+@JsonSerialize(using = AvailabilityTypeSerializer.class)
+public abstract class AvailabilityTypeMixin {
 }

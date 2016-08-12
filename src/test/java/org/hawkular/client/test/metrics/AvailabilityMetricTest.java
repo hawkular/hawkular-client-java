@@ -16,6 +16,8 @@
  */
 package org.hawkular.client.test.metrics;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.hawkular.client.test.BaseTest;
@@ -26,7 +28,6 @@ import org.hawkular.metrics.model.DataPoint;
 import org.hawkular.metrics.model.Metric;
 import org.testng.Assert;
 import org.testng.Reporter;
-//import org.hawkular.metrics.core.api.Availability;
 import org.testng.annotations.Test;
 
 /**
@@ -70,12 +71,17 @@ public class AvailabilityMetricTest extends BaseTest {
         client().metrics().addAvailabilityDataForMetric(metric2.getId(), expectedData);
     }
 
-    //TODO: FIX
-    //actual collection returned is String value of AvailabilityType, i.e.: DOWN, so isnt converted/cast correctly
-    @Test(dependsOnMethods = "addData", enabled = false)
+    @Test(dependsOnMethods = "addData")
     public void getData() throws Exception {
-        List<DataPoint<AvailabilityType>> actual =
-                client().metrics().findAvailabilityData(metric2.getId()).getEntity();
+        List<DataPoint<AvailabilityType>> actual = client().metrics().findAvailabilityData(metric2.getId()).getEntity();
+
+        //Sort so that equals can match
+        Collections.sort(actual, new Comparator<DataPoint<AvailabilityType>>() {
+            @Override
+            public int compare(DataPoint<AvailabilityType> o1, DataPoint<AvailabilityType> o2) {
+                return new Long(o1.getTimestamp()).compareTo(new Long(o2.getTimestamp()));
+            }
+        });
 
         Assert.assertEquals(actual.size(), expectedData.size());
 
