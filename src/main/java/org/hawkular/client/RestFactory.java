@@ -102,6 +102,8 @@ public class RestFactory<T> {
         client.register(RestRequestFilter.class);
         client.register(RestResponseFilter.class);
         client.register(HCJacksonJson2Provider.class);
+        client.register(ConvertersProvider.class);
+
         ProxyBuilder<T> proxyBuilder = client.target(uri).proxyBuilder(apiClassType);
         if (classLoader != null) {
             proxyBuilder = proxyBuilder.classloader(classLoader);
