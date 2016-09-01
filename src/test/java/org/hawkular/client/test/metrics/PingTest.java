@@ -34,5 +34,6 @@ public class PingTest extends BaseTest {
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
     }
 }
