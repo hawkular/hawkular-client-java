@@ -288,7 +288,7 @@ public class GaugeTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
     }
-    
+
     @Test(dependsOnMethods = "findGaugeDataWithId")
     public void getGaugeStatsTags() {
         Percentile percentile = new Percentile("90.0");
