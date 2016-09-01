@@ -20,7 +20,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.hawkular.client.ClientResponse;
+import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.inventory.json.Endpoints;
 import org.hawkular.client.inventory.json.IdJSON;
 import org.hawkular.inventory.api.model.Environment;
