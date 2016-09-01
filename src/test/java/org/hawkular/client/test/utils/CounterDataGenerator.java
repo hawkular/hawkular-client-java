@@ -25,6 +25,9 @@ import org.hawkular.metrics.model.DataPoint;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
+/**
+ * CAN BE REPLACED WITH DataPointGenerator
+ */
 public class CounterDataGenerator {
 
     public static List<DataPoint<Long>> gen(int size) {

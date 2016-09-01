@@ -26,6 +26,9 @@ import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
 
+/**
+ * CAN BE REPLACED WITH DataPointGenerator
+ */
 public class GaugeDataGenerator {
     private BTG ts = new BTG();
     private Random random = new Random();
