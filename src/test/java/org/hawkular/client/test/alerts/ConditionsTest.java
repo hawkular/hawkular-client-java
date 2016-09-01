@@ -28,8 +28,9 @@ import org.hawkular.alerts.api.model.condition.ThresholdCondition;
 import org.hawkular.alerts.api.model.condition.ThresholdRangeCondition;
 import org.hawkular.alerts.api.model.trigger.Mode;
 import org.hawkular.alerts.api.model.trigger.Trigger;
-import org.hawkular.client.ClientResponse;
+import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.test.BaseTest;
+import org.hawkular.client.test.utils.RandomStringGenerator;
 import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
@@ -46,7 +47,7 @@ public class ConditionsTest extends BaseTest {
 
     @Test
     public void testAvailabilityCondition() {
-        String triggerId = "New-Trigger-" + getRandomId();
+        String triggerId = "New-Trigger-" + RandomStringGenerator.getRandomId();
         String dataId = "no-data-id";
         //Make Conditions
         AvailabilityCondition availabilityCondition = new AvailabilityCondition(
@@ -58,7 +59,7 @@ public class ConditionsTest extends BaseTest {
 
     @Test
     public void testCompareCondition() {
-        String triggerId = "New-Trigger-" + getRandomId();
+        String triggerId = "New-Trigger-" + RandomStringGenerator.getRandomId();
         String dataId = "no-data-id";
         //Make Conditions
         CompareCondition compareCondition = new CompareCondition(
@@ -71,7 +72,7 @@ public class ConditionsTest extends BaseTest {
 
     @Test
     public void testStringCondition() {
-        String triggerId = "New-Trigger-" + getRandomId();
+        String triggerId = "New-Trigger-" + RandomStringGenerator.getRandomId();
         String dataId = "no-data-id";
         //Make Conditions
         StringCondition stringCondition = new StringCondition(
@@ -83,7 +84,7 @@ public class ConditionsTest extends BaseTest {
 
     @Test
     public void testThresholdCondition() {
-        String triggerId = "New-Trigger-" + getRandomId();
+        String triggerId = "New-Trigger-" + RandomStringGenerator.getRandomId();
         String dataId = "no-data-id";
         //Make Conditions
         ThresholdCondition thresholdCondition = new ThresholdCondition(
@@ -95,7 +96,7 @@ public class ConditionsTest extends BaseTest {
 
     @Test
     public void testThresholdRangeCondition() {
-        String triggerId = "New-Trigger-" + getRandomId();
+        String triggerId = "New-Trigger-" + RandomStringGenerator.getRandomId();
         String dataId = "no-data-id";
         //Make Conditions
         ThresholdRangeCondition thresholdRangeCondition = new ThresholdRangeCondition(

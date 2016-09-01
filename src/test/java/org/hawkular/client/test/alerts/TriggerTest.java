@@ -18,8 +18,9 @@ package org.hawkular.client.test.alerts;
 
 import org.hawkular.alerts.api.model.Severity;
 import org.hawkular.alerts.api.model.trigger.Trigger;
-import org.hawkular.client.ClientResponse;
+import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.test.BaseTest;
+import org.hawkular.client.test.utils.RandomStringGenerator;
 import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
@@ -36,7 +37,7 @@ public class TriggerTest extends BaseTest {
 
     @Test
     public void testTrigger() {
-        String triggerId = "trigger-id-" + getRandomId();
+        String triggerId = "trigger-id-" + RandomStringGenerator.getRandomId();
         //Create Trigger Test
         Trigger sampleTrigger = new Trigger(triggerId, "Sample Trigger");
         ClientResponse<Trigger> creationResult = client().alerts().createTrigger(sampleTrigger);

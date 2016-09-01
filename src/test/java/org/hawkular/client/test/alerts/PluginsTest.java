@@ -19,7 +19,7 @@ package org.hawkular.client.test.alerts;
 import java.util.Arrays;
 import java.util.List;
 
-import org.hawkular.client.ClientResponse;
+import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.test.BaseTest;
 import org.testng.Assert;
 import org.testng.Reporter;

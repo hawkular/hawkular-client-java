@@ -16,7 +16,7 @@
  */
 package org.hawkular.client.test.inventory;
 
-import org.hawkular.client.ClientResponse;
+import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.inventory.api.model.Tenant;
 import org.testng.Assert;
