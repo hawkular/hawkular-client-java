@@ -18,6 +18,7 @@ package org.hawkular.client.core.jaxrs;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
@@ -38,8 +39,8 @@ public class RestRequestFilter implements ClientRequestFilter {
 
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
-        for (String key : additionalHeaders.keySet()) {
-            requestContext.getHeaders().add(key, additionalHeaders.get(key));
+        for (Map.Entry<String, Object> current : additionalHeaders.entrySet()) {
+            requestContext.getHeaders().add(current.getKey(), current.getValue());
         }
         logRequests(requestContext);
     }

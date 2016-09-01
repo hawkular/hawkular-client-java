@@ -20,6 +20,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.net.URI;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import org.hawkular.client.alert.AlertsClient;
@@ -68,8 +69,8 @@ public class HawkularClient {
         }
         //Load headers
         if (headers != null && !headers.isEmpty()) {
-            for (String key : headers.keySet()) {
-                updateHeader(key, headers.get(key));
+            for (Map.Entry<String, Object> current : headers.entrySet()) {
+                updateHeader(current.getKey(), current.getValue());
             }
         }
     }
@@ -86,10 +87,6 @@ public class HawkularClient {
         return alertsClient;
     }
 
-    public int hashcode() {
-        return Objects.hash(endpointUri.hashCode());
-    }
-
     public void updateHeader(String key, Object value) {
         RestRequestFilter.updateHeader(key, value);
     }
@@ -98,6 +95,25 @@ public class HawkularClient {
         RestRequestFilter.removeHeader(key);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        HawkularClient that = (HawkularClient)o;
+        return Objects.equals(metricsClient, that.metricsClient) &&
+               Objects.equals(inventoryClient, that.inventoryClient) &&
+               Objects.equals(alertsClient, that.alertsClient) &&
+               Objects.equals(endpointUri, that.endpointUri);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(endpointUri.hashCode());
+    }
+
+    @Override
     public String toString() {
         return MoreObjects.toStringHelper(this).
             add("endpoint", endpointUri)
