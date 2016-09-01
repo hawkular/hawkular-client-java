@@ -19,37 +19,64 @@ package org.hawkular.client.test.metrics;
 import java.util.List;
 import java.util.Optional;
 
+import org.hawkular.client.core.ClientResponse;
+import org.hawkular.client.core.jaxrs.Empty;
 import org.hawkular.client.test.BaseTest;
+import org.hawkular.client.test.utils.RandomStringGenerator;
 import org.hawkular.metrics.model.Tenant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
-import org.testng.Reporter;
 import org.testng.annotations.Test;
 
 public class TenantTest extends BaseTest {
 
-    public TenantTest() throws Exception {
-        super();
+    private static final Logger LOG = LoggerFactory.getLogger(TenantTest.class);
+
+    private Integer originalTenantCount = 0;
+    private Tenant expectedTenant = new Tenant(RandomStringGenerator.getRandomId());
+
+    @Test
+    public void getTentantsCount() {
+        LOG.info("Testing with Tenant == {}", expectedTenant.getId());
+
+        ClientResponse<List<Tenant>> response = client()
+            .metrics()
+            .tenant()
+            .getTenants();
+
+        Assert.assertTrue(response.isSuccess());
+        Assert.assertNotNull(response.getEntity());
+
+        originalTenantCount = response.getEntity().size();
     }
 
-    @Test(priority = 5)
+    @Test(dependsOnMethods = "getTentantsCount")
     public void createTenants() throws Exception {
-        List<Tenant> tenantsBefore = client().metrics().getTenants().getEntity();
-        Reporter.log("Teant list Before: " + tenantsBefore.toString(), true);
+        ClientResponse<Empty> response = client()
+            .metrics()
+            .tenant()
+            .createTenant(true, expectedTenant);
 
-        final Tenant expectedTenant = randomTenant();
-        client().metrics().createTenant(expectedTenant);
+        Assert.assertTrue(response.isSuccess());
+    }
 
-        List<Tenant> tenantsAfter = client().metrics().getTenants().getEntity();
-        Reporter.log("Tenant list After: " + tenantsAfter.toString(), true);
+    @Test(dependsOnMethods = "createTenants")
+    public void getTentant() {
+        ClientResponse<List<Tenant>> response = client()
+            .metrics()
+            .tenant()
+            .getTenants();
 
-        Assert.assertTrue(tenantsBefore.size() == tenantsAfter.size() - 1);
+        Assert.assertTrue(response.isSuccess());
+        Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
+        Assert.assertTrue(originalTenantCount == (response.getEntity().size() - 1));
 
-        Optional<Tenant> value = tenantsAfter
-                .stream()
-                .filter(a -> a.getId().equals(expectedTenant.getId()))
-                .findFirst();
+        Optional<Tenant> value = response.getEntity().stream()
+            .filter(a -> a.equals(expectedTenant))
+            .findFirst();
 
         Assert.assertTrue(value.isPresent());
     }
-
 }
