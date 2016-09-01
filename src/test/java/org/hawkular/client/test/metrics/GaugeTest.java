@@ -28,7 +28,6 @@ import org.hawkular.client.core.jaxrs.Empty;
 import org.hawkular.client.core.jaxrs.ResponseCodes;
 import org.hawkular.client.core.jaxrs.param.TagsConverter;
 import org.hawkular.client.metrics.model.Order;
-import org.hawkular.client.test.BTG;
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.client.test.utils.DataPointGenerator;
 import org.hawkular.client.test.utils.MetricGenerator;
@@ -64,7 +63,8 @@ public class GaugeTest extends BaseTest {
     private final String podNamespace = RandomStringGenerator.getRandomId();
     private final String podName = RandomStringGenerator.getRandomId();
     private final Tags tags = TagGenerator.generate(podNamespace, podName);
-    private final Metric<Double> expectedMetric = MetricGenerator.generate(MetricType.GAUGE, tags.getTags(), metricName, dataPointGenerator.generator(10));
+    private final List<DataPoint<Double>> expectedDataPoints = dataPointGenerator.generator(10, tags.getTags());
+    private final Metric<Double> expectedMetric = MetricGenerator.generate(MetricType.GAUGE, tags.getTags(), metricName, expectedDataPoints);
 
     @Test
     public void findGaugeMetricsCount() {
@@ -117,7 +117,7 @@ public class GaugeTest extends BaseTest {
 
     @Test(dependsOnMethods = "createGaugeMetric")
     public void addGaugeData() {
-        Metric<Double> metric = MetricGenerator.generate(MetricType.GAUGE, tags.getTags(), metricName + "1", dataPointGenerator.generator(10));
+        Metric<Double> metric = MetricGenerator.generate(MetricType.GAUGE, tags.getTags(), metricName + "1", dataPointGenerator.generator(10, tags.getTags()));
 
         ClientResponse<Empty> response = client()
             .metrics()
@@ -127,6 +127,9 @@ public class GaugeTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
     }
 
+    /**
+     * TODO: Buckets are always empty
+     */
     @Test(dependsOnMethods = "addGaugeData")
     public void findGaugeRateStats() {
         Percentile percentile = new Percentile("90.0");
@@ -141,8 +144,14 @@ public class GaugeTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
+
+        NumericBucketPoint bucket = response.getEntity().get(0);
+        //Assert.assertFalse(bucket.isEmpty());
     }
 
+    /**
+     * TODO: Buckets are always empty
+     */
     @Test(dependsOnMethods = "addGaugeData")
     public void findGaugeStats() {
         Percentile percentile = new Percentile("90.0");
@@ -157,6 +166,9 @@ public class GaugeTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
+
+        NumericBucketPoint bucket = response.getEntity().get(0);
+        //Assert.assertFalse(bucket.isEmpty());
     }
 
     @Test(dependsOnMethods = "addGaugeData")
@@ -184,6 +196,9 @@ public class GaugeTest extends BaseTest {
         Assert.assertEquals(expectedMetric, response.getEntity());
     }
 
+    /**
+     * TODO: Not sure what populates this... as always get back 204 - no content
+     */
     @Test(dependsOnMethods = "addGaugeData", enabled = false)
     public void findGaugeDataPeriods() {
         ClientResponse<List<Long[]>> response = client()
@@ -191,11 +206,14 @@ public class GaugeTest extends BaseTest {
             .gauge()
             .findGaugeDataPeriods(metricName, null, null, 1.0, "eq");
 
-        //TODO: Not sure what populates this... as always get back 204 - no content
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
     }
 
+    /**
+     * TODO: Not sure what populates this... as always get back 204 - no content
+     */
     @Test(dependsOnMethods = "addGaugeData", enabled = false)
     public void getGaugeRate() {
         ClientResponse<List<DataPoint<Double>>> response = client()
@@ -203,12 +221,15 @@ public class GaugeTest extends BaseTest {
             .gauge()
             .getGaugeRate(metricName, null, null, 1, Order.ASC);
 
-        //TODO: Not sure what populates this... as always get back 204 - no content
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
     }
 
-    @Test(dependsOnMethods = "addGaugeData", enabled = true)
+    /**
+     * TODO: Buckets are always empty
+     */
+    @Test(dependsOnMethods = "addGaugeData")
     public void getGaugeRateStats() {
         Percentile percentile = new Percentile("90.0");
         Duration duration = new Duration(1, TimeUnit.DAYS);
@@ -221,32 +242,38 @@ public class GaugeTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
-    }
 
-    @Test(dependsOnMethods = "addGaugeData")
-    public void findGaugeDataWithId() {
-        ClientResponse<List<DataPoint<Double>>> response = client()
-            .metrics()
-            .gauge()
-            .findGaugeDataWithId(metricName, null, null, true, 1, Order.ASC);
-
-        Assert.assertTrue(response.isSuccess());
-        Assert.assertNotNull(response.getEntity());
+        NumericBucketPoint bucket = response.getEntity().get(0);
+        //Assert.assertFalse(bucket.isEmpty());
     }
 
     @Test(dependsOnMethods = "addGaugeData")
     public void addGaugeDataForMetric() {
-        BTG ts = new BTG();
-        DataPoint<Double> point = new DataPoint<Double>(ts.nextMilli(), 10.0, tags.getTags());
-
         ClientResponse<Empty> response = client()
             .metrics()
             .gauge()
-            .addGaugeDataForMetric(metricName, Arrays.asList(point));
+            .addGaugeDataForMetric(metricName, expectedDataPoints);
 
         Assert.assertTrue(response.isSuccess());
     }
 
+    @Test(dependsOnMethods = "addGaugeDataForMetric")
+    public void findGaugeDataWithId() {
+        ClientResponse<List<DataPoint<Double>>> response = client()
+            .metrics()
+            .gauge()
+            .findGaugeDataWithId(metricName, null, null, true, Integer.MAX_VALUE, Order.ASC);
+
+        Assert.assertTrue(response.isSuccess());
+        Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
+        Assert.assertEquals(expectedDataPoints.size(), response.getEntity().size());
+        Assert.assertEquals(expectedDataPoints, response.getEntity());
+    }
+
+    /**
+     * TODO: Not sure what populates this... as always get back 204 - no content
+     */
     @Test(dependsOnMethods = "addGaugeData", enabled = false)
     public void getGaugeStats() {
         Percentile percentile = new Percentile("90.0");
@@ -258,11 +285,10 @@ public class GaugeTest extends BaseTest {
             .getGaugeStats(
                 metricName, null, null, true, null, duration, new Percentiles(Arrays.asList(percentile)));
 
-        //TODO: Not sure what populates this... as always get back 204 - no content
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
     }
-
+    
     @Test(dependsOnMethods = "addGaugeData")
     public void getGaugeStatsTags() {
         Percentile percentile = new Percentile("90.0");

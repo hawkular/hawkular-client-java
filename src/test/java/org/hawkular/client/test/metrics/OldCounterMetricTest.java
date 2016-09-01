@@ -51,7 +51,7 @@ public class OldCounterMetricTest extends BaseTest {
     private final String podNamespace = RandomStringGenerator.getRandomId();
     private final String podName = RandomStringGenerator.getRandomId();
     private final Tags tags = TagGenerator.generate(podNamespace, podName);
-    private final List<DataPoint<Long>> expectedData = dataPointGenerator.generator(10);
+    private final List<DataPoint<Long>> expectedData = dataPointGenerator.generator(10, tags.getTags());
     private final Metric<Long> expectedDefinition = MetricGenerator.generate(MetricType.COUNTER, tags.getTags(), metricName, expectedData);
 
     @Test

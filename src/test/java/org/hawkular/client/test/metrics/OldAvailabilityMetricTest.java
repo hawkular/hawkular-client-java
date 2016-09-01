@@ -65,7 +65,7 @@ public class OldAvailabilityMetricTest extends BaseTest {
     private final String podNamespace = RandomStringGenerator.getRandomId();
     private final String podName = RandomStringGenerator.getRandomId();
     private final Tags tags = TagGenerator.generate(podNamespace, podName);
-    private final List<DataPoint<AvailabilityType>> expectedData = dataPointGenerator.generator(3);
+    private final List<DataPoint<AvailabilityType>> expectedData = dataPointGenerator.generator(3, tags.getTags());
     private final Metric<AvailabilityType> expectedDefinition = MetricGenerator.generate(MetricType.AVAILABILITY, tags.getTags(), metricName, expectedData);
     private final Metric<AvailabilityType> metric2 = MetricGenerator.generate(MetricType.AVAILABILITY, tags.getTags(), metricName, expectedData);
 

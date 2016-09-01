@@ -63,7 +63,7 @@ public class MetricTest extends BaseTest {
     private Integer originalMetricCount = 0;
     private final String metricName = RandomStringGenerator.getRandomId();
     private final Tags tags = TagGenerator.generate(RandomStringGenerator.getRandomId(), RandomStringGenerator.getRandomId());
-    private final Metric<AvailabilityType> expectedMetric = MetricGenerator.generate(MetricType.AVAILABILITY, tags.getTags(), metricName, dataPointGenerator.generator(3));
+    private final Metric<AvailabilityType> expectedMetric = MetricGenerator.generate(MetricType.AVAILABILITY, tags.getTags(), metricName, dataPointGenerator.generator(3, tags.getTags()));
 
     @Test
     public void findMetricsCount() {
@@ -117,7 +117,7 @@ public class MetricTest extends BaseTest {
     @Test(dependsOnMethods = "findMetrics")
     public void addMetricsData() {
         Map<String, String> tags = TagGenerator.generateMap(RandomStringGenerator.getRandomId(), RandomStringGenerator.getRandomId());
-        Metric<AvailabilityType> metric = MetricGenerator.generate(MetricType.AVAILABILITY, tags, metricName, dataPointGenerator.generator(3));
+        Metric<AvailabilityType> metric = MetricGenerator.generate(MetricType.AVAILABILITY, tags, metricName, dataPointGenerator.generator(3, tags));
         MixedMetricsRequest request = new MixedMetricsRequest(null, Arrays.asList(metric), null, null);
 
         ClientResponse<Empty> response = client()

@@ -48,7 +48,7 @@ public class OldGaugeMetricTest extends BaseTest {
     private final String podNamespace = RandomStringGenerator.getRandomId();
     private final String podName = RandomStringGenerator.getRandomId();
     private final Tags tags = TagGenerator.generate(podNamespace, podName);
-    private final List<DataPoint<Double>> expectedData1 = dataPointGenerator.generator(10);
+    private final List<DataPoint<Double>> expectedData1 = dataPointGenerator.generator(10, tags.getTags());
     private final Metric<Double> expectedMetric = MetricGenerator.generate(MetricType.GAUGE, tags.getTags(), metricName, expectedData1);
 
     @Test

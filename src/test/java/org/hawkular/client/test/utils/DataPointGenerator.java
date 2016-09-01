@@ -17,6 +17,7 @@
 package org.hawkular.client.test.utils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.hawkular.client.test.BTG;
@@ -26,17 +27,17 @@ import com.google.common.collect.ImmutableList.Builder;
 
 public class DataPointGenerator<T> {
 
-    public List<DataPoint<T>> generator(int size) {
-        return build(size);
+    public List<DataPoint<T>> generator(int size, Map<String, String> tags) {
+        return build(size, tags);
     }
 
-    private List<DataPoint<T>> build(int size) {
+    private List<DataPoint<T>> build(int size, Map<String, String> tags) {
         BTG ts = new BTG();
-        Random random = new Random();
+        Random random = new Random(1000);
 
         Builder<DataPoint<T>> builder = new Builder<>();
         for (int i = 0; i < size; i++) {
-            DataPoint<T> point = new DataPoint<T>(ts.nextMilli(), getValue(random));
+            DataPoint<T> point = new DataPoint<T>(ts.nextMilli(), getValue(random), tags);
             builder.add(point);
         }
         return builder.build();

@@ -80,7 +80,7 @@ public class StringTest extends BaseTest {
     public void createStringMetric() {
         LOG.info("Testing with MetricName == {}", metricName);
 
-        Metric<String> metric = MetricGenerator.generate(MetricType.STRING, tags.getTags(), metricName, dataPointGenerator.generator(10));
+        Metric<String> metric = MetricGenerator.generate(MetricType.STRING, tags.getTags(), metricName, dataPointGenerator.generator(10, tags.getTags()));
 
         ClientResponse<Empty> response = client()
             .metrics()
@@ -111,7 +111,7 @@ public class StringTest extends BaseTest {
 
     @Test(dependsOnMethods = "findMetricsDefinitions")
     public void createMultipleStringMetric() {
-        Metric<String> metric = MetricGenerator.generate(MetricType.STRING, tags.getTags(), metricName, dataPointGenerator.generator(10));
+        Metric<String> metric = MetricGenerator.generate(MetricType.STRING, tags.getTags(), metricName, dataPointGenerator.generator(10, tags.getTags()));
 
         ClientResponse<Empty> response = client()
             .metrics()

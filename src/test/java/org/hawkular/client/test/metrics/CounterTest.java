@@ -68,7 +68,7 @@ public class CounterTest extends BaseTest {
     private final String podNamespace = RandomStringGenerator.getRandomId();
     private final String podName = RandomStringGenerator.getRandomId();
     private final Tags tags = TagGenerator.generate(podNamespace, podName);
-    private final Metric<Long> expectedMetric = MetricGenerator.generate(MetricType.COUNTER, tags.getTags(), metricName, dataPointGenerator.generator(10));
+    private final Metric<Long> expectedMetric = MetricGenerator.generate(MetricType.COUNTER, tags.getTags(), metricName, dataPointGenerator.generator(10, tags.getTags()));
 
     @Test
     public void getCountersCount() {
@@ -135,7 +135,7 @@ public class CounterTest extends BaseTest {
 
     @Test(dependsOnMethods = "getCounters")
     public void addCounterData() {
-        Metric<Long> metric = MetricGenerator.generate(MetricType.COUNTER, tags.getTags(), metricName + "1", dataPointGenerator.generator(10));
+        Metric<Long> metric = MetricGenerator.generate(MetricType.COUNTER, tags.getTags(), metricName + "1", dataPointGenerator.generator(10, tags.getTags()));
 
         ClientResponse<Empty> response = client()
             .metrics()
@@ -227,7 +227,7 @@ public class CounterTest extends BaseTest {
         ClientResponse<Empty> response = client()
             .metrics()
             .counter()
-            .createCounterData(metricName, dataPointGenerator.generator(10));
+            .createCounterData(metricName, dataPointGenerator.generator(10, tags.getTags()));
 
         Assert.assertTrue(response.isSuccess());
     }

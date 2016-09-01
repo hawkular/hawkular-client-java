@@ -68,7 +68,7 @@ public class AvailabilityTest extends BaseTest {
     private final String podNamespace = RandomStringGenerator.getRandomId();
     private final String podName = RandomStringGenerator.getRandomId();
     private final Tags tags = TagGenerator.generate(podNamespace, podName);
-    private final Metric<AvailabilityType> expectedMetric = MetricGenerator.generate(MetricType.AVAILABILITY, tags.getTags(), metricName, dataPointGenerator.generator(3));
+    private final Metric<AvailabilityType> expectedMetric = MetricGenerator.generate(MetricType.AVAILABILITY, tags.getTags(), metricName, dataPointGenerator.generator(3, tags.getTags()));
 
 
     @Test
@@ -116,7 +116,7 @@ public class AvailabilityTest extends BaseTest {
 
     @Test(dependsOnMethods = "findAvailabilityMetrics")
     public void addAvailabilityData() {
-        Metric<AvailabilityType> metric = MetricGenerator.generate(MetricType.AVAILABILITY, tags.getTags(), metricName + "1", dataPointGenerator.generator(3));
+        Metric<AvailabilityType> metric = MetricGenerator.generate(MetricType.AVAILABILITY, tags.getTags(), metricName + "1", dataPointGenerator.generator(3, tags.getTags()));
 
         ClientResponse<Empty> response = client()
             .metrics()
@@ -165,7 +165,7 @@ public class AvailabilityTest extends BaseTest {
         ClientResponse<Empty> response = client()
             .metrics()
             .availability()
-            .addAvailabilityDataForMetric(metricName, dataPointGenerator.generator(3));
+            .addAvailabilityDataForMetric(metricName, dataPointGenerator.generator(3, tags.getTags()));
 
         Assert.assertTrue(response.isSuccess());
     }
