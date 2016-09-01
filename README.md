@@ -13,7 +13,8 @@ You have set your hawkular server url in to `HAWKULAR_ENDPOINT` environment vari
 
 To run `mvn test`
 
-Run with debug log: `mvn test -Dorg.slf4j.simpleLogger.defaultLogLevel=debug`
+Run with debug log: `mvn test -Dorg.slf4j.simpleLogger.defaultLogLevel=debug -Dorg.slf4j.simpleLogger.logFile=target/test.log`
+- http://www.slf4j.org/api/org/slf4j/impl/SimpleLogger.html
 
 # Help Wanted
 This project is under active development.  Pull requests are welcome.
