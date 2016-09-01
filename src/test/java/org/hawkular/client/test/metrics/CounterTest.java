@@ -80,6 +80,7 @@ public class CounterTest extends BaseTest {
         } else {
             Assert.assertTrue(response.isSuccess());
             Assert.assertNotNull(response.getEntity());
+            Assert.assertTrue(response.getEntity().size() > 0);
 
             originalCounterCount = response.getEntity().size();
         }

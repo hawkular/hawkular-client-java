@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
+import org.hawkular.client.core.jaxrs.ResponseCodes;
 import org.hawkular.client.metrics.model.Order;
 import org.hawkular.client.test.BTG;
 import org.hawkular.client.test.BaseTest;
@@ -52,12 +53,31 @@ public class StringTest extends BaseTest {
         }
     };
 
+    private Integer originalStringCount = 0;
     private final String metricName = RandomStringGenerator.getRandomId();
     private final String podNamespace = RandomStringGenerator.getRandomId();
     private final String podName = RandomStringGenerator.getRandomId();
     private final Tags tags = TagGenerator.generate(podNamespace, podName);
 
     @Test
+    public void findMetricsDefinitionsCount() {
+        ClientResponse<List<Metric>> response = client()
+            .metrics()
+            .string()
+            .findMetricsDefinitions(tags);
+
+        if (response.getStatusCode() == ResponseCodes.NO_CONTENT_204.value()) {
+            Assert.assertTrue(true);
+        } else {
+            Assert.assertTrue(response.isSuccess());
+            Assert.assertNotNull(response.getEntity());
+            Assert.assertTrue(response.getEntity().size() > 0);
+
+            originalStringCount = response.getEntity().size();
+        }
+    }
+
+    @Test(dependsOnMethods = "findMetricsDefinitionsCount")
     public void createStringMetric() {
         LOG.info("Testing with MetricName == {}", metricName);
 
@@ -81,6 +101,7 @@ public class StringTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
+        Assert.assertTrue(originalStringCount == (response.getEntity().size() - 1));
 
         Optional<Metric> value = response.getEntity().stream()
             .filter(a -> a.getTags().get(TagGenerator.POD_NAMESPACE).equals(podNamespace))

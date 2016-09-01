@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
+import org.hawkular.client.core.jaxrs.ResponseCodes;
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.client.test.utils.RandomStringGenerator;
 import org.hawkular.metrics.model.Tenant;
@@ -45,10 +46,15 @@ public class TenantTest extends BaseTest {
             .tenant()
             .getTenants();
 
-        Assert.assertTrue(response.isSuccess());
-        Assert.assertNotNull(response.getEntity());
+        if (response.getStatusCode() == ResponseCodes.NO_CONTENT_204.value()) {
+            Assert.assertTrue(true);
+        } else {
+            Assert.assertTrue(response.isSuccess());
+            Assert.assertNotNull(response.getEntity());
+            Assert.assertTrue(response.getEntity().size() > 0);
 
-        originalTenantCount = response.getEntity().size();
+            originalTenantCount = response.getEntity().size();
+        }
     }
 
     @Test(dependsOnMethods = "getTentantsCount")

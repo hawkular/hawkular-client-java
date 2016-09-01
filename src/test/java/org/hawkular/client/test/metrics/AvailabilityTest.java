@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
+import org.hawkular.client.core.jaxrs.ResponseCodes;
 import org.hawkular.client.metrics.model.Order;
 import org.hawkular.client.test.BTG;
 import org.hawkular.client.test.BaseTest;
@@ -63,7 +64,7 @@ public class AvailabilityTest extends BaseTest {
         }
     };
 
-    private Integer originalCounterCount = 0;
+    private Integer originalAvailabilityCount = 0;
     private final String metricName = RandomStringGenerator.getRandomId();
     private final String podNamespace = RandomStringGenerator.getRandomId();
     private final String podName = RandomStringGenerator.getRandomId();
@@ -71,11 +72,25 @@ public class AvailabilityTest extends BaseTest {
     private final Metric<AvailabilityType> expectedMetric = MetricGenerator.generate(MetricType.AVAILABILITY, tags.getTags(), metricName, dataPointGenerator.generator(3));
 
 
+    @Test
     public void findAvailabilityMetricsCount() {
+        ClientResponse<List<Metric<AvailabilityType>>> response = client()
+            .metrics()
+            .availability()
+            .findAvailabilityMetrics(tags);
 
+        if (response.getStatusCode() == ResponseCodes.NO_CONTENT_204.value()) {
+            Assert.assertTrue(true);
+        } else {
+            Assert.assertTrue(response.isSuccess());
+            Assert.assertNotNull(response.getEntity());
+            Assert.assertTrue(response.getEntity().size() > 0);
+
+            originalAvailabilityCount = response.getEntity().size();
+        }
     }
 
-    @Test
+    @Test(dependsOnMethods = "findAvailabilityMetricsCount")
     public void createAvailabilityMetric() {
         LOG.info("Testing with MetricName == {}", metricName);
 
@@ -96,6 +111,8 @@ public class AvailabilityTest extends BaseTest {
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
+        Assert.assertTrue(originalAvailabilityCount == (response.getEntity().size() - 1));
     }
 
     @Test(dependsOnMethods = "findAvailabilityMetrics")

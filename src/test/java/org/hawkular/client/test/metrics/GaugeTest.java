@@ -78,6 +78,7 @@ public class GaugeTest extends BaseTest {
         } else {
             Assert.assertTrue(response.isSuccess());
             Assert.assertNotNull(response.getEntity());
+            Assert.assertTrue(response.getEntity().size() > 0);
 
             originalGaugeCount = response.getEntity().size();
         }

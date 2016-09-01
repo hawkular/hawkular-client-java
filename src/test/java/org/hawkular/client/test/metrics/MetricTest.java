@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
+import org.hawkular.client.core.jaxrs.ResponseCodes;
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.client.test.utils.DataPointGenerator;
 import org.hawkular.client.test.utils.MetricGenerator;
@@ -58,10 +59,29 @@ public class MetricTest extends BaseTest {
         }
     };
 
+    private Integer originalMetricCount = 0;
     private final String metricName = RandomStringGenerator.getRandomId();
     private final Tags tags = TagGenerator.generate(RandomStringGenerator.getRandomId(), RandomStringGenerator.getRandomId());
 
     @Test
+    public void findMetricsCount() {
+        ClientResponse<List<Metric<?>>> response = client()
+            .metrics()
+            .metric()
+            .findMetrics(MetricType.AVAILABILITY, tags, metricName);
+
+        if (response.getStatusCode() == ResponseCodes.NO_CONTENT_204.value()) {
+            Assert.assertTrue(true);
+        } else {
+            Assert.assertTrue(response.isSuccess());
+            Assert.assertNotNull(response.getEntity());
+            Assert.assertTrue(response.getEntity().size() > 0);
+
+            originalMetricCount = response.getEntity().size();
+        }
+    }
+
+    @Test(dependsOnMethods = "findMetricsCount")
     public void createMetric() {
         LOG.info("Testing with MetricName == {}", metricName);
 
@@ -85,6 +105,7 @@ public class MetricTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
+        Assert.assertTrue(originalMetricCount == (response.getEntity().size() - 1));
     }
 
     @Test(dependsOnMethods = "findMetrics")
