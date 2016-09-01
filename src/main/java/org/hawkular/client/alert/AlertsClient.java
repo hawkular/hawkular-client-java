@@ -28,8 +28,8 @@ import org.hawkular.alerts.api.model.data.Data;
 import org.hawkular.alerts.api.model.event.Alert;
 import org.hawkular.alerts.api.model.trigger.Mode;
 import org.hawkular.alerts.api.model.trigger.Trigger;
-import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.alert.model.AlertsParams;
+import org.hawkular.client.core.ClientResponse;
 
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)

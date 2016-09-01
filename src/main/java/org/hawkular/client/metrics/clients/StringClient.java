@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
-import org.hawkular.client.core.jaxrs.Order;
+import org.hawkular.client.metrics.model.Order;
 import org.hawkular.metrics.model.DataPoint;
 import org.hawkular.metrics.model.Metric;
 import org.hawkular.metrics.model.param.Tags;

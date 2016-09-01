@@ -25,9 +25,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
-import org.hawkular.client.core.jaxrs.Order;
 import org.hawkular.client.core.jaxrs.ResponseCodes;
 import org.hawkular.client.core.jaxrs.param.TagsConverter;
+import org.hawkular.client.metrics.model.Order;
 import org.hawkular.client.test.BTG;
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.client.test.utils.DataPointGenerator;

@@ -23,7 +23,7 @@ import javax.ws.rs.ext.ParamConverter;
 import javax.ws.rs.ext.ParamConverterProvider;
 import javax.ws.rs.ext.Provider;
 
-import org.hawkular.client.core.jaxrs.Order;
+import org.hawkular.client.metrics.model.Order;
 import org.hawkular.metrics.model.param.Duration;
 import org.hawkular.metrics.model.param.Percentiles;
 import org.hawkular.metrics.model.param.Tags;

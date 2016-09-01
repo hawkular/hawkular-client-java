@@ -16,7 +16,7 @@
  */
 package org.hawkular.client.core.jaxrs.param;
 
-import org.hawkular.client.core.jaxrs.Order;
+import org.hawkular.client.metrics.model.Order;
 
 /**
  * https://github.com/hawkular/hawkular-metrics/blob/master/api/metrics-api-jaxrs/src/main/java/org/hawkular/metrics/api/jaxrs/param/OrderConverter.java
