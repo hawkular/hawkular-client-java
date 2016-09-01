@@ -46,9 +46,6 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-/**
- * TODO: ADD MORE CHECKS
- */
 public class CounterTest extends BaseTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(CounterTest.class);
@@ -68,7 +65,8 @@ public class CounterTest extends BaseTest {
     private final String podNamespace = RandomStringGenerator.getRandomId();
     private final String podName = RandomStringGenerator.getRandomId();
     private final Tags tags = TagGenerator.generate(podNamespace, podName);
-    private final Metric<Long> expectedMetric = MetricGenerator.generate(MetricType.COUNTER, tags.getTags(), metricName, dataPointGenerator.generator(10, tags.getTags()));
+    private final List<DataPoint<Long>> expectedDataPoints = dataPointGenerator.generator(10, tags.getTags());
+    private final Metric<Long> expectedMetric = MetricGenerator.generate(MetricType.COUNTER, tags.getTags(), metricName, expectedDataPoints);
 
     @Test
     public void getCountersCount() {
@@ -131,6 +129,13 @@ public class CounterTest extends BaseTest {
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
+
+        NumericBucketPoint bucket = response.getEntity().get(0);
+        Assert.assertFalse(bucket.isEmpty());
+        Assert.assertNotNull(bucket.getStart());
+        Assert.assertNotNull(bucket.getEnd());
+        Assert.assertTrue(bucket.getSamples() > 0);
     }
 
     @Test(dependsOnMethods = "getCounters")
@@ -158,6 +163,12 @@ public class CounterTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
+
+        NumericBucketPoint bucket = response.getEntity().get(0);
+        Assert.assertFalse(bucket.isEmpty());
+        Assert.assertNotNull(bucket.getStart());
+        Assert.assertNotNull(bucket.getEnd());
+        Assert.assertTrue(bucket.getSamples() > 0);
     }
 
     @Test(dependsOnMethods = "getCounters")
@@ -170,6 +181,7 @@ public class CounterTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
+        Assert.assertEquals(TagGenerator.convert(tags.getTags()), response.getEntity());
     }
 
     @Test(dependsOnMethods = "getCounters")
@@ -181,6 +193,7 @@ public class CounterTest extends BaseTest {
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertEquals(expectedMetric, response.getEntity());
     }
 
     @Test(dependsOnMethods = "getCounters")
@@ -195,6 +208,13 @@ public class CounterTest extends BaseTest {
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
+
+        NumericBucketPoint bucket = response.getEntity().get(0);
+        Assert.assertFalse(bucket.isEmpty());
+        Assert.assertNotNull(bucket.getStart());
+        Assert.assertNotNull(bucket.getEnd());
+        Assert.assertTrue(bucket.getSamples() > 0);
     }
 
     @Test(dependsOnMethods = "getCounters")
@@ -209,17 +229,13 @@ public class CounterTest extends BaseTest {
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
-    }
+        Assert.assertTrue(response.getEntity().size() > 0);
 
-    @Test(dependsOnMethods = "getCounters")
-    public void findCounterData() {
-        ClientResponse<List<DataPoint<Long>>> response = client()
-            .metrics()
-            .counter()
-            .findCounterData(metricName, null, null, 1, Order.ASC);
-
-        Assert.assertTrue(response.isSuccess());
-        Assert.assertNotNull(response.getEntity());
+        NumericBucketPoint bucket = response.getEntity().get(0);
+        Assert.assertFalse(bucket.isEmpty());
+        Assert.assertNotNull(bucket.getStart());
+        Assert.assertNotNull(bucket.getEnd());
+        Assert.assertTrue(bucket.getSamples() > 0);
     }
 
     @Test(dependsOnMethods = "getCounters")
@@ -227,12 +243,26 @@ public class CounterTest extends BaseTest {
         ClientResponse<Empty> response = client()
             .metrics()
             .counter()
-            .createCounterData(metricName, dataPointGenerator.generator(10, tags.getTags()));
+            .createCounterData(metricName, expectedDataPoints);
 
         Assert.assertTrue(response.isSuccess());
     }
 
     @Test(dependsOnMethods = "createCounterData")
+    public void findCounterData() {
+        ClientResponse<List<DataPoint<Long>>> response = client()
+            .metrics()
+            .counter()
+            .findCounterData(metricName, null, null, (expectedDataPoints.size() + 1), Order.ASC);
+
+        Assert.assertTrue(response.isSuccess());
+        Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
+        Assert.assertEquals(expectedDataPoints, response.getEntity());
+
+    }
+
+    @Test(dependsOnMethods = "findCounterData")
     public void findCounterMetricStats() {
         Percentile percentile = new Percentile("90.0");
         Duration duration = new Duration(1, TimeUnit.DAYS);
@@ -244,8 +274,18 @@ public class CounterTest extends BaseTest {
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
+
+        NumericBucketPoint bucket = response.getEntity().get(0);
+        Assert.assertFalse(bucket.isEmpty());
+        Assert.assertNotNull(bucket.getStart());
+        Assert.assertNotNull(bucket.getEnd());
+        Assert.assertTrue(bucket.getSamples() > 0);
     }
 
+    /**
+     * TODO: Not sure what populates this... as always get back 204 - no content
+     */
     @Test(dependsOnMethods = "createCounterData", enabled = false)
     public void getCounterMetricStatsTags() {
         Percentile percentile = new Percentile("90.0");
@@ -255,9 +295,9 @@ public class CounterTest extends BaseTest {
             .counter()
             .getCounterMetricStatsTags(metricName, tags, null, null, new Percentiles(Arrays.asList(percentile)));
 
-        //TODO: Not sure what populates this... as always get back 204 - no content
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
     }
 
     @Test(dependsOnMethods = "createCounterData")
@@ -269,6 +309,7 @@ public class CounterTest extends BaseTest {
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
         Assert.assertEquals(tags.getTags(), response.getEntity());
     }
 

@@ -262,7 +262,7 @@ public class GaugeTest extends BaseTest {
         ClientResponse<List<DataPoint<Double>>> response = client()
             .metrics()
             .gauge()
-            .findGaugeDataWithId(metricName, null, null, true, Integer.MAX_VALUE, Order.ASC);
+            .findGaugeDataWithId(metricName, null, null, true, (expectedDataPoints.size() + 1), Order.ASC);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
@@ -274,7 +274,7 @@ public class GaugeTest extends BaseTest {
     /**
      * TODO: Not sure what populates this... as always get back 204 - no content
      */
-    @Test(dependsOnMethods = "addGaugeData", enabled = false)
+    @Test(dependsOnMethods = "findGaugeDataWithId", enabled = false)
     public void getGaugeStats() {
         Percentile percentile = new Percentile("90.0");
         Duration duration = new Duration(1, TimeUnit.DAYS);
@@ -289,7 +289,7 @@ public class GaugeTest extends BaseTest {
         Assert.assertNotNull(response.getEntity());
     }
     
-    @Test(dependsOnMethods = "addGaugeData")
+    @Test(dependsOnMethods = "findGaugeDataWithId")
     public void getGaugeStatsTags() {
         Percentile percentile = new Percentile("90.0");
 
@@ -311,7 +311,7 @@ public class GaugeTest extends BaseTest {
         Assert.assertEquals(tags.getTags(), bucket.getTags());
     }
 
-    @Test(dependsOnMethods = "addGaugeData")
+    @Test(dependsOnMethods = "findGaugeDataWithId")
     public void getGaugeMetricTags() {
         ClientResponse<Map<String, String>> response = client()
             .metrics()

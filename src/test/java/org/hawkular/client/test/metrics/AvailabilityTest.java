@@ -68,7 +68,8 @@ public class AvailabilityTest extends BaseTest {
     private final String podNamespace = RandomStringGenerator.getRandomId();
     private final String podName = RandomStringGenerator.getRandomId();
     private final Tags tags = TagGenerator.generate(podNamespace, podName);
-    private final Metric<AvailabilityType> expectedMetric = MetricGenerator.generate(MetricType.AVAILABILITY, tags.getTags(), metricName, dataPointGenerator.generator(3, tags.getTags()));
+    private final List<DataPoint<AvailabilityType>> expectedDataPoints = dataPointGenerator.generator(3, tags.getTags());
+    private final Metric<AvailabilityType> expectedMetric = MetricGenerator.generate(MetricType.AVAILABILITY, tags.getTags(), metricName, expectedDataPoints);
 
 
     @Test
@@ -135,6 +136,8 @@ public class AvailabilityTest extends BaseTest {
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
+        Assert.assertEquals(TagGenerator.convert(tags.getTags()), response.getEntity());
     }
 
     @Test(dependsOnMethods = "addAvailabilityData")
@@ -146,31 +149,34 @@ public class AvailabilityTest extends BaseTest {
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertEquals(expectedMetric, response.getEntity());
     }
 
-    @Test(dependsOnMethods = "addAvailabilityData", enabled = false)
-    public void findAvailabilityData() {
-        ClientResponse<List<DataPoint<AvailabilityType>>> response = client()
-            .metrics()
-            .availability()
-            .findAvailabilityData(metricName, null, null, true, 1, Order.ASC);
-
-        //TODO: Not sure what populates this... as always get back 204 - no content
-        Assert.assertTrue(response.isSuccess());
-        Assert.assertNotNull(response.getEntity());
-    }
-
-    @Test(dependsOnMethods = "getAvailabilityMetric")
+    @Test(dependsOnMethods = "addAvailabilityData")
     public void addAvailabilityDataForMetric() {
         ClientResponse<Empty> response = client()
             .metrics()
             .availability()
-            .addAvailabilityDataForMetric(metricName, dataPointGenerator.generator(3, tags.getTags()));
+            .addAvailabilityDataForMetric(metricName, expectedDataPoints);
 
         Assert.assertTrue(response.isSuccess());
     }
 
     @Test(dependsOnMethods = "addAvailabilityDataForMetric")
+    public void findAvailabilityData() {
+        ClientResponse<List<DataPoint<AvailabilityType>>> response = client()
+            .metrics()
+            .availability()
+            .findAvailabilityData(metricName, null, null, true, (expectedDataPoints.size() + 1), Order.ASC);
+
+        Assert.assertTrue(response.isSuccess());
+        Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
+        Assert.assertEquals(expectedDataPoints.size(), response.getEntity().size());
+        Assert.assertEquals(expectedDataPoints, response.getEntity());
+    }
+
+    @Test(dependsOnMethods = "findAvailabilityData")
     public void findAvailabilityStats() {
         Duration duration = new Duration(1, TimeUnit.DAYS);
 
@@ -181,9 +187,17 @@ public class AvailabilityTest extends BaseTest {
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
+
+        AvailabilityBucketPoint bucket = response.getEntity().get(0);
+        Assert.assertFalse(bucket.isEmpty());
+        Assert.assertNotNull(bucket.getStart());
+        Assert.assertNotNull(bucket.getEnd());
+        Assert.assertNotNull(bucket.getDurationMap());
+        Assert.assertTrue(bucket.getDurationMap().size() > 0);
     }
 
-    @Test(dependsOnMethods = "addAvailabilityDataForMetric")
+    @Test(dependsOnMethods = "findAvailabilityStats")
     public void getAvailabilityMetricTags() {
         ClientResponse<Map<String, String>> response = client()
             .metrics()
@@ -192,6 +206,8 @@ public class AvailabilityTest extends BaseTest {
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
+        Assert.assertEquals(tags.getTags(), response.getEntity());
     }
 
     @Test(dependsOnMethods = "getAvailabilityMetricTags")
@@ -201,7 +217,6 @@ public class AvailabilityTest extends BaseTest {
             .availability()
             .updateAvailabilityMetricTags(metricName, TagGenerator.generateMap("updatedNamespace", "updatedPod"));
 
-        //todo: race condition
         Assert.assertTrue(response.isSuccess());
     }
 
