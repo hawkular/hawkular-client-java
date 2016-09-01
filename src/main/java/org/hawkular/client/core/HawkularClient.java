@@ -14,7 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client;
+package org.hawkular.client.core;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -22,6 +24,7 @@ import java.util.Objects;
 
 import org.hawkular.client.alert.AlertsClient;
 import org.hawkular.client.alert.AlertsClientImpl;
+import org.hawkular.client.core.jaxrs.RestRequestFilter;
 import org.hawkular.client.inventory.InventoryClient;
 import org.hawkular.client.inventory.InventoryClientImpl;
 import org.hawkular.client.metrics.MetricsClient;
@@ -50,8 +53,9 @@ public class HawkularClient {
         this(endpointUri, null, null, headers);
     }
 
-    public HawkularClient(URI endpointUri, String username, String password, HashMap<String, Object> headers)
-            throws Exception {
+    public HawkularClient(URI endpointUri, String username, String password, HashMap<String, Object> headers) throws Exception {
+        checkArgument(endpointUri != null, "EndpointUri is null");
+
         this.endpointUri = endpointUri;
         if (username != null) {
             metricsClient = new MetricsClientImpl(endpointUri, username, password);
@@ -96,8 +100,8 @@ public class HawkularClient {
 
     public String toString() {
         return MoreObjects.toStringHelper(this).
-                add("endpoint", endpointUri)
-                .toString();
+            add("endpoint", endpointUri)
+            .toString();
     }
 
 }

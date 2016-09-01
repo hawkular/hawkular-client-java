@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client;
+package org.hawkular.client.core.jaxrs.fasterxml.jackson;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -28,14 +28,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.Provider;
 
-import org.hawkular.client.metrics.mixins.MetricsJacksonConfig;
 import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
@@ -47,16 +43,10 @@ public class HCJacksonJson2Provider extends ResteasyJackson2Provider {
 
     @Override
     public void writeTo(Object value, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType,
-            MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException {
-        ObjectMapper mapper = locateMapper(type, mediaType);
-        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-        mapper.setSerializationInclusion(Include.NON_NULL);
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                        MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException {
+        ObjectMapper mapper = ClientObjectMapper.config(locateMapper(type, mediaType));
 
-        //AddMixIns
-        MetricsJacksonConfig.configure(mapper);
-
+        //TODO: Solve with a custome serializer
         //FIXES: AlertsCondition tests failing
         //If its a List, try to get the GenericType back, as the 'genericType' might be the interface,
         //but we want the concrete back so Jackson can marshal correctly

@@ -14,25 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client;
+package org.hawkular.client.metrics.fasterxml.jackson;
 
-import javax.ws.rs.ext.ContextResolver;
-import javax.ws.rs.ext.Provider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-@Provider
-public class JacksonObjectMapperProvider implements ContextResolver<ObjectMapper>{
-    private final ObjectMapper objectMapper;
-
-    public JacksonObjectMapperProvider() throws Exception {
-        objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
-
-    @Override
-    public ObjectMapper getContext(Class<?> type) {
-        return objectMapper;
-    }
-
+@JsonDeserialize(using = NumericBucketPointDeserializer.class)
+public abstract class NumericBucketPointMixin {
 }
+
+
+
+

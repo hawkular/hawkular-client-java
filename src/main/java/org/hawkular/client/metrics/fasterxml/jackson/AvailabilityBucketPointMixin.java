@@ -14,18 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.metrics.mixins;
-
-import org.hawkular.metrics.model.fasterxml.jackson.MetricTypeDeserializer;
-import org.hawkular.metrics.model.fasterxml.jackson.MetricTypeSerializer;
+package org.hawkular.client.metrics.fasterxml.jackson;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-/**
- * @author jkandasa@redhat.com (Jeeva Kandasamy)
- */
-@JsonDeserialize(using = MetricTypeDeserializer.class)
-@JsonSerialize(using = MetricTypeSerializer.class)
-public abstract class MetricTypeMixin {
+@JsonDeserialize(using = AvailabilityBucketPointDeserializer.class)
+public abstract class AvailabilityBucketPointMixin {
 }
+
+
+
+

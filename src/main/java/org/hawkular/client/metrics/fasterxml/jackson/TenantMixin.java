@@ -14,15 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.metrics.mixins;
-
-import org.hawkular.metrics.model.fasterxml.jackson.AvailabilityTypeDeserializer;
-import org.hawkular.metrics.model.fasterxml.jackson.AvailabilityTypeSerializer;
+package org.hawkular.client.metrics.fasterxml.jackson;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-@JsonDeserialize(using = AvailabilityTypeDeserializer.class)
-@JsonSerialize(using = AvailabilityTypeSerializer.class)
-public abstract class AvailabilityTypeMixin {
+/**
+ * @author jkandasa@redhat.com (Jeeva Kandasamy)
+ */
+@JsonSerialize(using = TenantSerializer.class)
+@JsonDeserialize(using = TenantDeserializer.class)
+public abstract class TenantMixin {
 }
+
+
+
+

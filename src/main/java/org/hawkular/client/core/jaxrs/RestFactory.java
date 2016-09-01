@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client;
+package org.hawkular.client.core.jaxrs;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -38,6 +38,9 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.hawkular.client.core.jaxrs.fasterxml.jackson.HCJacksonJson2Provider;
+import org.hawkular.client.core.jaxrs.fasterxml.jackson.JacksonObjectMapperProvider;
+import org.hawkular.client.core.jaxrs.param.ConvertersProvider;
 import org.jboss.resteasy.client.jaxrs.ProxyBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
@@ -78,8 +81,8 @@ public class RestFactory<T> {
             HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort());
             CredentialsProvider credsProvider = new BasicCredentialsProvider();
             credsProvider.setCredentials(
-                    new AuthScope(targetHost.getHostName(), targetHost.getPort()),
-                    new UsernamePasswordCredentials(userName, password));
+                new AuthScope(targetHost.getHostName(), targetHost.getPort()),
+                new UsernamePasswordCredentials(userName, password));
             // Create AuthCache instance
             AuthCache authCache = new BasicAuthCache();
             // Generate BASIC scheme object and add it to the local auth cache
@@ -124,13 +127,13 @@ public class RestFactory<T> {
             builder.loadTrustMaterial(keyStore, new TrustStrategy() {
                 @Override
                 public boolean isTrusted(X509Certificate[] trustedCert, String nameConstraints)
-                        throws CertificateException {
+                    throws CertificateException {
                     return true;
                 }
             });
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build());
             CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(
-                    sslsf).build();
+                sslsf).build();
             return httpclient;
 
         } catch (Exception ex) {

@@ -14,23 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client;
+package org.hawkular.client.metrics.fasterxml.jackson;
 
-import java.net.URI;
+import org.hawkular.metrics.model.fasterxml.jackson.AvailabilityTypeDeserializer;
+import org.hawkular.metrics.model.fasterxml.jackson.AvailabilityTypeSerializer;
 
-public abstract class BaseClient<T> {
-    private T restAPI;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-    public BaseClient(URI endpointUri, String username, String password,
-            RestFactory<T> restFactory) throws Exception {
-        restAPI = (T) restFactory.createAPI(endpointUri, username, password);
-    }
-
-    public BaseClient(URI endpointUri, RestFactory<T> restFactory) throws Exception {
-        restAPI = (T) restFactory.createAPI(endpointUri);
-    }
-
-    public T restApi() {
-        return this.restAPI;
-    }
+@JsonDeserialize(using = AvailabilityTypeDeserializer.class)
+@JsonSerialize(using = AvailabilityTypeSerializer.class)
+public abstract class AvailabilityTypeMixin {
 }
