@@ -65,7 +65,7 @@ public class MetricDefinitionTest extends OpenshiftBaseTest {
 
         Tags tags = new Tags(tagsMap);
 
-        List<Metric<?>> defs = client().metrics().findMetrics(null, tags, null).getEntity();
+        List<Metric<?>> defs = client().metrics().metric().findMetrics(null, tags, null).getEntity();
         Reporter.log(defs.toString(), true);
 
         Assert.assertTrue(defs != null && defs.size() == expectedMetricIDs.size());

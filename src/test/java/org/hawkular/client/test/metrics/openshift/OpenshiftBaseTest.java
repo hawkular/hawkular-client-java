@@ -58,7 +58,7 @@ public class OpenshiftBaseTest extends BaseTest {
 
         Tags tags = new Tags(tagsMap);
 
-        List<Metric<?>> defs = client().metrics().findMetrics(MetricType.GAUGE, tags, null).getEntity();
+        List<Metric<?>> defs = client().metrics().metric().findMetrics(MetricType.GAUGE, tags, null).getEntity();
         Assert.assertNotNull(defs, "namespace: " + podNamespace + ", container: " + containerName);
         Assert.assertTrue(defs.size() > 1);
         String podId = defs.get(0).getTags().get("pod_id");

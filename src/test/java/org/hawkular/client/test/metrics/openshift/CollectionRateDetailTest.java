@@ -67,9 +67,8 @@ public class CollectionRateDetailTest extends OpenshiftBaseTest {
 
     private void getData(String metricID, String testID, long start, long end, Duration timeBucket) {
         Reporter.log("Fetching large data set... may take a couple minutes", true);
-        List<DataPoint<Double>> rawData = client().metrics()
-                .findGaugeDataWithId(metricID, start, end, null, null, null,
-                        null, null, null).getEntity();
+        List<DataPoint<Double>> rawData = client().metrics().gauge()
+                .findGaugeDataWithId(metricID, start, end, null, null, null).getEntity();
 
         Assert.assertNotNull(rawData, testID);
         Reporter.log("raw datapoints: " + rawData.size(), true);

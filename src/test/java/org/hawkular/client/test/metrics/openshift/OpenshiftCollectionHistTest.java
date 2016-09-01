@@ -87,7 +87,7 @@ public class OpenshiftCollectionHistTest extends BaseTest {
 
         Tags tags = new Tags(tagsMap);
 
-        List<Metric<?>> defs = super.client().metrics().findMetrics(MetricType.GAUGE, tags, null).getEntity();
+        List<Metric<?>> defs = super.client().metrics().metric().findMetrics(MetricType.GAUGE, tags, null).getEntity();
         Assert.assertNotNull(defs, "namespace: " + podNamespace + ", container: " + containerName);
         Assert.assertTrue(defs.size() > 1);
         return defs.get(0).getTags().get("pod_id");
@@ -101,8 +101,7 @@ public class OpenshiftCollectionHistTest extends BaseTest {
         long start = now - Duration.ofHours(36).toMillis();
         long dur = start + Duration.ofHours(36).toMillis();
 
-        List<DataPoint<Double>> rawData = client().metrics().findGaugeDataWithId(metricID, start, dur, null, null,
-                null, null, null, null).getEntity();
+        List<DataPoint<Double>> rawData = client().metrics().gauge().findGaugeDataWithId(metricID, start, dur, null, null, null).getEntity();
 
         Assert.assertNotNull(rawData, "namespace: " + podNamespace + ", container: " + containerName);
 
