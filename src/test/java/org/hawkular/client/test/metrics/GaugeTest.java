@@ -127,9 +127,6 @@ public class GaugeTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
     }
 
-    /**
-     * TODO: Buckets are always empty
-     */
     @Test(dependsOnMethods = "addGaugeData")
     public void findGaugeRateStats() {
         Percentile percentile = new Percentile("90.0");
@@ -146,12 +143,12 @@ public class GaugeTest extends BaseTest {
         Assert.assertTrue(response.getEntity().size() > 0);
 
         NumericBucketPoint bucket = response.getEntity().get(0);
-        //Assert.assertFalse(bucket.isEmpty());
+        Assert.assertFalse(bucket.isEmpty());
+        Assert.assertNotNull(bucket.getStart());
+        Assert.assertNotNull(bucket.getEnd());
+        Assert.assertTrue(bucket.getSamples() > 0);
     }
 
-    /**
-     * TODO: Buckets are always empty
-     */
     @Test(dependsOnMethods = "addGaugeData")
     public void findGaugeStats() {
         Percentile percentile = new Percentile("90.0");
@@ -168,7 +165,10 @@ public class GaugeTest extends BaseTest {
         Assert.assertTrue(response.getEntity().size() > 0);
 
         NumericBucketPoint bucket = response.getEntity().get(0);
-        //Assert.assertFalse(bucket.isEmpty());
+        Assert.assertFalse(bucket.isEmpty());
+        Assert.assertNotNull(bucket.getStart());
+        Assert.assertNotNull(bucket.getEnd());
+        Assert.assertTrue(bucket.getSamples() > 0);
     }
 
     @Test(dependsOnMethods = "addGaugeData")
@@ -226,9 +226,6 @@ public class GaugeTest extends BaseTest {
         Assert.assertTrue(response.getEntity().size() > 0);
     }
 
-    /**
-     * TODO: Buckets are always empty
-     */
     @Test(dependsOnMethods = "addGaugeData")
     public void getGaugeRateStats() {
         Percentile percentile = new Percentile("90.0");
@@ -244,7 +241,10 @@ public class GaugeTest extends BaseTest {
         Assert.assertTrue(response.getEntity().size() > 0);
 
         NumericBucketPoint bucket = response.getEntity().get(0);
-        //Assert.assertFalse(bucket.isEmpty());
+        Assert.assertFalse(bucket.isEmpty());
+        Assert.assertNotNull(bucket.getStart());
+        Assert.assertNotNull(bucket.getEnd());
+        Assert.assertTrue(bucket.getSamples() > 0);
     }
 
     @Test(dependsOnMethods = "addGaugeData")
