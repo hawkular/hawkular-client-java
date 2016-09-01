@@ -19,6 +19,7 @@ package org.hawkular.client.test.utils;
 import java.util.List;
 import java.util.Map;
 
+import org.hawkular.client.test.BaseTest;
 import org.hawkular.metrics.model.DataPoint;
 import org.hawkular.metrics.model.Metric;
 import org.hawkular.metrics.model.MetricId;
@@ -27,10 +28,9 @@ import org.hawkular.metrics.model.MetricType;
 public class MetricGenerator {
 
     private static final int DATA_RETENTION = 21;
-    private static final String METRIC_ID_NAME = "unit-testing";
 
     public static <T> Metric<T> generate(MetricType<T> metricType, Map<String, String> tags, String name, List<DataPoint<T>> dataPoints) {
-        MetricId<T> id = new MetricId<T>(METRIC_ID_NAME, metricType, name);
+        MetricId<T> id = new MetricId<T>(BaseTest.HEADER_TENANT, metricType, name);
         return new Metric<T>(id, tags, DATA_RETENTION, dataPoints);
     }
 }

@@ -31,8 +31,10 @@ import org.testng.annotations.BeforeMethod;
 
 public class BaseTest {
 
-    private HawkularClient client;
     public static final long MINUTE = 1000 * 60;
+    public static final String HEADER_TENANT = "unit-testing";
+
+    private HawkularClient client;
 
     @BeforeClass
     public void init() throws Exception {
@@ -40,7 +42,7 @@ public class BaseTest {
         Reporter.log(endpoint.toString());
 
         HashMap<String, Object> headers = new HashMap<String, Object>();
-        headers.put(HawkularClient.KEY_HEADER_TENANT, "unit-testing");
+        headers.put(HawkularClient.KEY_HEADER_TENANT, HEADER_TENANT);
 
         client = new HawkularClient(endpoint, getUsername(), getPassword(), headers);
     }
