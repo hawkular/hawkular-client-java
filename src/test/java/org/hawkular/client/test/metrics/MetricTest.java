@@ -41,7 +41,7 @@ import org.testng.annotations.Test;
 
 public class MetricTest extends BaseTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(StringTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MetricTest.class);
 
     private final DataPointGenerator<AvailabilityType> dataPointGenerator = new DataPointGenerator<AvailabilityType>() {
         private List<AvailabilityType> values = Arrays.asList(AvailabilityType.DOWN, AvailabilityType.UP, AvailabilityType.UNKNOWN);

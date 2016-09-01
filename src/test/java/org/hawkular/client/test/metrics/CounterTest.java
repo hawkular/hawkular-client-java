@@ -42,10 +42,14 @@ import org.hawkular.metrics.model.Percentile;
 import org.hawkular.metrics.model.param.Duration;
 import org.hawkular.metrics.model.param.Percentiles;
 import org.hawkular.metrics.model.param.Tags;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class CounterTest extends BaseTest {
+
+    private static final Logger LOG = LoggerFactory.getLogger(CounterTest.class);
 
     private final DataPointGenerator<Long> dataPointGenerator = new DataPointGenerator<Long>() {
         private AtomicLong value = new AtomicLong(1000L);
@@ -83,6 +87,8 @@ public class CounterTest extends BaseTest {
 
     @Test(dependsOnMethods = "getCountersCount")
     public void createCounter() {
+        LOG.info("Testing with MetricName == {}", metricName);
+
         ClientResponse<Empty> response = client()
             .metrics()
             .counter()
@@ -182,7 +188,7 @@ public class CounterTest extends BaseTest {
         Assert.assertNotNull(response.getEntity());
     }
 
-    @Test(dependsOnMethods = "getCounters", enabled = false)
+    @Test(dependsOnMethods = "getCounters")
     public void findCounterRate() {
         BTG ts = new BTG();
         Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
@@ -191,18 +197,16 @@ public class CounterTest extends BaseTest {
         Percentile percentile = new Percentile("90.0");
         Duration duration = new Duration(1, TimeUnit.DAYS);
 
-        ClientResponse<List<DataPoint<Long>>> response = client()
+        ClientResponse<List<NumericBucketPoint>> response = client()
             .metrics()
             .counter()
             .findCounterRate(metricName, start, end, null, null, null, duration, new Percentiles(Arrays.asList(percentile)));
 
-        //TODO: datapoint timestamp error
-        //wrong type, should be: NumericBucketPoint
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
     }
 
-    @Test(dependsOnMethods = "getCounters", enabled = false)
+    @Test(dependsOnMethods = "getCounters")
     public void findCounterRateStats() {
         BTG ts = new BTG();
         Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
@@ -245,7 +249,7 @@ public class CounterTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
     }
 
-    @Test(dependsOnMethods = "createCounterData", enabled = false)
+    @Test(dependsOnMethods = "createCounterData")
     public void findCounterMetricStats() {
         BTG ts = new BTG();
         Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
@@ -276,7 +280,7 @@ public class CounterTest extends BaseTest {
             .counter()
             .getCounterMetricStatsTags(metricName, tags, start, end, new Percentiles(Arrays.asList(percentile)));
 
-        //204
+        //TODO: Not sure what populates this... as always get back 204 - no content
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
     }

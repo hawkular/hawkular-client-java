@@ -39,10 +39,14 @@ import org.hawkular.metrics.model.Metric;
 import org.hawkular.metrics.model.MetricType;
 import org.hawkular.metrics.model.param.Duration;
 import org.hawkular.metrics.model.param.Tags;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class AvailabilityTest extends BaseTest {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AvailabilityTest.class);
 
     private final DataPointGenerator<AvailabilityType> dataPointGenerator = new DataPointGenerator<AvailabilityType>() {
         private List<AvailabilityType> values = Arrays.asList(AvailabilityType.DOWN, AvailabilityType.UP, AvailabilityType.UNKNOWN);
@@ -73,6 +77,8 @@ public class AvailabilityTest extends BaseTest {
 
     @Test
     public void createAvailabilityMetric() {
+        LOG.info("Testing with MetricName == {}", metricName);
+
         ClientResponse<Empty> response = client()
             .metrics()
             .availability()
@@ -165,7 +171,6 @@ public class AvailabilityTest extends BaseTest {
             .availability()
             .findAvailabilityStats(metricName, start, end, null, duration);
 
-        //todo: wrong type
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
     }

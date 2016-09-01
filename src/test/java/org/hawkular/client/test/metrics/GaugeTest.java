@@ -43,10 +43,14 @@ import org.hawkular.metrics.model.TaggedBucketPoint;
 import org.hawkular.metrics.model.param.Duration;
 import org.hawkular.metrics.model.param.Percentiles;
 import org.hawkular.metrics.model.param.Tags;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class GaugeTest extends BaseTest {
+
+    private static final Logger LOG = LoggerFactory.getLogger(GaugeTest.class);
 
     private final DataPointGenerator<Double> dataPointGenerator = new DataPointGenerator<Double>() {
         @Override
@@ -81,6 +85,8 @@ public class GaugeTest extends BaseTest {
 
     @Test(dependsOnMethods = "findGaugeMetricsCount")
     public void createGaugeMetric() {
+        LOG.info("Testing with MetricName == {}", metricName);
+
         ClientResponse<Empty> response = client()
             .metrics()
             .gauge()
@@ -216,7 +222,7 @@ public class GaugeTest extends BaseTest {
         Assert.assertNotNull(response.getEntity());
     }
 
-    @Test(dependsOnMethods = "addGaugeData", enabled = false)
+    @Test(dependsOnMethods = "addGaugeData", enabled = true)
     public void getGaugeRateStats() {
         BTG ts = new BTG();
         Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
@@ -225,14 +231,11 @@ public class GaugeTest extends BaseTest {
         Percentile percentile = new Percentile("90.0");
         Duration duration = new Duration(1, TimeUnit.DAYS);
 
-        ClientResponse<List<DataPoint<Double>>> response = client()
+        ClientResponse<List<NumericBucketPoint>> response = client()
             .metrics()
             .gauge()
             .getGaugeRateStats(metricName, start, end, null, duration, new Percentiles(Arrays.asList(percentile)));
 
-        //[{"start":1472645199196,"end":1472731599196,"empty":true}]
-        //TODO: datapoint timestamp error
-        //wrong type, should be: NumericBucketPoint
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
     }
