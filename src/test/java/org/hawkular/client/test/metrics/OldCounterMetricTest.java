@@ -19,24 +19,40 @@ package org.hawkular.client.test.metrics;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.hawkular.client.test.BaseTest;
-import org.hawkular.client.test.utils.CounterDataGenerator;
+import org.hawkular.client.test.utils.DataPointGenerator;
 import org.hawkular.client.test.utils.MetricGenerator;
+import org.hawkular.client.test.utils.RandomStringGenerator;
+import org.hawkular.client.test.utils.TagGenerator;
 import org.hawkular.metrics.model.DataPoint;
 import org.hawkular.metrics.model.Metric;
+import org.hawkular.metrics.model.MetricType;
+import org.hawkular.metrics.model.param.Tags;
 import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
 
 public class OldCounterMetricTest extends BaseTest {
 
-    private final Metric<Long> expectedDefinition = MetricGenerator.genCounterDef();
-    private final List<DataPoint<Long>> expectedData = CounterDataGenerator.gen(10);
+    private final DataPointGenerator<Long> dataPointGenerator = new DataPointGenerator<Long>() {
+        private AtomicLong value = new AtomicLong(1000L);
 
-    public OldCounterMetricTest() throws Exception {
-        super();
-    }
+        @Override
+        protected Long getValue(Random random) {
+            value.getAndAccumulate(100L, (left, right) -> left + random.nextLong());
+            return value.longValue();
+        }
+    };
+
+    private final String metricName = RandomStringGenerator.getRandomId();
+    private final String podNamespace = RandomStringGenerator.getRandomId();
+    private final String podName = RandomStringGenerator.getRandomId();
+    private final Tags tags = TagGenerator.generate(podNamespace, podName);
+    private final List<DataPoint<Long>> expectedData = dataPointGenerator.generator(10);
+    private final Metric<Long> expectedDefinition = MetricGenerator.generate(MetricType.COUNTER, tags.getTags(), metricName, expectedData);
 
     @Test
     public void createDefinition() throws Exception {
@@ -47,7 +63,7 @@ public class OldCounterMetricTest extends BaseTest {
     @Test(dependsOnMethods = "createDefinition")
     public void getDefinition() throws Exception {
         Metric<Long> actual =
-                client().metrics().counter().getCounter(expectedDefinition.getId()).getEntity();
+            client().metrics().counter().getCounter(expectedDefinition.getId()).getEntity();
         Reporter.log("Got: " + actual, true);
         Assert.assertEquals(actual, expectedDefinition);
     }

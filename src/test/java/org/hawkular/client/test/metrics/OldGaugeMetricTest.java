@@ -19,12 +19,17 @@ package org.hawkular.client.test.metrics;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 import org.hawkular.client.test.BaseTest;
-import org.hawkular.client.test.utils.GaugeDataGenerator;
+import org.hawkular.client.test.utils.DataPointGenerator;
 import org.hawkular.client.test.utils.MetricGenerator;
+import org.hawkular.client.test.utils.RandomStringGenerator;
+import org.hawkular.client.test.utils.TagGenerator;
 import org.hawkular.metrics.model.DataPoint;
 import org.hawkular.metrics.model.Metric;
+import org.hawkular.metrics.model.MetricType;
+import org.hawkular.metrics.model.param.Tags;
 import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
@@ -32,13 +37,19 @@ import org.testng.annotations.Test;
 //@Test(groups = { "known-failure" }, description = "HWKMETRICS-51")
 public class OldGaugeMetricTest extends BaseTest {
 
-    private final Metric<Double> expectedMetric = MetricGenerator.genGaugeDef();
+    private final DataPointGenerator<Double> dataPointGenerator = new DataPointGenerator<Double>() {
+        @Override
+        protected Double getValue(Random random) {
+            return random.nextDouble();
+        }
+    };
 
-    private final List<DataPoint<Double>> expectedData1 = GaugeDataGenerator.gen(4);
-
-    public OldGaugeMetricTest() throws Exception {
-        super();
-    }
+    private final String metricName = RandomStringGenerator.getRandomId();
+    private final String podNamespace = RandomStringGenerator.getRandomId();
+    private final String podName = RandomStringGenerator.getRandomId();
+    private final Tags tags = TagGenerator.generate(podNamespace, podName);
+    private final List<DataPoint<Double>> expectedData1 = dataPointGenerator.generator(10);
+    private final Metric<Double> expectedMetric = MetricGenerator.generate(MetricType.GAUGE, tags.getTags(), metricName, expectedData1);
 
     @Test
     public void createDefinition() throws Exception {

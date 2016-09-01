@@ -16,41 +16,63 @@
  */
 package org.hawkular.client.test.metrics;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
 import org.hawkular.client.test.BaseTest;
-import org.hawkular.client.test.utils.AvailabilityDataGenerator;
+import org.hawkular.client.test.utils.DataPointGenerator;
 import org.hawkular.client.test.utils.MetricGenerator;
+import org.hawkular.client.test.utils.RandomStringGenerator;
+import org.hawkular.client.test.utils.TagGenerator;
 import org.hawkular.metrics.model.AvailabilityType;
 import org.hawkular.metrics.model.DataPoint;
 import org.hawkular.metrics.model.Metric;
+import org.hawkular.metrics.model.MetricType;
+import org.hawkular.metrics.model.param.Tags;
 import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
 
 /**
  * Insert and retrieve data
- * @author vnguyen
  *
+ * @author vnguyen
  */
 public class OldAvailabilityMetricTest extends BaseTest {
 
-    private final Metric<AvailabilityType> expectedDefinition = MetricGenerator.genAvailDef();
+    private final DataPointGenerator<AvailabilityType> dataPointGenerator = new DataPointGenerator<AvailabilityType>() {
+        private List<AvailabilityType> values = Arrays.asList(AvailabilityType.DOWN, AvailabilityType.UP, AvailabilityType.UNKNOWN);
+        private AtomicInteger counter = new AtomicInteger(0);
 
-    private final Metric<AvailabilityType> metric2 = MetricGenerator.genAvailDef();
-    private final List<DataPoint<AvailabilityType>> expectedData = AvailabilityDataGenerator.gen(
-            AvailabilityType.DOWN,
-            AvailabilityType.UP,
-            AvailabilityType.UNKNOWN);
+        @Override
+        protected AvailabilityType getValue(Random random) {
+            if (counter.get() >= values.size()) {
+                counter.set(0);
+            }
+
+            int index = counter.getAndIncrement();
+            return values.get(index);
+        }
+    };
+
+    private final String metricName = RandomStringGenerator.getRandomId();
+    private final String podNamespace = RandomStringGenerator.getRandomId();
+    private final String podName = RandomStringGenerator.getRandomId();
+    private final Tags tags = TagGenerator.generate(podNamespace, podName);
+    private final List<DataPoint<AvailabilityType>> expectedData = dataPointGenerator.generator(3);
+    private final Metric<AvailabilityType> expectedDefinition = MetricGenerator.generate(MetricType.AVAILABILITY, tags.getTags(), metricName, expectedData);
+    private final Metric<AvailabilityType> metric2 = MetricGenerator.generate(MetricType.AVAILABILITY, tags.getTags(), metricName, expectedData);
 
     @Test
     public void createDefinition() throws Exception {
         Reporter.log("Creating: " + expectedDefinition.toString(), true);
-        ClientResponse<Empty> resp =  client().metrics().availability().createAvailabilityMetric(true, expectedDefinition);
+        ClientResponse<Empty> resp = client().metrics().availability().createAvailabilityMetric(true, expectedDefinition);
 
         Assert.assertTrue(resp.isSuccess());
     }
