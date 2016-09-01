@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
@@ -164,14 +163,10 @@ public class StringTest extends BaseTest {
 
     @Test(dependsOnMethods = "updateMetricDefinitionsTags", enabled = false)
     public void getMetricDefinitionsData() {
-        BTG ts = new BTG();
-        Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
-        Long end = ts.nextMilli() + TimeUnit.SECONDS.toMillis(10L);
-
         ClientResponse<List<DataPoint>> response = client()
             .metrics()
             .string()
-            .getMetricDefinitionsData(metricName, start, end, false, 1, Order.ASC);
+            .getMetricDefinitionsData(metricName, null, null, false, 1, Order.ASC);
 
         //TODO: Not sure what populates this... as always get back 204 - no content
         Assert.assertTrue(response.isSuccess());

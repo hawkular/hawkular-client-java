@@ -58,8 +58,8 @@ public interface GaugeHandler {
     @GET
     @Path("/rate/stats")
     Response findGaugeRateStats(
-        @QueryParam("start") final Long start,
-        @QueryParam("end") final Long end,
+        @QueryParam("start") String start,
+        @QueryParam("end") String end,
         @QueryParam("buckets") Integer bucketsCount,
         @QueryParam("bucketsDuration") Duration bucketDuration,
         @QueryParam("percentiles") Percentiles percentiles,
@@ -74,8 +74,8 @@ public interface GaugeHandler {
     @GET
     @Path("/stats")
     Response findGaugeStats(
-        @QueryParam("start") final Long start,
-        @QueryParam("end") final Long end,
+        @QueryParam("start") String start,
+        @QueryParam("end") String end,
         @QueryParam("buckets") Integer bucketsCount,
         @QueryParam("bucketDuration") Duration bucketDuration,
         @QueryParam("percentiles") Percentiles percentiles,
@@ -95,8 +95,8 @@ public interface GaugeHandler {
     @Path("/{id}/periods")
     Response findGaugeDataPeriods(
         @PathParam("id") String id,
-        @QueryParam("start") Long start,
-        @QueryParam("end") Long end,
+        @QueryParam("start") String start,
+        @QueryParam("end") String end,
         @QueryParam("threshold") double threshold,
         @QueryParam("op") String operator);
 
@@ -104,8 +104,8 @@ public interface GaugeHandler {
     @Path("/{id}/rate")
     Response getGaugeRate(
         @PathParam("id") String id,
-        @QueryParam("start") Long start,
-        @QueryParam("end") Long end,
+        @QueryParam("start") String start,
+        @QueryParam("end") String end,
         @QueryParam("limit") Integer limit,
         @QueryParam("order") Order order);
 
@@ -113,8 +113,8 @@ public interface GaugeHandler {
     @Path("/{id}/rate/stats")
     Response getGaugeRateStats(
         @PathParam("id") String id,
-        @QueryParam("start") Long start,
-        @QueryParam("end") Long end,
+        @QueryParam("start") String start,
+        @QueryParam("end") String end,
         @QueryParam("buckets") Integer bucketsCount,
         @QueryParam("bucketDuration") Duration bucketDuration,
         @QueryParam("percentiles") Percentiles percentiles);
@@ -123,8 +123,8 @@ public interface GaugeHandler {
     @Path("/{id}/raw")
     Response findGaugeDataWithId(
         @PathParam("id") String id,
-        @QueryParam("start") Long start,
-        @QueryParam("end") Long end,
+        @QueryParam("start") String start,
+        @QueryParam("end") String end,
         @QueryParam("fromEarliest") Boolean fromEarliest,
         @QueryParam("limit") Integer limit,
         @QueryParam("order") Order order);
@@ -137,8 +137,8 @@ public interface GaugeHandler {
     @Path("/{id}/stats")
     Response getGaugeStats(
         @PathParam("id") String id,
-        @QueryParam("start") Long start,
-        @QueryParam("end") Long end,
+        @QueryParam("start") String start,
+        @QueryParam("end") String end,
         @QueryParam("fromEarliest") Boolean fromEarliest,
         @QueryParam("buckets") Integer bucketsCount,
         @QueryParam("bucketDuration") Duration bucketDuration,
@@ -149,8 +149,8 @@ public interface GaugeHandler {
     Response getGaugeStatsTags(
         @PathParam("id") String id,
         @PathParam("tags") Tags tags,
-        @QueryParam("start") Long start,
-        @QueryParam("end") Long end,
+        @QueryParam("start") String start,
+        @QueryParam("end") String end,
         @QueryParam("percentiles") Percentiles percentiles);
 
     @GET

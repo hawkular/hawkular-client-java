@@ -71,8 +71,8 @@ public interface AvailabilityHandler {
     @Path("/{id}/raw")
     Response findAvailabilityData(
         @PathParam("id") String id,
-        @QueryParam("start") Long start,
-        @QueryParam("end") Long end,
+        @QueryParam("start") String start,
+        @QueryParam("end") String end,
         @QueryParam("distinct") Boolean distinct,
         @QueryParam("limit") Integer limit,
         @QueryParam("order") Order order);
@@ -85,8 +85,8 @@ public interface AvailabilityHandler {
     @Path("/{id}/stats")
     Response findAvailabilityStats(
         @PathParam("id") String id,
-        @QueryParam("start") Long start,
-        @QueryParam("end") Long end,
+        @QueryParam("start") String start,
+        @QueryParam("end") String end,
         @QueryParam("buckets") Integer buckets,
         @QueryParam("bucketDuration") Duration bucketDuration);
 

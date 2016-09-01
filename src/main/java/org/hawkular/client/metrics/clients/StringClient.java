@@ -76,8 +76,8 @@ public interface StringClient {
      */
     ClientResponse<List<DataPoint>> getMetricDefinitionsData(
         String id,
-        Long start,
-        Long end,
+        String start,
+        String end,
         Boolean distinct,
         Integer limit,
         Order order);

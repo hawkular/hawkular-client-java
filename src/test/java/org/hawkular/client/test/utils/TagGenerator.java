@@ -16,7 +16,9 @@
  */
 package org.hawkular.client.test.utils;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.hawkular.metrics.model.param.Tags;
@@ -36,5 +38,14 @@ public class TagGenerator {
         tagsMap.put(POD_NAME, podName);
 
         return tagsMap;
+    }
+
+    public static Map<String, List<String>> convert(Map<String, String> tags) {
+        Map<String, List<String>> answer = new HashMap<String, List<String>>();
+        for (Map.Entry<String, String> current : tags.entrySet()) {
+            answer.put(current.getKey(), Arrays.asList(current.getValue()));
+        }
+
+        return answer;
     }
 }

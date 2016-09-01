@@ -84,7 +84,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
 
     @Override
     public ClientResponse<List<NumericBucketPoint>> findGaugeRateStats(
-        Long start, Long end, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles, Tags tags, List<String> metricNames, Boolean stacked) {
+        String start, String end, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles, Tags tags, List<String> metricNames, Boolean stacked) {
         Response serverResponse = null;
 
         try {
@@ -117,7 +117,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
 
     @Override
     public ClientResponse<List<NumericBucketPoint>> findGaugeStats(
-        Long start, Long end, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles, Tags tags, List<String> metricNames, Boolean stacked) {
+        String start, String end, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles, Tags tags, List<String> metricNames, Boolean stacked) {
         Response serverResponse = null;
 
         try {
@@ -165,7 +165,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
     }
 
     @Override
-    public ClientResponse<List<Long[]>> findGaugeDataPeriods(String id, Long start, Long end, Double threshold, String operator) {
+    public ClientResponse<List<Long[]>> findGaugeDataPeriods(String id, String start, String end, Double threshold, String operator) {
         Response serverResponse = null;
 
         try {
@@ -181,7 +181,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
     }
 
     @Override
-    public ClientResponse<List<DataPoint<Double>>> getGaugeRate(String id, Long start, Long end, Integer limit, Order order) {
+    public ClientResponse<List<DataPoint<Double>>> getGaugeRate(String id, String start, String end, Integer limit, Order order) {
         Response serverResponse = null;
 
         try {
@@ -198,7 +198,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
 
     @Override
     public ClientResponse<List<NumericBucketPoint>> getGaugeRateStats(
-        String id, Long start, Long end, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles) {
+        String id, String start, String end, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles) {
         Response serverResponse = null;
 
         try {
@@ -215,7 +215,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
 
     @Override
     public ClientResponse<List<DataPoint<Double>>> findGaugeDataWithId(
-        String id, Long start, Long end, Boolean fromEarliest, Integer limit, Order order) {
+        String id, String start, String end, Boolean fromEarliest, Integer limit, Order order) {
         Response serverResponse = null;
 
         try {
@@ -248,7 +248,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
 
     @Override
     public ClientResponse<List<DataPoint<Double>>> getGaugeStats(
-        String id, Long start, Long end, Boolean fromEarliest, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles) {
+        String id, String start, String end, Boolean fromEarliest, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles) {
         Response serverResponse = null;
 
         try {
@@ -264,7 +264,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
     }
 
     @Override
-    public ClientResponse<Map<String, TaggedBucketPoint>> getGaugeStatsTags(String id, Tags tags, Long start, Long end, Percentiles percentiles) {
+    public ClientResponse<Map<String, TaggedBucketPoint>> getGaugeStatsTags(String id, Tags tags, String start, String end, Percentiles percentiles) {
         Response serverResponse = null;
 
         try {

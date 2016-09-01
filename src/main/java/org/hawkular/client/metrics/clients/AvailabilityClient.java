@@ -85,8 +85,8 @@ public interface AvailabilityClient {
      */
     ClientResponse<List<DataPoint<AvailabilityType>>> findAvailabilityData(
         String id,
-        Long start,
-        Long end,
+        String start,
+        String end,
         Boolean distinct,
         Integer limit,
         Order order);
@@ -112,8 +112,8 @@ public interface AvailabilityClient {
      */
     ClientResponse<List<AvailabilityBucketPoint>> findAvailabilityStats(
         String id,
-        Long start,
-        Long end,
+        String start,
+        String end,
         Integer buckets,
         Duration bucketDuration);
 

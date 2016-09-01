@@ -129,10 +129,6 @@ public class GaugeTest extends BaseTest {
 
     @Test(dependsOnMethods = "addGaugeData")
     public void findGaugeRateStats() {
-        BTG ts = new BTG();
-        Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
-        Long end = ts.nextMilli() + TimeUnit.SECONDS.toMillis(10L);
-
         Percentile percentile = new Percentile("90.0");
         Duration duration = new Duration(1, TimeUnit.DAYS);
 
@@ -140,18 +136,15 @@ public class GaugeTest extends BaseTest {
             .metrics()
             .gauge()
             .findGaugeRateStats(
-                start, end, 1, duration, new Percentiles(Arrays.asList(percentile)), null, Arrays.asList(metricName), true);
+                null, null, 1, duration, new Percentiles(Arrays.asList(percentile)), null, Arrays.asList(metricName), true);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
     }
 
     @Test(dependsOnMethods = "addGaugeData")
     public void findGaugeStats() {
-        BTG ts = new BTG();
-        Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
-        Long end = ts.nextMilli() + TimeUnit.SECONDS.toMillis(10L);
-
         Percentile percentile = new Percentile("90.0");
         Duration duration = new Duration(1, TimeUnit.DAYS);
 
@@ -159,10 +152,11 @@ public class GaugeTest extends BaseTest {
             .metrics()
             .gauge()
             .findGaugeStats(
-                start, end, null, duration, new Percentiles(Arrays.asList(percentile)), null, Arrays.asList(metricName), true);
+                null, null, null, duration, new Percentiles(Arrays.asList(percentile)), null, Arrays.asList(metricName), true);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
     }
 
     @Test(dependsOnMethods = "addGaugeData")
@@ -175,8 +169,7 @@ public class GaugeTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
-        Assert.assertTrue(response.getEntity().containsKey(TagGenerator.POD_NAMESPACE));
-        Assert.assertTrue(response.getEntity().get(TagGenerator.POD_NAMESPACE).contains(podNamespace));
+        Assert.assertEquals(TagGenerator.convert(tags.getTags()), response.getEntity());
     }
 
     @Test(dependsOnMethods = "addGaugeData")
@@ -193,14 +186,10 @@ public class GaugeTest extends BaseTest {
 
     @Test(dependsOnMethods = "addGaugeData", enabled = false)
     public void findGaugeDataPeriods() {
-        BTG ts = new BTG();
-        Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
-        Long end = ts.nextMilli() + TimeUnit.SECONDS.toMillis(10L);
-
         ClientResponse<List<Long[]>> response = client()
             .metrics()
             .gauge()
-            .findGaugeDataPeriods(metricName, start, end, 1.0, "eq");
+            .findGaugeDataPeriods(metricName, null, null, 1.0, "eq");
 
         //TODO: Not sure what populates this... as always get back 204 - no content
         Assert.assertTrue(response.isSuccess());
@@ -209,14 +198,10 @@ public class GaugeTest extends BaseTest {
 
     @Test(dependsOnMethods = "addGaugeData", enabled = false)
     public void getGaugeRate() {
-        BTG ts = new BTG();
-        Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
-        Long end = ts.nextMilli() + TimeUnit.SECONDS.toMillis(10L);
-
         ClientResponse<List<DataPoint<Double>>> response = client()
             .metrics()
             .gauge()
-            .getGaugeRate(metricName, start, end, 1, Order.ASC);
+            .getGaugeRate(metricName, null, null, 1, Order.ASC);
 
         //TODO: Not sure what populates this... as always get back 204 - no content
         Assert.assertTrue(response.isSuccess());
@@ -225,32 +210,25 @@ public class GaugeTest extends BaseTest {
 
     @Test(dependsOnMethods = "addGaugeData", enabled = true)
     public void getGaugeRateStats() {
-        BTG ts = new BTG();
-        Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
-        Long end = ts.nextMilli() + TimeUnit.SECONDS.toMillis(10L);
-
         Percentile percentile = new Percentile("90.0");
         Duration duration = new Duration(1, TimeUnit.DAYS);
 
         ClientResponse<List<NumericBucketPoint>> response = client()
             .metrics()
             .gauge()
-            .getGaugeRateStats(metricName, start, end, null, duration, new Percentiles(Arrays.asList(percentile)));
+            .getGaugeRateStats(metricName, null, null, null, duration, new Percentiles(Arrays.asList(percentile)));
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
     }
 
     @Test(dependsOnMethods = "addGaugeData")
     public void findGaugeDataWithId() {
-        BTG ts = new BTG();
-        Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
-        Long end = ts.nextMilli() + TimeUnit.SECONDS.toMillis(10L);
-
         ClientResponse<List<DataPoint<Double>>> response = client()
             .metrics()
             .gauge()
-            .findGaugeDataWithId(metricName, start, end, true, 1, Order.ASC);
+            .findGaugeDataWithId(metricName, null, null, true, 1, Order.ASC);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
@@ -287,16 +265,12 @@ public class GaugeTest extends BaseTest {
 
     @Test(dependsOnMethods = "addGaugeData")
     public void getGaugeStatsTags() {
-        BTG ts = new BTG();
-        Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
-        Long end = ts.nextMilli() + TimeUnit.SECONDS.toMillis(10L);
-
         Percentile percentile = new Percentile("90.0");
 
         ClientResponse<Map<String, TaggedBucketPoint>> response = client()
             .metrics()
             .gauge()
-            .getGaugeStatsTags(metricName, tags, start, end, new Percentiles(Arrays.asList(percentile)));
+            .getGaugeStatsTags(metricName, tags, null, null, new Percentiles(Arrays.asList(percentile)));
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
@@ -307,6 +281,8 @@ public class GaugeTest extends BaseTest {
 
         TaggedBucketPoint bucket = response.getEntity().get(tagsKey);
         Assert.assertNotNull(bucket);
+        Assert.assertNotNull(bucket.getTags());
+        Assert.assertEquals(tags.getTags(), bucket.getTags());
     }
 
     @Test(dependsOnMethods = "addGaugeData")
@@ -318,6 +294,8 @@ public class GaugeTest extends BaseTest {
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
+        Assert.assertEquals(tags.getTags(), response.getEntity());
     }
 
     @Test(dependsOnMethods = "getGaugeMetricTags")

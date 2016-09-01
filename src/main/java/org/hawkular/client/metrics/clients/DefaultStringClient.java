@@ -128,7 +128,7 @@ public class DefaultStringClient extends BaseClient<StringHandler> implements St
 
     @Override
     public ClientResponse<List<DataPoint>> getMetricDefinitionsData(
-        String id, Long start, Long end, Boolean distinct, Integer limit, Order order) {
+        String id, String start, String end, Boolean distinct, Integer limit, Order order) {
         Response serverResponse = null;
 
         try {

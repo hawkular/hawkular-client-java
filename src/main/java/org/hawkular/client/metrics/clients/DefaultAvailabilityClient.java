@@ -131,7 +131,7 @@ public class DefaultAvailabilityClient extends BaseClient<AvailabilityHandler> i
 
     @Override
     public ClientResponse<List<DataPoint<AvailabilityType>>> findAvailabilityData(
-        String id, Long start, Long end, Boolean distinct, Integer limit, Order order) {
+        String id, String start, String end, Boolean distinct, Integer limit, Order order) {
         Response serverResponse = null;
 
         try {
@@ -164,7 +164,7 @@ public class DefaultAvailabilityClient extends BaseClient<AvailabilityHandler> i
 
     @Override
     public ClientResponse<List<AvailabilityBucketPoint>> findAvailabilityStats(
-        String id, Long start, Long end, Integer buckets, Duration bucketDuration) {
+        String id, String start, String end, Integer buckets, Duration bucketDuration) {
         Response serverResponse = null;
 
         try {

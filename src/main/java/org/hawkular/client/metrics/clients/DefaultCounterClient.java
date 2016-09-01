@@ -83,7 +83,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
 
     @Override
     public ClientResponse<List<NumericBucketPoint>> findCounterRateDataStats(
-        Long start, Long end, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles, Tags tags, List<String> metricNames, Boolean stacked) {
+        String start, String end, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles, Tags tags, List<String> metricNames, Boolean stacked) {
         Response serverResponse = null;
 
         try {
@@ -116,7 +116,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
 
     @Override
     public ClientResponse<List<NumericBucketPoint>> findCounterStats(
-        Long start, Long end, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles, Tags tags, List<String> metricNames, Boolean stacked) {
+        String start, String end, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles, Tags tags, List<String> metricNames, Boolean stacked) {
         Response serverResponse = null;
 
         try {
@@ -165,7 +165,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
 
     @Override
     public ClientResponse<List<NumericBucketPoint>> findCounterRate(
-        String id, Long start, Long end, Integer limit, Order order, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles) {
+        String id, String start, String end, Integer limit, Order order, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles) {
         Response serverResponse = null;
 
         try {
@@ -182,7 +182,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
 
     @Override
     public ClientResponse<List<NumericBucketPoint>> findCounterRateStats(
-        String id, Long start, Long end, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles) {
+        String id, String start, String end, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles) {
         Response serverResponse = null;
 
         try {
@@ -198,7 +198,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
     }
 
     @Override
-    public ClientResponse<List<DataPoint<Long>>> findCounterData(String id, Long start, Long end, Integer limit, Order order) {
+    public ClientResponse<List<DataPoint<Long>>> findCounterData(String id, String start, String end, Integer limit, Order order) {
         Response serverResponse = null;
 
         try {
@@ -231,7 +231,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
 
     @Override
     public ClientResponse<List<NumericBucketPoint>> findCounterMetricStats(
-        String id, Long start, Long end, Boolean fromEarliest, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles, Integer limit, Order order) {
+        String id, String start, String end, Boolean fromEarliest, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles, Integer limit, Order order) {
         Response serverResponse = null;
 
         try {
@@ -247,7 +247,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
     }
 
     @Override
-    public ClientResponse<Map<String, String>> getCounterMetricStatsTags(String id, Tags tags, Long start, Long end, Percentiles percentiles) {
+    public ClientResponse<Map<String, String>> getCounterMetricStatsTags(String id, Tags tags, String start, String end, Percentiles percentiles) {
         Response serverResponse = null;
 
         try {

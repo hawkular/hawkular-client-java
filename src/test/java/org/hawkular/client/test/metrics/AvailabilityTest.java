@@ -27,7 +27,6 @@ import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
 import org.hawkular.client.core.jaxrs.ResponseCodes;
 import org.hawkular.client.metrics.model.Order;
-import org.hawkular.client.test.BTG;
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.client.test.utils.DataPointGenerator;
 import org.hawkular.client.test.utils.MetricGenerator;
@@ -151,14 +150,10 @@ public class AvailabilityTest extends BaseTest {
 
     @Test(dependsOnMethods = "addAvailabilityData", enabled = false)
     public void findAvailabilityData() {
-        BTG ts = new BTG();
-        Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
-        Long end = ts.nextMilli() + TimeUnit.SECONDS.toMillis(10L);
-
         ClientResponse<List<DataPoint<AvailabilityType>>> response = client()
             .metrics()
             .availability()
-            .findAvailabilityData(metricName, start, end, true, 1, Order.ASC);
+            .findAvailabilityData(metricName, null, null, true, 1, Order.ASC);
 
         //TODO: Not sure what populates this... as always get back 204 - no content
         Assert.assertTrue(response.isSuccess());
@@ -177,16 +172,12 @@ public class AvailabilityTest extends BaseTest {
 
     @Test(dependsOnMethods = "addAvailabilityDataForMetric")
     public void findAvailabilityStats() {
-        BTG ts = new BTG();
-        Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
-        Long end = ts.nextMilli() + TimeUnit.SECONDS.toMillis(10L);
-
         Duration duration = new Duration(1, TimeUnit.DAYS);
 
         ClientResponse<List<AvailabilityBucketPoint>> response = client()
             .metrics()
             .availability()
-            .findAvailabilityStats(metricName, start, end, null, duration);
+            .findAvailabilityStats(metricName, null, null, null, duration);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());

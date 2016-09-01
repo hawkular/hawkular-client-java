@@ -65,8 +65,8 @@ public interface CounterClient {
      * @return
      */
     ClientResponse<List<NumericBucketPoint>> findCounterRateDataStats(
-        Long start,
-        Long end,
+        String start,
+        String end,
         Integer bucketsCount,
         Duration bucketDuration,
         Percentiles percentiles,
@@ -99,8 +99,8 @@ public interface CounterClient {
      * @return
      */
     ClientResponse<List<NumericBucketPoint>> findCounterStats(
-        Long start,
-        Long end,
+        String start,
+        String end,
         Integer bucketsCount,
         Duration bucketDuration,
         Percentiles percentiles,
@@ -139,8 +139,8 @@ public interface CounterClient {
      */
     ClientResponse<List<NumericBucketPoint>> findCounterRate(
         String id,
-        Long start,
-        Long end,
+        String start,
+        String end,
         Integer limit,
         Order order,
         Integer bucketsCount,
@@ -160,8 +160,8 @@ public interface CounterClient {
      */
     ClientResponse<List<NumericBucketPoint>> findCounterRateStats(
         String id,
-        Long start,
-        Long end,
+        String start,
+        String end,
         Integer bucketsCount,
         Duration bucketDuration,
         Percentiles percentiles);
@@ -178,8 +178,8 @@ public interface CounterClient {
      */
     ClientResponse<List<DataPoint<Long>>> findCounterData(
         String id,
-        Long start,
-        Long end,
+        String start,
+        String end,
         Integer limit,
         Order order);
 
@@ -208,8 +208,8 @@ public interface CounterClient {
      */
     ClientResponse<List<NumericBucketPoint>> findCounterMetricStats(
         String id,
-        Long start,
-        Long end,
+        String start,
+        String end,
         Boolean fromEarliest,
         Integer bucketsCount,
         Duration bucketDuration,
@@ -231,8 +231,8 @@ public interface CounterClient {
     ClientResponse<Map<String, String>> getCounterMetricStatsTags(
         String id,
         Tags tags,
-        Long start,
-        Long end,
+        String start,
+        String end,
         Percentiles percentiles);
 
     /**

@@ -28,7 +28,6 @@ import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
 import org.hawkular.client.core.jaxrs.ResponseCodes;
 import org.hawkular.client.metrics.model.Order;
-import org.hawkular.client.test.BTG;
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.client.test.utils.DataPointGenerator;
 import org.hawkular.client.test.utils.MetricGenerator;
@@ -47,6 +46,9 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+/**
+ * TODO: ADD MORE CHECKS
+ */
 public class CounterTest extends BaseTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(CounterTest.class);
@@ -119,17 +121,13 @@ public class CounterTest extends BaseTest {
 
     @Test(dependsOnMethods = "getCounters")
     public void findCounterRateDataStats() {
-        BTG ts = new BTG();
-        Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
-        Long end = ts.nextMilli() + TimeUnit.SECONDS.toMillis(10L);
-
         Percentile percentile = new Percentile("90.0");
         Duration duration = new Duration(1, TimeUnit.DAYS);
 
         ClientResponse<List<NumericBucketPoint>> response = client()
             .metrics()
             .counter()
-            .findCounterRateDataStats(start, end, null, duration, new Percentiles(Arrays.asList(percentile)), null, Arrays.asList(metricName), true);
+            .findCounterRateDataStats(null, null, null, duration, new Percentiles(Arrays.asList(percentile)), null, Arrays.asList(metricName), true);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
@@ -149,17 +147,13 @@ public class CounterTest extends BaseTest {
 
     @Test(dependsOnMethods = "getCounters")
     public void findCounterStats() {
-        BTG ts = new BTG();
-        Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
-        Long end = ts.nextMilli() + TimeUnit.SECONDS.toMillis(10L);
-
         Percentile percentile = new Percentile("90.0");
         Duration duration = new Duration(1, TimeUnit.DAYS);
 
         ClientResponse<List<NumericBucketPoint>> response = client()
             .metrics()
             .counter()
-            .findCounterStats(start, end, null, duration, new Percentiles(Arrays.asList(percentile)), null, Arrays.asList(metricName), true);
+            .findCounterStats(null, null, null, duration, new Percentiles(Arrays.asList(percentile)), null, Arrays.asList(metricName), true);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
@@ -191,17 +185,13 @@ public class CounterTest extends BaseTest {
 
     @Test(dependsOnMethods = "getCounters")
     public void findCounterRate() {
-        BTG ts = new BTG();
-        Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
-        Long end = ts.nextMilli() + TimeUnit.SECONDS.toMillis(10L);
-
         Percentile percentile = new Percentile("90.0");
         Duration duration = new Duration(1, TimeUnit.DAYS);
 
         ClientResponse<List<NumericBucketPoint>> response = client()
             .metrics()
             .counter()
-            .findCounterRate(metricName, start, end, null, null, null, duration, new Percentiles(Arrays.asList(percentile)));
+            .findCounterRate(metricName, null, null, null, null, null, duration, new Percentiles(Arrays.asList(percentile)));
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
@@ -209,17 +199,13 @@ public class CounterTest extends BaseTest {
 
     @Test(dependsOnMethods = "getCounters")
     public void findCounterRateStats() {
-        BTG ts = new BTG();
-        Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
-        Long end = ts.nextMilli() + TimeUnit.SECONDS.toMillis(10L);
-
         Percentile percentile = new Percentile("90.0");
         Duration duration = new Duration(1, TimeUnit.DAYS);
 
         ClientResponse<List<NumericBucketPoint>> response = client()
             .metrics()
             .counter()
-            .findCounterRateStats(metricName, start, end, null, duration, new Percentiles(Arrays.asList(percentile)));
+            .findCounterRateStats(metricName, null, null, null, duration, new Percentiles(Arrays.asList(percentile)));
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
@@ -227,14 +213,10 @@ public class CounterTest extends BaseTest {
 
     @Test(dependsOnMethods = "getCounters")
     public void findCounterData() {
-        BTG ts = new BTG();
-        Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
-        Long end = ts.nextMilli() + TimeUnit.SECONDS.toMillis(10L);
-
         ClientResponse<List<DataPoint<Long>>> response = client()
             .metrics()
             .counter()
-            .findCounterData(metricName, start, end, 1, Order.ASC);
+            .findCounterData(metricName, null, null, 1, Order.ASC);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
@@ -252,10 +234,6 @@ public class CounterTest extends BaseTest {
 
     @Test(dependsOnMethods = "createCounterData")
     public void findCounterMetricStats() {
-        BTG ts = new BTG();
-        Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
-        Long end = ts.nextMilli() + TimeUnit.SECONDS.toMillis(10L);
-
         Percentile percentile = new Percentile("90.0");
         Duration duration = new Duration(1, TimeUnit.DAYS);
 
@@ -270,16 +248,12 @@ public class CounterTest extends BaseTest {
 
     @Test(dependsOnMethods = "createCounterData", enabled = false)
     public void getCounterMetricStatsTags() {
-        BTG ts = new BTG();
-        Long start = ts.nextMilli() - TimeUnit.SECONDS.toMillis(10L);
-        Long end = ts.nextMilli() + TimeUnit.SECONDS.toMillis(10L);
-
         Percentile percentile = new Percentile("90.0");
 
         ClientResponse<Map<String, String>> response = client()
             .metrics()
             .counter()
-            .getCounterMetricStatsTags(metricName, tags, start, end, new Percentiles(Arrays.asList(percentile)));
+            .getCounterMetricStatsTags(metricName, tags, null, null, new Percentiles(Arrays.asList(percentile)));
 
         //TODO: Not sure what populates this... as always get back 204 - no content
         Assert.assertTrue(response.isSuccess());

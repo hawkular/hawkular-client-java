@@ -101,7 +101,7 @@ public class OpenshiftCollectionHistTest extends BaseTest {
         long start = now - Duration.ofHours(36).toMillis();
         long dur = start + Duration.ofHours(36).toMillis();
 
-        List<DataPoint<Double>> rawData = client().metrics().gauge().findGaugeDataWithId(metricID, start, dur, null, null, null).getEntity();
+        List<DataPoint<Double>> rawData = client().metrics().gauge().findGaugeDataWithId(metricID, String.valueOf(start), String.valueOf(dur), null, null, null).getEntity();
 
         Assert.assertNotNull(rawData, "namespace: " + podNamespace + ", container: " + containerName);
 

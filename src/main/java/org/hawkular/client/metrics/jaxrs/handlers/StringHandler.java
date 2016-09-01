@@ -69,8 +69,8 @@ public interface StringHandler {
     @Path("/{id}/raw")
     Response getMetricDefinitionsData(
         @PathParam("id") String id,
-        @QueryParam("start") Long start,
-        @QueryParam("end") Long end,
+        @QueryParam("start") String start,
+        @QueryParam("end") String end,
         @QueryParam("distinct") Boolean distinct,
         @QueryParam("limit") Integer limit,
         @QueryParam("order") Order order);

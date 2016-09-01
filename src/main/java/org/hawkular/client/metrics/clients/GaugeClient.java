@@ -63,8 +63,8 @@ public interface GaugeClient {
      * @return
      */
     ClientResponse<List<NumericBucketPoint>> findGaugeRateStats(
-        Long start,
-        Long end,
+        String start,
+        String end,
         Integer bucketsCount,
         Duration bucketDuration,
         Percentiles percentiles,
@@ -94,8 +94,8 @@ public interface GaugeClient {
      * @return
      */
     ClientResponse<List<NumericBucketPoint>> findGaugeStats(
-        Long start,
-        Long end,
+        String start,
+        String end,
         Integer bucketsCount,
         Duration bucketDuration,
         Percentiles percentiles,
@@ -131,8 +131,8 @@ public interface GaugeClient {
      */
     ClientResponse<List<Long[]>> findGaugeDataPeriods(
         String id,
-        Long start,
-        Long end,
+        String start,
+        String end,
         Double threshold,
         String operator);
 
@@ -148,8 +148,8 @@ public interface GaugeClient {
      */
     ClientResponse<List<DataPoint<Double>>> getGaugeRate(
         String id,
-        Long start,
-        Long end,
+        String start,
+        String end,
         Integer limit,
         Order order);
 
@@ -166,8 +166,8 @@ public interface GaugeClient {
      */
     ClientResponse<List<NumericBucketPoint>> getGaugeRateStats(
         String id,
-        Long start,
-        Long end,
+        String start,
+        String end,
         Integer bucketsCount,
         Duration bucketDuration,
         Percentiles percentiles);
@@ -185,8 +185,8 @@ public interface GaugeClient {
      */
     ClientResponse<List<DataPoint<Double>>> findGaugeDataWithId(
         String id,
-        Long start,
-        Long end,
+        String start,
+        String end,
         Boolean fromEarliest,
         Integer limit,
         Order order);
@@ -214,8 +214,8 @@ public interface GaugeClient {
      */
     ClientResponse<List<DataPoint<Double>>> getGaugeStats(
         String id,
-        Long start,
-        Long end,
+        String start,
+        String end,
         Boolean fromEarliest,
         Integer bucketsCount,
         Duration bucketDuration,
@@ -235,8 +235,8 @@ public interface GaugeClient {
     ClientResponse<Map<String, TaggedBucketPoint>> getGaugeStatsTags(
         String id,
         Tags tags,
-        Long start,
-        Long end,
+        String start,
+        String end,
         Percentiles percentiles);
 
     /**

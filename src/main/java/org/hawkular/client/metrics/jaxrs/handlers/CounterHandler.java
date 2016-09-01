@@ -58,8 +58,8 @@ public interface CounterHandler {
     @GET
     @Path("/rate/stats")
     Response findCounterRateDataStats(
-        @QueryParam("start") final Long start,
-        @QueryParam("end") final Long end,
+        @QueryParam("start") String start,
+        @QueryParam("end") String end,
         @QueryParam("buckets") Integer bucketsCount,
         @QueryParam("bucketDuration") Duration bucketDuration,
         @QueryParam("percentiles") Percentiles percentiles,
@@ -74,8 +74,8 @@ public interface CounterHandler {
     @GET
     @Path("/stats")
     Response findCounterStats(
-        @QueryParam("start") final Long start,
-        @QueryParam("end") final Long end,
+        @QueryParam("start") String start,
+        @QueryParam("end") String end,
         @QueryParam("buckets") Integer bucketsCount,
         @QueryParam("bucketDuration") Duration bucketDuration,
         @QueryParam("percentiles") Percentiles percentiles,
@@ -95,8 +95,8 @@ public interface CounterHandler {
     @Path("/{id}/rate")
     Response findCounterRate(
         @PathParam("id") String id,
-        @QueryParam("start") Long start,
-        @QueryParam("end") Long end,
+        @QueryParam("start") String start,
+        @QueryParam("end") String end,
         @QueryParam("limit") Integer limit,
         @QueryParam("order") Order order,
         @QueryParam("buckets") Integer bucketsCount,
@@ -107,8 +107,8 @@ public interface CounterHandler {
     @Path("/{id}/rate/stats")
     Response findCounterRateStats(
         @PathParam("id") String id,
-        @QueryParam("start") Long start,
-        @QueryParam("end") Long end,
+        @QueryParam("start") String start,
+        @QueryParam("end") String end,
         @QueryParam("buckets") Integer bucketsCount,
         @QueryParam("bucketDuration") Duration bucketDuration,
         @QueryParam("percentiles") Percentiles percentiles);
@@ -117,8 +117,8 @@ public interface CounterHandler {
     @Path("/{id}/raw")
     Response findCounterData(
         @PathParam("id") String id,
-        @QueryParam("start") Long start,
-        @QueryParam("end") Long end,
+        @QueryParam("start") String start,
+        @QueryParam("end") String end,
         @QueryParam("limit") Integer limit,
         @QueryParam("order") Order order);
 
@@ -130,8 +130,8 @@ public interface CounterHandler {
     @Path("/{id}/stats")
     Response findCounterMetricStats(
         @PathParam("id") String id,
-        @QueryParam("start") Long start,
-        @QueryParam("end") Long end,
+        @QueryParam("start") String start,
+        @QueryParam("end") String end,
         @QueryParam("fromEarliest") Boolean fromEarliest,
         @QueryParam("buckets") Integer bucketsCount,
         @QueryParam("bucketDuration") Duration bucketDuration,
@@ -144,8 +144,8 @@ public interface CounterHandler {
     Response getCounterMetricStatsTags(
         @PathParam("id") String id,
         @PathParam("tags") Tags tags,
-        @QueryParam("start") Long start,
-        @QueryParam("end") Long end,
+        @QueryParam("start") String start,
+        @QueryParam("end") String end,
         @QueryParam("percentiles") Percentiles percentiles);
 
     @GET
