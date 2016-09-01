@@ -21,6 +21,7 @@ import org.hawkular.client.metrics.clients.CounterClient;
 import org.hawkular.client.metrics.clients.GaugeClient;
 import org.hawkular.client.metrics.clients.MetricClient;
 import org.hawkular.client.metrics.clients.PingClient;
+import org.hawkular.client.metrics.clients.StatusClient;
 import org.hawkular.client.metrics.clients.StringClient;
 import org.hawkular.client.metrics.clients.TenantClient;
 
@@ -42,4 +43,6 @@ public interface MetricsClient {
     TenantClient tenant();
 
     PingClient ping();
+
+    StatusClient status();
 }

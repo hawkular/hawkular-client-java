@@ -28,11 +28,13 @@ import org.hawkular.client.metrics.clients.DefaultCounterClient;
 import org.hawkular.client.metrics.clients.DefaultGaugeClient;
 import org.hawkular.client.metrics.clients.DefaultMetricClient;
 import org.hawkular.client.metrics.clients.DefaultPingClient;
+import org.hawkular.client.metrics.clients.DefaultStatusClient;
 import org.hawkular.client.metrics.clients.DefaultStringClient;
 import org.hawkular.client.metrics.clients.DefaultTenantClient;
 import org.hawkular.client.metrics.clients.GaugeClient;
 import org.hawkular.client.metrics.clients.MetricClient;
 import org.hawkular.client.metrics.clients.PingClient;
+import org.hawkular.client.metrics.clients.StatusClient;
 import org.hawkular.client.metrics.clients.StringClient;
 import org.hawkular.client.metrics.clients.TenantClient;
 
@@ -45,6 +47,7 @@ public class MetricsClientImpl implements MetricsClient {
     private final DefaultStringClient string;
     private final DefaultTenantClient tenant;
     private final DefaultPingClient ping;
+    private final DefaultStatusClient status;
 
     public MetricsClientImpl(URI endpointUri) throws Exception {
         this(endpointUri, null, null);
@@ -60,6 +63,7 @@ public class MetricsClientImpl implements MetricsClient {
         string = new DefaultStringClient(endpointUri, username, password);
         tenant = new DefaultTenantClient(endpointUri, username, password);
         ping = new DefaultPingClient(endpointUri, username, password);
+        status = new DefaultStatusClient(endpointUri, username, password);
     }
 
     @Override
@@ -102,6 +106,12 @@ public class MetricsClientImpl implements MetricsClient {
     public PingClient ping() {
         checkNotNull(ping != null, "PingClient is null");
         return ping;
+    }
+
+    @Override
+    public StatusClient status() {
+        checkNotNull(status != null, "StatusClient is null");
+        return status;
     }
 
 }
