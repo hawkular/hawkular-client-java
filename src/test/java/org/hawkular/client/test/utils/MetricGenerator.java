@@ -17,40 +17,47 @@
 package org.hawkular.client.test.utils;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import org.hawkular.client.test.BaseTest;
 import org.hawkular.metrics.model.AvailabilityType;
+import org.hawkular.metrics.model.DataPoint;
 import org.hawkular.metrics.model.Metric;
 import org.hawkular.metrics.model.MetricId;
 import org.hawkular.metrics.model.MetricType;
 
 /**
  * Random MetricDefinition generator
- * @author vnguyen
  *
+ * @author vnguyen
  */
-public class MetricDefGenerator {
+public class MetricGenerator {
+
     private static final int DATA_RETENTION = 21;
     private static final Map<String, String> TAGS = new HashMap<String, String>();
 
     @SuppressWarnings("unchecked")
     public static Metric<Double> genGaugeDef() {
-        return (Metric<Double>) genDef(MetricType.GAUGE);
+        return (Metric<Double>)genDef(MetricType.GAUGE);
     }
 
     @SuppressWarnings("unchecked")
     public static Metric<Long> genCounterDef() {
-        return (Metric<Long>) genDef(MetricType.COUNTER);
+        return (Metric<Long>)genDef(MetricType.COUNTER);
     }
 
     @SuppressWarnings("unchecked")
     public static Metric<AvailabilityType> genAvailDef() {
-        return (Metric<AvailabilityType>) genDef(MetricType.AVAILABILITY);
+        return (Metric<AvailabilityType>)genDef(MetricType.AVAILABILITY);
     }
 
     public static <T> Metric<?> genDef(MetricType<T> metricType) {
-        MetricId<?> id = new MetricId<>("unit-testing", metricType, BaseTest.getRandomId());
+        MetricId<?> id = new MetricId<>("unit-testing", metricType, RandomStringGenerator.getRandomId());
         return new Metric<>(id, TAGS, DATA_RETENTION);
+    }
+
+    public static <T> Metric<T> generate(MetricType<T> metricType, Map<String, String> tags, String name, List<DataPoint<T>> dataPoints) {
+        MetricId<T> id = new MetricId<T>("unit-testing", metricType, name);
+        return new Metric<T>(id, tags, DATA_RETENTION, dataPoints);
     }
 }
