@@ -137,7 +137,7 @@ public interface CounterClient {
      * @param percentiles
      * @return
      */
-    ClientResponse<List<DataPoint<Long>>> findCounterRate(
+    ClientResponse<List<NumericBucketPoint>> findCounterRate(
         String id,
         Long start,
         Long end,
@@ -158,7 +158,7 @@ public interface CounterClient {
      * @param percentiles
      * @return
      */
-    ClientResponse<List<DataPoint<Long>>> findCounterRateStats(
+    ClientResponse<List<NumericBucketPoint>> findCounterRateStats(
         String id,
         Long start,
         Long end,
@@ -206,7 +206,7 @@ public interface CounterClient {
      * @param order
      * @return
      */
-    ClientResponse<List<DataPoint<Long>>> findCounterMetricStats(
+    ClientResponse<List<NumericBucketPoint>> findCounterMetricStats(
         String id,
         Long start,
         Long end,

@@ -164,15 +164,15 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
     }
 
     @Override
-    public ClientResponse<List<DataPoint<Long>>> findCounterRate(
+    public ClientResponse<List<NumericBucketPoint>> findCounterRate(
         String id, Long start, Long end, Integer limit, Order order, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles) {
         Response serverResponse = null;
 
         try {
             serverResponse = restApi().findCounterRate(id, start, end, limit, order, bucketsCount, bucketDuration, percentiles);
-            JavaType javaType = collectionResolver().get(List.class, DataPoint.class, Long.class);
+            JavaType javaType = collectionResolver().get(List.class, NumericBucketPoint.class);
 
-            return new DefaultClientResponse<List<DataPoint<Long>>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<List<NumericBucketPoint>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -181,15 +181,15 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
     }
 
     @Override
-    public ClientResponse<List<DataPoint<Long>>> findCounterRateStats(
+    public ClientResponse<List<NumericBucketPoint>> findCounterRateStats(
         String id, Long start, Long end, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles) {
         Response serverResponse = null;
 
         try {
             serverResponse = restApi().findCounterRateStats(id, start, end, bucketsCount, bucketDuration, percentiles);
-            JavaType javaType = collectionResolver().get(List.class, DataPoint.class, Long.class);
+            JavaType javaType = collectionResolver().get(List.class, NumericBucketPoint.class);
 
-            return new DefaultClientResponse<List<DataPoint<Long>>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<List<NumericBucketPoint>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -230,15 +230,15 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
     }
 
     @Override
-    public ClientResponse<List<DataPoint<Long>>> findCounterMetricStats(
+    public ClientResponse<List<NumericBucketPoint>> findCounterMetricStats(
         String id, Long start, Long end, Boolean fromEarliest, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles, Integer limit, Order order) {
         Response serverResponse = null;
 
         try {
             serverResponse = restApi().findCounterMetricStats(id, start, end, fromEarliest, bucketsCount, bucketDuration, percentiles, limit, order);
-            JavaType javaType = collectionResolver().get(List.class, DataPoint.class, Long.class);
+            JavaType javaType = collectionResolver().get(List.class, NumericBucketPoint.class);
 
-            return new DefaultClientResponse<List<DataPoint<Long>>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<List<NumericBucketPoint>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();

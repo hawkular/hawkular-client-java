@@ -211,13 +211,11 @@ public class CounterTest extends BaseTest {
         Percentile percentile = new Percentile("90.0");
         Duration duration = new Duration(1, TimeUnit.DAYS);
 
-        ClientResponse<List<DataPoint<Long>>> response = client()
+        ClientResponse<List<NumericBucketPoint>> response = client()
             .metrics()
             .counter()
             .findCounterRateStats(metricName, start, end, null, duration, new Percentiles(Arrays.asList(percentile)));
 
-        //TODO: datapoint timestamp error
-        //wrong type, should be: NumericBucketPoint
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
     }
@@ -256,13 +254,11 @@ public class CounterTest extends BaseTest {
         Percentile percentile = new Percentile("90.0");
         Duration duration = new Duration(1, TimeUnit.DAYS);
 
-        ClientResponse<List<DataPoint<Long>>> response = client()
+        ClientResponse<List<NumericBucketPoint>> response = client()
             .metrics()
             .counter()
             .findCounterMetricStats(metricName, null, null, true, null, duration, new Percentiles(Arrays.asList(percentile)), 1, Order.ASC);
 
-        ///TODO: datapoint timestamp error
-        //wrong type, should be: NumericBucketPoint
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
     }

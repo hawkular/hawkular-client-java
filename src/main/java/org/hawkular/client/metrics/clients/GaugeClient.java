@@ -164,7 +164,7 @@ public interface GaugeClient {
      * @param percentiles
      * @return
      */
-    ClientResponse<List<DataPoint<Double>>> getGaugeRateStats(
+    ClientResponse<List<NumericBucketPoint>> getGaugeRateStats(
         String id,
         Long start,
         Long end,
