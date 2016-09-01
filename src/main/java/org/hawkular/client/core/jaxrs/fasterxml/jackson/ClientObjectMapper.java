@@ -36,6 +36,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 public class ClientObjectMapper extends ObjectMapper {
 
+    private static final long serialVersionUID = 1L;
+
     public ClientObjectMapper() {
         config(this);
     }
