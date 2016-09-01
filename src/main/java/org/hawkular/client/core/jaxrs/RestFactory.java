@@ -18,7 +18,10 @@ package org.hawkular.client.core.jaxrs;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.KeyManagementException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
@@ -121,9 +124,11 @@ public class RestFactory<T> {
 
     //trust any host
     public HttpClient getHttpClient() {
-        SSLContextBuilder builder = new SSLContextBuilder();
+        CloseableHttpClient httpclient = null;
+
         try {
             KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            SSLContextBuilder builder = new SSLContextBuilder();
             builder.loadTrustMaterial(keyStore, new TrustStrategy() {
                 @Override
                 public boolean isTrusted(X509Certificate[] trustedCert, String nameConstraints)
@@ -131,15 +136,17 @@ public class RestFactory<T> {
                     return true;
                 }
             });
+
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build());
-            CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(
-                sslsf).build();
-            return httpclient;
-
-        } catch (Exception ex) {
-            _logger.error("Exception, ", ex);
-            return null;
+            httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+        } catch (NoSuchAlgorithmException e) {
+            _logger.error("Failed to create HTTPClient: {}", e);
+        } catch (KeyStoreException e) {
+            _logger.error("Failed to create HTTPClient: {}", e);
+        } catch (KeyManagementException e) {
+            _logger.error("Failed to create HTTPClient: {}", e);
         }
-    }
 
+        return httpclient;
+    }
 }
