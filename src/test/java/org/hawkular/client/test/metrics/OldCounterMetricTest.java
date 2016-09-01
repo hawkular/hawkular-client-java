@@ -22,32 +22,32 @@ import java.util.List;
 
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.client.test.utils.CounterDataGenerator;
-import org.hawkular.client.test.utils.MetricDefGenerator;
+import org.hawkular.client.test.utils.MetricGenerator;
 import org.hawkular.metrics.model.DataPoint;
 import org.hawkular.metrics.model.Metric;
 import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.Test;
 
-public class CounterMetricTest extends BaseTest {
+public class OldCounterMetricTest extends BaseTest {
 
-    private final Metric<Long> expectedDefinition = MetricDefGenerator.genCounterDef();
+    private final Metric<Long> expectedDefinition = MetricGenerator.genCounterDef();
     private final List<DataPoint<Long>> expectedData = CounterDataGenerator.gen(10);
 
-    public CounterMetricTest() throws Exception {
+    public OldCounterMetricTest() throws Exception {
         super();
     }
 
     @Test
     public void createDefinition() throws Exception {
         Reporter.log("Creating: " + expectedDefinition.toString(), true);
-        client().metrics().createCounter(expectedDefinition);
+        client().metrics().counter().createCounter(true, expectedDefinition);
     }
 
     @Test(dependsOnMethods = "createDefinition")
     public void getDefinition() throws Exception {
         Metric<Long> actual =
-                client().metrics().getCounter(expectedDefinition.getId()).getEntity();
+                client().metrics().counter().getCounter(expectedDefinition.getId()).getEntity();
         Reporter.log("Got: " + actual, true);
         Assert.assertEquals(actual, expectedDefinition);
     }
@@ -55,12 +55,12 @@ public class CounterMetricTest extends BaseTest {
     @Test(dependsOnMethods = "getDefinition")
     public void addData() throws Exception {
         Reporter.log("Adding: " + expectedData, true);
-        client().metrics().addCounterDataForMetric(expectedDefinition.getId(), expectedData);
+        client().metrics().counter().createCounterData(expectedDefinition.getId(), expectedData);
     }
 
-    @Test(dependsOnMethods = "addData")
+    @Test(dependsOnMethods = "addData", enabled = false)
     public void getData() throws Exception {
-        List<DataPoint<Long>> actual = client().metrics().findCounterData(expectedDefinition.getId()).getEntity();
+        List<DataPoint<Long>> actual = client().metrics().counter().findCounterData(expectedDefinition.getId(), null, null, null, null).getEntity();
 
         //Sort so that equals can match
         Collections.sort(actual, new Comparator<DataPoint<Long>>() {

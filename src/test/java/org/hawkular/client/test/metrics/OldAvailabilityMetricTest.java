@@ -20,9 +20,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.hawkular.client.core.ClientResponse;
+import org.hawkular.client.core.jaxrs.Empty;
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.client.test.utils.AvailabilityDataGenerator;
-import org.hawkular.client.test.utils.MetricDefGenerator;
+import org.hawkular.client.test.utils.MetricGenerator;
 import org.hawkular.metrics.model.AvailabilityType;
 import org.hawkular.metrics.model.DataPoint;
 import org.hawkular.metrics.model.Metric;
@@ -35,31 +37,28 @@ import org.testng.annotations.Test;
  * @author vnguyen
  *
  */
-public class AvailabilityMetricTest extends BaseTest {
+public class OldAvailabilityMetricTest extends BaseTest {
 
-    private final Metric<AvailabilityType> expectedDefinition = MetricDefGenerator.genAvailDef();
+    private final Metric<AvailabilityType> expectedDefinition = MetricGenerator.genAvailDef();
 
-    private final Metric<AvailabilityType> metric2 = MetricDefGenerator.genAvailDef();
+    private final Metric<AvailabilityType> metric2 = MetricGenerator.genAvailDef();
     private final List<DataPoint<AvailabilityType>> expectedData = AvailabilityDataGenerator.gen(
             AvailabilityType.DOWN,
             AvailabilityType.UP,
             AvailabilityType.UNKNOWN);
 
-    public AvailabilityMetricTest() throws Exception {
-        super();
-    }
-
     @Test
     public void createDefinition() throws Exception {
         Reporter.log("Creating: " + expectedDefinition.toString(), true);
-        client().metrics().createAvailabilityMetric(expectedDefinition);
+        ClientResponse<Empty> resp =  client().metrics().availability().createAvailabilityMetric(true, expectedDefinition);
+
+        Assert.assertTrue(resp.isSuccess());
     }
 
     // Known failure.  See https://issues.jboss.org/browse/HWKMETRICS-169
     @Test(dependsOnMethods = "createDefinition", enabled = false)
     public void getDefinition() throws Exception {
-        Metric<AvailabilityType> actual =
-                client().metrics().getAvailabilityMetric(expectedDefinition.getId()).getEntity();
+        Metric<AvailabilityType> actual = client().metrics().availability().getAvailabilityMetric(expectedDefinition.getId()).getEntity();
         Reporter.log("Got: " + actual.toString(), true);
         Assert.assertEquals(actual, expectedDefinition);
 
@@ -68,12 +67,12 @@ public class AvailabilityMetricTest extends BaseTest {
     @Test(dependsOnMethods = "createDefinition")
     public void addData() throws Exception {
         Reporter.log("Adding: " + expectedData.toString(), true);
-        client().metrics().addAvailabilityDataForMetric(metric2.getId(), expectedData);
+        client().metrics().availability().addAvailabilityDataForMetric(metric2.getId(), expectedData);
     }
 
     @Test(dependsOnMethods = "addData")
     public void getData() throws Exception {
-        List<DataPoint<AvailabilityType>> actual = client().metrics().findAvailabilityData(metric2.getId()).getEntity();
+        List<DataPoint<AvailabilityType>> actual = client().metrics().availability().findAvailabilityData(metric2.getId(), null, null, null, null, null).getEntity();
 
         //Sort so that equals can match
         Collections.sort(actual, new Comparator<DataPoint<AvailabilityType>>() {
