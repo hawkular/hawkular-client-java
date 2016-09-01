@@ -19,6 +19,7 @@ package org.hawkular.client.test.metrics;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -62,6 +63,7 @@ public class MetricTest extends BaseTest {
     private Integer originalMetricCount = 0;
     private final String metricName = RandomStringGenerator.getRandomId();
     private final Tags tags = TagGenerator.generate(RandomStringGenerator.getRandomId(), RandomStringGenerator.getRandomId());
+    private final Metric<AvailabilityType> expectedMetric = MetricGenerator.generate(MetricType.AVAILABILITY, tags.getTags(), metricName, dataPointGenerator.generator(3));
 
     @Test
     public void findMetricsCount() {
@@ -85,12 +87,10 @@ public class MetricTest extends BaseTest {
     public void createMetric() {
         LOG.info("Testing with MetricName == {}", metricName);
 
-        Metric<AvailabilityType> metric = MetricGenerator.generate(MetricType.AVAILABILITY, tags.getTags(), metricName, dataPointGenerator.generator(3));
-
         ClientResponse<Empty> response = client()
             .metrics()
             .metric()
-            .createMetric(true, metric);
+            .createMetric(true, expectedMetric);
 
         Assert.assertTrue(response.isSuccess());
     }
@@ -106,12 +106,18 @@ public class MetricTest extends BaseTest {
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
         Assert.assertTrue(originalMetricCount == (response.getEntity().size() - 1));
+
+        Optional<Metric<?>> value = response.getEntity().stream()
+            .filter(a -> a.equals(expectedMetric))
+            .findFirst();
+
+        Assert.assertTrue(value.isPresent());
     }
 
     @Test(dependsOnMethods = "findMetrics")
     public void addMetricsData() {
         Map<String, String> tags = TagGenerator.generateMap(RandomStringGenerator.getRandomId(), RandomStringGenerator.getRandomId());
-        Metric<AvailabilityType> metric = MetricGenerator.generate(MetricType.AVAILABILITY, tags, metricName,  dataPointGenerator.generator(3));
+        Metric<AvailabilityType> metric = MetricGenerator.generate(MetricType.AVAILABILITY, tags, metricName, dataPointGenerator.generator(3));
         MixedMetricsRequest request = new MixedMetricsRequest(null, Arrays.asList(metric), null, null);
 
         ClientResponse<Empty> response = client()
@@ -124,12 +130,14 @@ public class MetricTest extends BaseTest {
 
     @Test(dependsOnMethods = "findMetrics")
     public void findMetricsTags() {
-        ClientResponse<Map<String, List<String>>>  response = client()
+        ClientResponse<Map<String, List<String>>> response = client()
             .metrics()
             .metric()
             .findMetricsTags(tags, MetricType.AVAILABILITY);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
+        Assert.assertEquals(TagGenerator.convert(tags.getTags()), response.getEntity());
     }
 }
