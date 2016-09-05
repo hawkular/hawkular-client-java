@@ -247,15 +247,15 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
     }
 
     @Override
-    public ClientResponse<List<DataPoint<Double>>> getGaugeStats(
+    public ClientResponse<List<NumericBucketPoint>> getGaugeStats(
         String id, String start, String end, Boolean fromEarliest, Integer bucketsCount, Duration bucketDuration, Percentiles percentiles) {
         Response serverResponse = null;
 
         try {
             serverResponse = restApi().getGaugeStats(id, start, end, fromEarliest, bucketsCount, bucketDuration, percentiles);
-            JavaType javaType = collectionResolver().get(List.class, DataPoint.class, Double.class);
+            JavaType javaType = collectionResolver().get(List.class, NumericBucketPoint.class);
 
-            return new DefaultClientResponse<List<DataPoint<Double>>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<List<NumericBucketPoint>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();

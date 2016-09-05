@@ -196,25 +196,19 @@ public class GaugeTest extends BaseTest {
         Assert.assertEquals(expectedMetric, response.getEntity());
     }
 
-    /**
-     * TODO: Not sure what populates this... as always get back 204 - no content
-     */
-    @Test(dependsOnMethods = "addGaugeData", enabled = false)
+    @Test(dependsOnMethods = "addGaugeData")
     public void findGaugeDataPeriods() {
         ClientResponse<List<Long[]>> response = client()
             .metrics()
             .gauge()
-            .findGaugeDataPeriods(metricName, null, null, 1.0, "eq");
+            .findGaugeDataPeriods(metricName, null, null, Double.valueOf(10), "lte");
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
     }
 
-    /**
-     * TODO: Not sure what populates this... as always get back 204 - no content
-     */
-    @Test(dependsOnMethods = "addGaugeData", enabled = false)
+    @Test(dependsOnMethods = "addGaugeData")
     public void getGaugeRate() {
         ClientResponse<List<DataPoint<Double>>> response = client()
             .metrics()
@@ -271,15 +265,12 @@ public class GaugeTest extends BaseTest {
         Assert.assertEquals(expectedDataPoints, response.getEntity());
     }
 
-    /**
-     * TODO: Not sure what populates this... as always get back 204 - no content
-     */
-    @Test(dependsOnMethods = "findGaugeDataWithId", enabled = false)
+    @Test(dependsOnMethods = "findGaugeDataWithId")
     public void getGaugeStats() {
         Percentile percentile = new Percentile("90.0");
         Duration duration = new Duration(1, TimeUnit.DAYS);
 
-        ClientResponse<List<DataPoint<Double>>> response = client()
+        ClientResponse<List<NumericBucketPoint>> response = client()
             .metrics()
             .gauge()
             .getGaugeStats(
@@ -287,6 +278,13 @@ public class GaugeTest extends BaseTest {
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
+
+        NumericBucketPoint bucket = response.getEntity().get(0);
+        Assert.assertFalse(bucket.isEmpty());
+        Assert.assertNotNull(bucket.getStart());
+        Assert.assertNotNull(bucket.getEnd());
+        Assert.assertTrue(bucket.getSamples() > 0);
     }
 
     @Test(dependsOnMethods = "findGaugeDataWithId")
