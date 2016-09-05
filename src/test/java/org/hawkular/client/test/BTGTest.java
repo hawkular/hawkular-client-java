@@ -33,11 +33,10 @@ public class BTGTest {
         Reporter.log("Current: " + now.toString());
 
         BTG ts = new BTG(now);
-        for(int i=0; i<4; i++) {
+        for (int i = 0; i < 4; i++) {
             Instant next = ts.next();
             Reporter.log(next.toString());
             Assert.assertEquals(next, now.minus(window).plus(defaultInc.multipliedBy(i)));
-
         }
     }
 }

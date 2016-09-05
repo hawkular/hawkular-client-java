@@ -26,6 +26,7 @@ import org.apache.http.annotation.NotThreadSafe;
  * from (current time - window) in 30 seconds increment to avoid getting almost
  * identical values when calling System.currentTimeMillis() in
  * rapid succession
+ *
  * @author vnguyen
  */
 @NotThreadSafe
