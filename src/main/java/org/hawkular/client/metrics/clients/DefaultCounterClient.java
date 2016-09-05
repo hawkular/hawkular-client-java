@@ -33,6 +33,7 @@ import org.hawkular.client.metrics.model.Order;
 import org.hawkular.metrics.model.DataPoint;
 import org.hawkular.metrics.model.Metric;
 import org.hawkular.metrics.model.NumericBucketPoint;
+import org.hawkular.metrics.model.TaggedBucketPoint;
 import org.hawkular.metrics.model.param.Duration;
 import org.hawkular.metrics.model.param.Percentiles;
 import org.hawkular.metrics.model.param.Tags;
@@ -247,14 +248,14 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
     }
 
     @Override
-    public ClientResponse<Map<String, String>> getCounterMetricStatsTags(String id, Tags tags, String start, String end, Percentiles percentiles) {
+    public ClientResponse<Map<String, TaggedBucketPoint>> getCounterMetricStatsTags(String id, Tags tags, String start, String end, Percentiles percentiles) {
         Response serverResponse = null;
 
         try {
             serverResponse = restApi().getCounterMetricStatsTags(id, tags, start, end, percentiles);
-            JavaType javaType = mapResolver().get(Map.class, String.class, String.class);
+            JavaType javaType = mapResolver().get(Map.class, String.class, TaggedBucketPoint.class);
 
-            return new DefaultClientResponse<Map<String, String>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<Map<String, TaggedBucketPoint>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();

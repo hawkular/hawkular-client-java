@@ -25,6 +25,7 @@ import org.hawkular.client.metrics.model.Order;
 import org.hawkular.metrics.model.DataPoint;
 import org.hawkular.metrics.model.Metric;
 import org.hawkular.metrics.model.NumericBucketPoint;
+import org.hawkular.metrics.model.TaggedBucketPoint;
 import org.hawkular.metrics.model.param.Duration;
 import org.hawkular.metrics.model.param.Percentiles;
 import org.hawkular.metrics.model.param.Tags;
@@ -228,7 +229,7 @@ public interface CounterClient {
      * @param percentiles
      * @return
      */
-    ClientResponse<Map<String, String>> getCounterMetricStatsTags(
+    ClientResponse<Map<String, TaggedBucketPoint>> getCounterMetricStatsTags(
         String id,
         Tags tags,
         String start,

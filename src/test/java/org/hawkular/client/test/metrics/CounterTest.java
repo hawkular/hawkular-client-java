@@ -27,6 +27,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
 import org.hawkular.client.core.jaxrs.ResponseCodes;
+import org.hawkular.client.core.jaxrs.param.TagsConverter;
 import org.hawkular.client.metrics.model.Order;
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.client.test.utils.DataPointGenerator;
@@ -38,6 +39,7 @@ import org.hawkular.metrics.model.Metric;
 import org.hawkular.metrics.model.MetricType;
 import org.hawkular.metrics.model.NumericBucketPoint;
 import org.hawkular.metrics.model.Percentile;
+import org.hawkular.metrics.model.TaggedBucketPoint;
 import org.hawkular.metrics.model.param.Duration;
 import org.hawkular.metrics.model.param.Percentiles;
 import org.hawkular.metrics.model.param.Tags;
@@ -259,7 +261,6 @@ public class CounterTest extends BaseTest {
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
         Assert.assertEquals(expectedDataPoints, response.getEntity());
-
     }
 
     @Test(dependsOnMethods = "findCounterData")
@@ -283,14 +284,11 @@ public class CounterTest extends BaseTest {
         Assert.assertTrue(bucket.getSamples() > 0);
     }
 
-    /**
-     * TODO: Not sure what populates this... as always get back 204 - no content
-     */
-    @Test(dependsOnMethods = "createCounterData", enabled = false)
+    @Test(dependsOnMethods = "deleteCounterMetricTags")
     public void getCounterMetricStatsTags() {
         Percentile percentile = new Percentile("90.0");
 
-        ClientResponse<Map<String, String>> response = client()
+        ClientResponse<Map<String, TaggedBucketPoint>> response = client()
             .metrics()
             .counter()
             .getCounterMetricStatsTags(metricName, tags, null, null, new Percentiles(Arrays.asList(percentile)));
@@ -298,6 +296,14 @@ public class CounterTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
+
+        String tagsKey = new TagsConverter().toString(tags);
+        Assert.assertTrue(response.getEntity().containsKey(tagsKey));
+
+        TaggedBucketPoint bucket = response.getEntity().get(tagsKey);
+        Assert.assertNotNull(bucket);
+        Assert.assertNotNull(bucket.getTags());
+        Assert.assertEquals(tags.getTags(), bucket.getTags());
     }
 
     @Test(dependsOnMethods = "createCounterData")
