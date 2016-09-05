@@ -26,7 +26,6 @@ import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
 import org.hawkular.client.core.jaxrs.ResponseCodes;
 import org.hawkular.client.metrics.model.Order;
-import org.hawkular.client.test.BTG;
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.client.test.utils.DataPointGenerator;
 import org.hawkular.client.test.utils.MetricGenerator;
@@ -147,28 +146,30 @@ public class StringTest extends BaseTest {
         Assert.assertNotNull(response.getEntity().getTags());
     }
 
+    /**
+     * TODO: On hawkular server, throws a cast exception on first send, sent email to dev-list
+     */
     @Test(dependsOnMethods = "createMultipleStringMetric")
     public void createMetricDefinitionsData() {
-        BTG ts = new BTG();
-        DataPoint<String> point = new DataPoint<String>(ts.nextMilli(), RandomStringGenerator.getRandomId(), tags.getTags());
-
         ClientResponse<Empty> response = client()
             .metrics()
             .string()
-            .createMetricDefinitionsData(metricName, Arrays.asList(point));
+            .createMetricDefinitionsData(metricName, dataPointGenerator.generator(1, tags.getTags()));
 
-        //TODO: On hawkular server, throws a cast exception on first send, sent email to dev-list
         Assert.assertTrue(response.isSuccess());
     }
 
-    @Test(dependsOnMethods = "updateMetricDefinitionsTags", enabled = false)
+    /**
+     * TODO: Think this fails due to "createMetricDefinitionsData" failing on the CastException
+     * ...as always get back 204 - no content
+     */
+    @Test(dependsOnMethods = "createMetricDefinitionsData", enabled = false)
     public void getMetricDefinitionsData() {
         ClientResponse<List<DataPoint>> response = client()
             .metrics()
             .string()
             .getMetricDefinitionsData(metricName, null, null, false, 1, Order.ASC);
 
-        //TODO: Not sure what populates this... as always get back 204 - no content
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
     }
