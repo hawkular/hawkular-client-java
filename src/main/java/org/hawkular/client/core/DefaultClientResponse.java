@@ -72,6 +72,7 @@ public class DefaultClientResponse<T> implements ClientResponse<T>  {
                     LOG.error("Failed to parse: {}", ex);
 
                     setErrorMsg("Failed to parse: " + ex.toString());
+                    setSuccess(Boolean.FALSE);
                 }
             }
         } else {
