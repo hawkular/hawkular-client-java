@@ -18,6 +18,7 @@ package org.hawkular.client.metrics.fasterxml.jackson;
 
 import java.io.IOException;
 
+import org.hawkular.client.core.jaxrs.fasterxml.jackson.ClientObjectMapper;
 import org.hawkular.metrics.model.Tenant;
 import org.hawkular.metrics.model.TenantDefinition;
 
@@ -31,7 +32,7 @@ public class TenantSerializer extends JsonSerializer<Tenant> {
     @Override
     public void serialize(Tenant tenant, JsonGenerator jgen, SerializerProvider sp) throws IOException {
         if (tenant != null) {
-            ObjectMapper objectMapper = new ObjectMapper();
+            ObjectMapper objectMapper = new ClientObjectMapper();
             objectMapper.writeValue(jgen, new TenantDefinition(tenant));
         } else {
             jgen.writeNull();

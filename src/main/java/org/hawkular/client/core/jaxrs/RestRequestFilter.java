@@ -24,6 +24,7 @@ import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
 import javax.ws.rs.ext.Provider;
 
+import org.hawkular.client.core.jaxrs.fasterxml.jackson.ClientObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +35,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class RestRequestFilter implements ClientRequestFilter {
 
     private static final Logger _logger = LoggerFactory.getLogger(RestRequestFilter.class);
-    private static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+    private static ObjectMapper OBJECT_MAPPER = new ClientObjectMapper();
     private static HashMap<String, Object> additionalHeaders = new HashMap<String, Object>();
 
     @Override
