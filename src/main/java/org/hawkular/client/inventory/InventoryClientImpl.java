@@ -51,11 +51,11 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     private static final long MINUTE = 1000 * 60;
 
     public InventoryClientImpl(URI endpointUri, String username,
-            String password) throws Exception {
+            String password)  {
         super(endpointUri, username, password, new RestFactory<InventoryRestApi>(InventoryRestApi.class));
     }
 
-    public InventoryClientImpl(URI endpointUri) throws Exception {
+    public InventoryClientImpl(URI endpointUri)  {
         this(endpointUri, null, null);
     }
 
