@@ -137,7 +137,7 @@ public class AvailabilityTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
-        Assert.assertEquals(TagGenerator.convert(tags.getTags()), response.getEntity());
+        Assert.assertEquals(response.getEntity(), TagGenerator.convert(tags.getTags()));
     }
 
     @Test(dependsOnMethods = "addAvailabilityData")
@@ -149,7 +149,7 @@ public class AvailabilityTest extends BaseTest {
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
-        Assert.assertEquals(expectedMetric, response.getEntity());
+        Assert.assertEquals(response.getEntity(), expectedMetric);
     }
 
     @Test(dependsOnMethods = "addAvailabilityData")
@@ -172,8 +172,8 @@ public class AvailabilityTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
-        Assert.assertEquals(expectedDataPoints.size(), response.getEntity().size());
-        Assert.assertEquals(expectedDataPoints, response.getEntity());
+        Assert.assertEquals(response.getEntity().size(), expectedDataPoints.size());
+        Assert.assertEquals(response.getEntity(), expectedDataPoints);
     }
 
     @Test(dependsOnMethods = "findAvailabilityData")
@@ -207,7 +207,7 @@ public class AvailabilityTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
-        Assert.assertEquals(tags.getTags(), response.getEntity());
+        Assert.assertEquals(response.getEntity(), tags.getTags());
     }
 
     @Test(dependsOnMethods = "getAvailabilityMetricTags")

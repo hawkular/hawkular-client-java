@@ -183,7 +183,7 @@ public class StringTest extends BaseTest {
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
-        Assert.assertEquals(tags.getTags(), response.getEntity());
+        Assert.assertEquals(response.getEntity(), tags.getTags());
     }
 
     @Test(dependsOnMethods = "findMetricDefinitionsTags")

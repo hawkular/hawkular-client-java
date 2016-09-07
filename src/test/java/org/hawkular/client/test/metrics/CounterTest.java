@@ -183,7 +183,7 @@ public class CounterTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
-        Assert.assertEquals(TagGenerator.convert(tags.getTags()), response.getEntity());
+        Assert.assertEquals(response.getEntity(), TagGenerator.convert(tags.getTags()));
     }
 
     @Test(dependsOnMethods = "getCounters")
@@ -195,7 +195,7 @@ public class CounterTest extends BaseTest {
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
-        Assert.assertEquals(expectedMetric, response.getEntity());
+        Assert.assertEquals(response.getEntity(), expectedMetric);
     }
 
     @Test(dependsOnMethods = "getCounters")
@@ -260,7 +260,7 @@ public class CounterTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
-        Assert.assertEquals(expectedDataPoints, response.getEntity());
+        Assert.assertEquals(response.getEntity(), expectedDataPoints);
     }
 
     @Test(dependsOnMethods = "findCounterData")
@@ -303,7 +303,7 @@ public class CounterTest extends BaseTest {
         TaggedBucketPoint bucket = response.getEntity().get(tagsKey);
         Assert.assertNotNull(bucket);
         Assert.assertNotNull(bucket.getTags());
-        Assert.assertEquals(tags.getTags(), bucket.getTags());
+        Assert.assertEquals(bucket.getTags(), tags.getTags());
     }
 
     @Test(dependsOnMethods = "createCounterData")
@@ -316,7 +316,7 @@ public class CounterTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
-        Assert.assertEquals(tags.getTags(), response.getEntity());
+        Assert.assertEquals(response.getEntity(), tags.getTags());
     }
 
     @Test(dependsOnMethods = "getCounterMetricTags")
