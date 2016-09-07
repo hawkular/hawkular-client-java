@@ -16,6 +16,7 @@
  */
 package org.hawkular.client.core;
 
+
 import static com.google.common.base.Preconditions.checkArgument;
 
 import java.net.URI;
@@ -42,36 +43,24 @@ public class HawkularClient {
     private AlertsClient alertsClient;
     private URI endpointUri;
 
-    public HawkularClient(URI endpointUri, String username, String password) throws Exception {
-        this(endpointUri, username, password, null);
-    }
-
-    public HawkularClient(URI endpointUri) throws Exception {
-        this(endpointUri, null, null, null);
-    }
-
-    public HawkularClient(URI endpointUri, HashMap<String, Object> headers) throws Exception {
+    public HawkularClient(URI endpointUri, HashMap<String, Object> headers) {
         this(endpointUri, null, null, headers);
     }
 
-    public HawkularClient(URI endpointUri, String username, String password, HashMap<String, Object> headers) throws Exception {
+    public HawkularClient(URI endpointUri, String username, String password, HashMap<String, Object> headers) {
         checkArgument(endpointUri != null, "EndpointUri is null");
+        checkArgument(headers != null, "Headers is empty. Expected at least Hawkular-Tenant");
+        checkArgument(!headers.isEmpty(), "Headers is empty. Expected at least Hawkular-Tenant");
+        checkArgument(headers.containsKey(KEY_HEADER_TENANT), "Hawkular-Tenant header is missing");
 
         this.endpointUri = endpointUri;
-        if (username != null) {
-            metricsClient = new MetricsClientImpl(endpointUri, username, password);
-            inventoryClient = new InventoryClientImpl(endpointUri, username, password);
-            alertsClient = new AlertsClientImpl(endpointUri, username, password);
-        } else {
-            metricsClient = new MetricsClientImpl(endpointUri);
-            inventoryClient = new InventoryClientImpl(endpointUri);
-            alertsClient = new AlertsClientImpl(endpointUri);
-        }
-        //Load headers
-        if (headers != null && !headers.isEmpty()) {
-            for (Map.Entry<String, Object> current : headers.entrySet()) {
-                updateHeader(current.getKey(), current.getValue());
-            }
+
+        this.metricsClient = new MetricsClientImpl(endpointUri, username, password);
+        this.inventoryClient = new InventoryClientImpl(endpointUri, username, password);
+        this.alertsClient = new AlertsClientImpl(endpointUri, username, password);
+
+        for (Map.Entry<String, Object> current : headers.entrySet()) {
+            updateHeader(current.getKey(), current.getValue());
         }
     }
 
@@ -119,5 +108,4 @@ public class HawkularClient {
             add("endpoint", endpointUri)
             .toString();
     }
-
 }
