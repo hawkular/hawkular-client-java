@@ -19,15 +19,11 @@ package org.hawkular.client.test;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.HawkularClient;
-import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 
 public class BaseTest {
 
@@ -84,13 +80,5 @@ public class BaseTest {
      */
     public HawkularClient client() {
         return client;
-    }
-
-    @BeforeMethod
-    public void isHawkularAlive() {
-        ClientResponse<Map<String, String>> response = client.metrics().ping().ping();
-
-        Assert.assertNotNull(response);
-        Assert.assertTrue(response.isSuccess());
     }
 }
