@@ -18,63 +18,67 @@ package org.hawkular.client.test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.hawkular.client.HawkularClient;
-import org.hawkular.metrics.model.MetricId;
-import org.hawkular.metrics.model.MetricType;
-import org.hawkular.metrics.model.Tenant;
+import org.hawkular.client.core.HawkularClient;
 import org.testng.Reporter;
+import org.testng.annotations.BeforeClass;
 
 public class BaseTest {
 
-    private HawkularClient client;
     public static final long MINUTE = 1000 * 60;
+    public static final String HEADER_TENANT = "unit-testing";
 
-    public BaseTest() throws Exception {
-        init();
-    }
+    private HawkularClient client;
 
+    @BeforeClass
     public void init() throws Exception {
         URI endpoint = getEndpointFromEnv();
         Reporter.log(endpoint.toString());
-        //TODO: this authentication detail created for temporary purpose only. Should be changed later
-        //we may use the default one as jode/password
-        client = new HawkularClient(endpoint, "jdoe", "password");
+
+        HashMap<String, Object> headers = new HashMap<String, Object>();
+        headers.put(HawkularClient.KEY_HEADER_TENANT, HEADER_TENANT);
+
+        client = new HawkularClient(endpoint, getUsername(), getPassword(), headers);
     }
 
-    private static URI getEndpointFromEnv() throws URISyntaxException {
+    private URI getEndpointFromEnv() throws URISyntaxException {
         String endpoint = System.getenv("HAWKULAR_ENDPOINT");
         if (StringUtils.trimToNull(endpoint) == null) {
             Reporter.log("HAWKULAR_ENDPOINT env not defined. Defaulting to 'localhost'");
             endpoint = "http://localhost:8080";
         }
+
         return new URI(endpoint);
+    }
+
+    private String getUsername() {
+        String username = System.getenv("HAWKULAR_USER");
+        if (StringUtils.trimToNull(username) == null) {
+            Reporter.log("HAWKULAR_USER env not defined. Defaulting to 'jdoe'");
+            username = "jdoe";
+        }
+
+        return username;
+    }
+
+    private String getPassword() {
+        String password = System.getenv("HAWKULAR_PASSWORD");
+        if (StringUtils.trimToNull(password) == null) {
+            Reporter.log("HAWKULAR_PASSWORD env not defined. Defaulting to 'password'");
+            password = "password";
+        }
+
+        return password;
     }
 
     /**
      * Return the main Hawkular client
+     *
      * @return HawkularClient
      */
     public HawkularClient client() {
         return client;
-    }
-
-    public static Tenant randomTenant() {
-        return new Tenant(getRandomId());
-    }
-
-    public static MetricId<?> randomMetricId(MetricType<?> type) {
-        String name = getRandomId();
-        return new MetricId<>(name, type, name);
-    }
-
-    public static String getRandomId() {
-        return getRandomId(8);
-    }
-
-    public static String getRandomId(int count) {
-        return RandomStringUtils.randomAlphanumeric(count).toLowerCase();
     }
 }

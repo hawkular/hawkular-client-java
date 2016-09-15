@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates
+ * Copyright 2015-2016 Red Hat, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,44 +19,47 @@ package org.hawkular.client.test.alerts;
 import java.util.Arrays;
 import java.util.List;
 
-import org.hawkular.client.ClientResponse;
+import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.test.BaseTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
-import org.testng.Reporter;
 import org.testng.annotations.Test;
 
-/**
- * @author jkandasa@redhat.com (Jeeva Kandasamy)
- */
-@Test(groups = { "alerts" })
+@Test(groups = {"alerts", "alerts-plugins"})
 public class PluginsTest extends BaseTest {
-    public PluginsTest() throws Exception {
-        super();
-    }
+
+    private static final Logger LOG = LoggerFactory.getLogger(PluginsTest.class);
 
     public static final String EMAIL_PLUGIN_NAME = "email";
+    public static final String EMAIL_PLUGIN_PROPERTY_TO = "to";
+    public static final String EMAIL_PLUGIN_PROPERTY_FROM = "from";
+    private static final List<String> emailProperties =
+        Arrays.asList("cc", "from", "from-name", "template.hawkular.url", "template.html", "template.plain", "to");
 
-    @Test(groups={"known-failure"})
-    public void findPlugins() {
-        ClientResponse<String[]> response = client().alerts().findActionPlugins();
-        Reporter.log("Alert available Plugins Result: " + response.toString(), true);
+    @Test
+    public void findActionPlugins() {
+        LOG.info("Testing with Plugin == {}", EMAIL_PLUGIN_NAME);
+
+        ClientResponse<List<String>> response = client()
+            .alerts()
+            .plugins()
+            .findActionPlugins();
+
         Assert.assertTrue(response.isSuccess());
-        Assert.assertTrue(response.getEntity().length > 0);
+        Assert.assertTrue(response.getEntity().size() > 0);
+        Assert.assertTrue(response.getEntity().contains(EMAIL_PLUGIN_NAME));
     }
 
-    @Test(groups={"known-failure"})
-    public void findEmailPlugin() {
-        ClientResponse<String[]> response = client().alerts().getActionPlugin(EMAIL_PLUGIN_NAME);
-        Reporter.log("Alert Email Plugin variables Result: " + response.toString(), true);
-        Assert.assertTrue(response.isSuccess());
-        List<String> result = Arrays.asList(response.getEntity());
-        Assert.assertTrue(result.contains("cc"));
-        Assert.assertTrue(result.contains("from"));
-        Assert.assertTrue(result.contains("from-name"));
-        Assert.assertTrue(result.contains("template.hawkular.url"));
-        Assert.assertTrue(result.contains("template.html"));
-        Assert.assertTrue(result.contains("template.plain"));
-        Assert.assertTrue(result.contains("to"));
-    }
+    @Test(dependsOnMethods = "findActionPlugins")
+    public void getActionPlugin() {
+        ClientResponse<List<String>> response = client()
+            .alerts()
+            .plugins()
+            .getActionPlugin(EMAIL_PLUGIN_NAME);
 
+        Assert.assertTrue(response.isSuccess());
+        Assert.assertTrue(response.getEntity().size() > 0);
+        Assert.assertEquals(response.getEntity(), emailProperties);
+    }
 }

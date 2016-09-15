@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates
+ * Copyright 2015-2016 Red Hat, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -51,6 +51,7 @@ public class OpenshiftCollectionHistTest extends BaseTest {
         super();
     }
 
+    //TODO: Test currently fails due to no metrics found...
     @Test
     public void getMetricDefs() throws Exception {
 
@@ -80,11 +81,13 @@ public class OpenshiftCollectionHistTest extends BaseTest {
     }
 
     public String getPodUID(String podNamespace, String containerName) {
-        Tags tags = new Tags(new HashMap<String, String>());
-        tags.getTags().put("container_name", containerName);
-        tags.getTags().put("pod_namespace", podNamespace);
+        Map<String, String> tagsMap = new HashMap<String, String>();
+        tagsMap.put("container_name", containerName);
+        tagsMap.put("pod_namespace", podNamespace);
 
-        List<Metric<?>> defs = super.client().metrics().findMetrics(MetricType.GAUGE, tags, null).getEntity();
+        Tags tags = new Tags(tagsMap);
+
+        List<Metric<?>> defs = super.client().metrics().metric().findMetrics(MetricType.GAUGE, tags, null).getEntity();
         Assert.assertNotNull(defs, "namespace: " + podNamespace + ", container: " + containerName);
         Assert.assertTrue(defs.size() > 1);
         return defs.get(0).getTags().get("pod_id");
@@ -98,8 +101,7 @@ public class OpenshiftCollectionHistTest extends BaseTest {
         long start = now - Duration.ofHours(36).toMillis();
         long dur = start + Duration.ofHours(36).toMillis();
 
-        List<DataPoint<Double>> rawData = client().metrics().findGaugeDataWithId(metricID, start, dur, null, null,
-                null, null, null, null).getEntity();
+        List<DataPoint<Double>> rawData = client().metrics().gauge().findGaugeDataWithId(metricID, String.valueOf(start), String.valueOf(dur), null, null, null).getEntity();
 
         Assert.assertNotNull(rawData, "namespace: " + podNamespace + ", container: " + containerName);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates
+ * Copyright 2015-2016 Red Hat, Inc. and/or its affiliates
  * and other contributors as indicated by the @author tags.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,11 +33,10 @@ public class BTGTest {
         Reporter.log("Current: " + now.toString());
 
         BTG ts = new BTG(now);
-        for(int i=0; i<4; i++) {
+        for (int i = 0; i < 4; i++) {
             Instant next = ts.next();
             Reporter.log(next.toString());
             Assert.assertEquals(next, now.minus(window).plus(defaultInc.multipliedBy(i)));
-
         }
     }
 }

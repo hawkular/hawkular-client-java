@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/Hawkular-QE/hawkular-java-client.svg?branch=master)](https://travis-ci.org/Hawkular-QE/hawkular-java-client)
-# Java client for [Hawkular](https://github.com/hawkular/hawkular)
+[![Build Status](https://travis-ci.org/hawkular/hawkular-client-java.svg?branch=master)](https://travis-ci.org/hawkular/hawkular-client-java)
+# Java client for [Hawkular](https://github.com/hawkular)
 Example,
 ```java
 HawkularClient hawkular = new HawkularClient("http://209.132.178.218:18080/", "", "");
@@ -13,7 +13,8 @@ You have set your hawkular server url in to `HAWKULAR_ENDPOINT` environment vari
 
 To run `mvn test`
 
-Run with debug log: `mvn test -Dorg.slf4j.simpleLogger.defaultLogLevel=debug`
+Run with debug log: `mvn test -Dorg.slf4j.simpleLogger.defaultLogLevel=debug -Dorg.slf4j.simpleLogger.logFile=target/test.log`
+- http://www.slf4j.org/api/org/slf4j/impl/SimpleLogger.html
 
 # Help Wanted
 This project is under active development.  Pull requests are welcome.

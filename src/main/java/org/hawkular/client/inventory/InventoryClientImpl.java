@@ -23,9 +23,10 @@ import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
-import org.hawkular.client.BaseClient;
-import org.hawkular.client.ClientResponse;
-import org.hawkular.client.RestFactory;
+import org.hawkular.client.core.BaseClient;
+import org.hawkular.client.core.ClientResponse;
+import org.hawkular.client.core.ClientResponseOld;
+import org.hawkular.client.core.jaxrs.RestFactory;
 import org.hawkular.client.inventory.json.Endpoints;
 import org.hawkular.client.inventory.json.IdJSON;
 import org.hawkular.inventory.api.model.Environment;
@@ -42,18 +43,20 @@ import org.hawkular.inventory.api.model.Tenant.Update;
 /**
  * @author jkandasa@redhat.com (Jeeva Kandasamy)
  */
+//https://github.com/hawkular/hawkular-inventory/tree/9d68378657733ce006484824cc359aeca7f4938d/hawkular-inventory-rest-api/src/main/java/org/hawkular/inventory/rest/deprecated
+@Deprecated()
 public class InventoryClientImpl extends BaseClient<InventoryRestApi>
         implements InventoryClient {
     private String tenantId = null;
     private static final long MINUTE = 1000 * 60;
 
     public InventoryClientImpl(URI endpointUri, String username,
-            String password) throws Exception {
+            String password)  {
         super(endpointUri, username, password, new RestFactory<InventoryRestApi>(InventoryRestApi.class));
     }
 
-    public InventoryClientImpl(URI endpointUri) throws Exception {
-        super(endpointUri, new RestFactory<InventoryRestApi>(InventoryRestApi.class));
+    public InventoryClientImpl(URI endpointUri)  {
+        this(endpointUri, null, null);
     }
 
     public String getTenantId() {
@@ -65,21 +68,21 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> pingTime() {
-        return new ClientResponse<String>(String.class,
+        return new ClientResponseOld<String>(String.class,
                 restApi().pingTime(),
                 RESPONSE_CODE.GET_SUCCESS.value());
     }
 
     @Override
     public ClientResponse<Endpoints> pingHello() {
-        return new ClientResponse<Endpoints>(Endpoints.class,
+        return new ClientResponseOld<Endpoints>(Endpoints.class,
                 restApi().pingHello(),
                 RESPONSE_CODE.GET_SUCCESS.value());
     }
 
     @Override
     public ClientResponse<Tenant> getTenant() {
-        return new ClientResponse<Tenant>(Tenant.class, restApi().getTenant(), RESPONSE_CODE.GET_SUCCESS.value());
+        return new ClientResponseOld<Tenant>(Tenant.class, restApi().getTenant(), RESPONSE_CODE.GET_SUCCESS.value());
     }
 
     @Override
@@ -89,25 +92,25 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> updateTenant(Update updateTenant) {
-        return new ClientResponse<String>(String.class, restApi().getTenant(), RESPONSE_CODE.UPDATE_SUCCESS.value());
+        return new ClientResponseOld<String>(String.class, restApi().getTenant(), RESPONSE_CODE.UPDATE_SUCCESS.value());
     }
 
     @Override
     public ClientResponse<String> deleteTenant() {
-        return new ClientResponse<String>(String.class, restApi().deleteTenant(), RESPONSE_CODE.DELETE_SUCCESS.value());
+        return new ClientResponseOld<String>(String.class, restApi().deleteTenant(), RESPONSE_CODE.DELETE_SUCCESS.value());
     }
 
     //Enviroment
 
     @Override
     public ClientResponse<List<Environment>> getEnvironments() {
-        return new ClientResponse<List<Environment>>(Environment.class, restApi().getEnvironments(),
+        return new ClientResponseOld<List<Environment>>(Environment.class, restApi().getEnvironments(),
                 RESPONSE_CODE.GET_SUCCESS.value(), getTenantId(), true);
     }
 
     @Override
     public ClientResponse<Environment> getEnvironment(String environmentId) {
-        return new ClientResponse<Environment>(Environment.class, restApi().getEnvironment(environmentId),
+        return new ClientResponseOld<Environment>(Environment.class, restApi().getEnvironment(environmentId),
                 RESPONSE_CODE.GET_SUCCESS.value(), getTenantId());
     }
 
@@ -118,7 +121,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> createEnvironment(Environment.Blueprint environmentBlueprint) {
-        return new ClientResponse<String>(String.class, restApi().createEnvironment(environmentBlueprint),
+        return new ClientResponseOld<String>(String.class, restApi().createEnvironment(environmentBlueprint),
                 RESPONSE_CODE.CREATE_SUCCESS.value());
     }
 
@@ -140,7 +143,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> updateEnvironment(String environmentId, Environment.Update update) {
-        return new ClientResponse<String>(String.class, restApi().updateEnvironment(environmentId, update),
+        return new ClientResponseOld<String>(String.class, restApi().updateEnvironment(environmentId, update),
                 RESPONSE_CODE.UPDATE_SUCCESS.value());
     }
 
@@ -156,7 +159,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> deleteEnvironment(String environmentId) {
-        return new ClientResponse<String>(String.class, restApi().deleteEnvironment(environmentId),
+        return new ClientResponseOld<String>(String.class, restApi().deleteEnvironment(environmentId),
                 RESPONSE_CODE.DELETE_SUCCESS.value());
     }
 
@@ -169,13 +172,13 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<List<MetricType>> getMetricTypes() {
-        return new ClientResponse<List<MetricType>>(MetricType.class, restApi().getMetricTypes(),
+        return new ClientResponseOld<List<MetricType>>(MetricType.class, restApi().getMetricTypes(),
                 RESPONSE_CODE.GET_SUCCESS.value(), getTenantId(), true);
     }
 
     @Override
     public ClientResponse<MetricType> getMetricType(String metricTypeId) {
-        return new ClientResponse<MetricType>(MetricType.class, this.restApi().getMetricType(metricTypeId),
+        return new ClientResponseOld<MetricType>(MetricType.class, this.restApi().getMetricType(metricTypeId),
                 RESPONSE_CODE.GET_SUCCESS.value(), getTenantId());
     }
 
@@ -186,7 +189,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> createMetricType(MetricType.Blueprint metricType) {
-        return new ClientResponse<String>(String.class, restApi().createMetricType(metricType),
+        return new ClientResponseOld<String>(String.class, restApi().createMetricType(metricType),
                 RESPONSE_CODE.CREATE_SUCCESS.value());
     }
 
@@ -206,7 +209,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     @Override
     public ClientResponse<String> updateMetricType(String metricTypeId,
             MetricType.Update metricUpdate) {
-        return new ClientResponse<String>(String.class, restApi().updateMetricType(metricTypeId, metricUpdate),
+        return new ClientResponseOld<String>(String.class, restApi().updateMetricType(metricTypeId, metricUpdate),
                 RESPONSE_CODE.UPDATE_SUCCESS.value());
     }
 
@@ -218,7 +221,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> deleteMetricType(String metricTypeId) {
-        return new ClientResponse<String>(String.class, restApi().deleteMetricType(metricTypeId),
+        return new ClientResponseOld<String>(String.class, restApi().deleteMetricType(metricTypeId),
                 RESPONSE_CODE.DELETE_SUCCESS.value());
     }
 
@@ -237,7 +240,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
         } else {
             response = restApi().createMetric(environmentId, feedId, metric);
         }
-        return new ClientResponse<String>(String.class, response, RESPONSE_CODE.CREATE_SUCCESS.value());
+        return new ClientResponseOld<String>(String.class, response, RESPONSE_CODE.CREATE_SUCCESS.value());
     }
 
     @Override
@@ -260,10 +263,10 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     @Override
     public ClientResponse<Metric> getMetric(String environmentId, String feedId, String metricId) {
         if (feedId == null) {
-            return new ClientResponse<Metric>(Metric.class, this.restApi().getMetric(environmentId, metricId),
+            return new ClientResponseOld<Metric>(Metric.class, this.restApi().getMetric(environmentId, metricId),
                     RESPONSE_CODE.GET_SUCCESS.value(), getTenantId());
         } else {
-            return new ClientResponse<Metric>(Metric.class, this.restApi().getMetric(environmentId, feedId, metricId),
+            return new ClientResponseOld<Metric>(Metric.class, this.restApi().getMetric(environmentId, feedId, metricId),
                     RESPONSE_CODE.GET_SUCCESS.value(), getTenantId());
         }
     }
@@ -275,14 +278,14 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<List<Metric>> getMetrics(String environmentId) {
-        return new ClientResponse<List<Metric>>(Metric.class, restApi().getMetrics(environmentId),
+        return new ClientResponseOld<List<Metric>>(Metric.class, restApi().getMetrics(environmentId),
                 RESPONSE_CODE.GET_SUCCESS.value(), getTenantId(), true);
 
     }
 
     @Override
     public ClientResponse<List<Metric>> getMetrics(String environmentId, String feedId) {
-        return new ClientResponse<List<Metric>>(Metric.class, restApi().getMetrics(environmentId, feedId),
+        return new ClientResponseOld<List<Metric>>(Metric.class, restApi().getMetrics(environmentId, feedId),
                 RESPONSE_CODE.GET_SUCCESS.value(), getTenantId(), true);
     }
 
@@ -295,7 +298,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
         } else {
             response = restApi().updateMetric(environmentId, feedId, metricId, metricUpdate);
         }
-        return new ClientResponse<String>(String.class, response, RESPONSE_CODE.UPDATE_SUCCESS.value());
+        return new ClientResponseOld<String>(String.class, response, RESPONSE_CODE.UPDATE_SUCCESS.value());
     }
 
     @Override
@@ -318,7 +321,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
         } else {
             response = restApi().deleteMetric(environmentId, feedId, metricId);
         }
-        return new ClientResponse<String>(String.class, response, RESPONSE_CODE.DELETE_SUCCESS.value());
+        return new ClientResponseOld<String>(String.class, response, RESPONSE_CODE.DELETE_SUCCESS.value());
     }
 
     @Override
@@ -335,13 +338,13 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     //Get Resource Types
     @Override
     public ClientResponse<List<ResourceType>> getResourceTypes() {
-        return new ClientResponse<List<ResourceType>>(ResourceType.class, restApi().getResourceTypes(),
+        return new ClientResponseOld<List<ResourceType>>(ResourceType.class, restApi().getResourceTypes(),
                 RESPONSE_CODE.GET_SUCCESS.value(), getTenantId(), true);
     }
 
     @Override
     public ClientResponse<ResourceType> getResourceType(String resourceTypeId) {
-        return new ClientResponse<ResourceType>(ResourceType.class, restApi().getResourceType(resourceTypeId),
+        return new ClientResponseOld<ResourceType>(ResourceType.class, restApi().getResourceType(resourceTypeId),
                 RESPONSE_CODE.GET_SUCCESS.value(), getTenantId());
     }
 
@@ -352,19 +355,19 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<List<MetricType>> getMetricTypes(String resourceTypeId) {
-        return new ClientResponse<List<MetricType>>(MetricType.class, restApi().getMetricTypes(),
+        return new ClientResponseOld<List<MetricType>>(MetricType.class, restApi().getMetricTypes(),
                 RESPONSE_CODE.GET_SUCCESS.value(), getTenantId(), true);
     }
 
     @Override
     public ClientResponse<List<Resource>> getResources(String resourceTypeId) {
-        return new ClientResponse<List<Resource>>(Resource.class, restApi().getResources(resourceTypeId),
+        return new ClientResponseOld<List<Resource>>(Resource.class, restApi().getResources(resourceTypeId),
                 RESPONSE_CODE.GET_SUCCESS.value(), getTenantId(), true);
     }
 
     @Override
     public ClientResponse<String> createResourceType(ResourceType.Blueprint resourceType) {
-        return new ClientResponse<String>(String.class, restApi().createResourceType(resourceType),
+        return new ClientResponseOld<String>(String.class, restApi().createResourceType(resourceType),
                 RESPONSE_CODE.CREATE_SUCCESS.value());
     }
 
@@ -380,7 +383,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> updateResourceType(String resourceTypeId, ResourceType.Update resourceTypeUpdate) {
-        return new ClientResponse<String>(String.class,
+        return new ClientResponseOld<String>(String.class,
                 restApi().updateResourceType(resourceTypeId, resourceTypeUpdate),
                 RESPONSE_CODE.UPDATE_SUCCESS.value());
     }
@@ -392,7 +395,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> deleteResourceType(String resourceTypeId) {
-        return new ClientResponse<String>(String.class,
+        return new ClientResponseOld<String>(String.class,
                 restApi().deleteResourceType(resourceTypeId),
                 RESPONSE_CODE.DELETE_SUCCESS.value());
     }
@@ -404,14 +407,14 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> addMetricType(String resourceTypeId, IdJSON metricTypeId) {
-        return new ClientResponse<String>(String.class,
+        return new ClientResponseOld<String>(String.class,
                 restApi().addMetricType(resourceTypeId, metricTypeId),
                 RESPONSE_CODE.ADD_SUCCESS.value());
     }
 
     @Override
     public ClientResponse<String> removeMetricType(String resourceTypeId, String metricTypeId) {
-        return new ClientResponse<String>(String.class,
+        return new ClientResponseOld<String>(String.class,
                 restApi().removeMetricType(resourceTypeId, metricTypeId),
                 RESPONSE_CODE.REMOVE_SUCCESS.value());
     }
@@ -425,7 +428,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
         } else {
             response = restApi().addResource(environmentId, feedId, resource);
         }
-        return new ClientResponse<String>(String.class, response, RESPONSE_CODE.ADD_SUCCESS.value());
+        return new ClientResponseOld<String>(String.class, response, RESPONSE_CODE.ADD_SUCCESS.value());
     }
 
     @Override
@@ -446,7 +449,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     @Override
     public ClientResponse<List<Resource>> getResourcesByType(String environmentId, String typeId, String typeVersion,
             boolean feedless) {
-        return new ClientResponse<List<Resource>>(Resource.class, restApi().getResourcesByType(environmentId, typeId,
+        return new ClientResponseOld<List<Resource>>(Resource.class, restApi().getResourcesByType(environmentId, typeId,
                 typeVersion, feedless), RESPONSE_CODE.GET_SUCCESS.value(), getTenantId(), true);
     }
 
@@ -458,7 +461,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     @Override
     public ClientResponse<List<Resource>> getResourcesByType(String environmentId, String feedId, String typeId,
             String typeVersion) {
-        return new ClientResponse<List<Resource>>(Resource.class, restApi().getResourcesByType(environmentId, feedId,
+        return new ClientResponseOld<List<Resource>>(Resource.class, restApi().getResourcesByType(environmentId, feedId,
                 typeId, typeVersion), RESPONSE_CODE.GET_SUCCESS.value(), getTenantId(), true);
     }
 
@@ -470,7 +473,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
         } else {
             response = restApi().getResource(environmentId, feedId, resourceId);
         }
-        return new ClientResponse<Resource>(Resource.class, response, RESPONSE_CODE.GET_SUCCESS.value(), getTenantId());
+        return new ClientResponseOld<Resource>(Resource.class, response, RESPONSE_CODE.GET_SUCCESS.value(), getTenantId());
 
     }
 
@@ -494,7 +497,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
         } else {
             response = restApi().updateResource(environmentId, feedId, resourceId, update);
         }
-        return new ClientResponse<String>(String.class, response, RESPONSE_CODE.UPDATE_SUCCESS.value());
+        return new ClientResponseOld<String>(String.class, response, RESPONSE_CODE.UPDATE_SUCCESS.value());
     }
 
     @Override
@@ -517,7 +520,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
         } else {
             response = restApi().deleteResource(environmentId, feedId, resourceId);
         }
-        return new ClientResponse<String>(String.class, response, RESPONSE_CODE.DELETE_SUCCESS.value());
+        return new ClientResponseOld<String>(String.class, response, RESPONSE_CODE.DELETE_SUCCESS.value());
     }
 
     @Override
@@ -540,7 +543,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
         } else {
             response = restApi().addMetricToResource(environmentId, feedId, resourceId, metricIds);
         }
-        return new ClientResponse<String>(String.class, response, RESPONSE_CODE.ADD_SUCCESS.value());
+        return new ClientResponseOld<String>(String.class, response, RESPONSE_CODE.ADD_SUCCESS.value());
     }
 
     @Override
@@ -557,7 +560,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
         } else {
             response = restApi().listMetricsOfResource(environmentID, feedId, resourceId);
         }
-        return new ClientResponse<List<Metric>>(Metric.class, response, RESPONSE_CODE.GET_SUCCESS.value(),
+        return new ClientResponseOld<List<Metric>>(Metric.class, response, RESPONSE_CODE.GET_SUCCESS.value(),
                 getTenantId(), true);
     }
 
@@ -575,7 +578,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
         } else {
             response = this.restApi().getMetricOfResource(environmentId, feedId, resourceId, metricId);
         }
-        return new ClientResponse<Metric>(Metric.class, response, RESPONSE_CODE.GET_SUCCESS.value(), getTenantId());
+        return new ClientResponseOld<Metric>(Metric.class, response, RESPONSE_CODE.GET_SUCCESS.value(), getTenantId());
     }
 
     @Override
@@ -586,7 +589,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
     //Feed
     @Override
     public ClientResponse<String> registerFeed(Feed.Blueprint feed) {
-        return new ClientResponse<String>(String.class, restApi().registerFeed(feed),
+        return new ClientResponseOld<String>(String.class, restApi().registerFeed(feed),
                 RESPONSE_CODE.REGISTER_SUCCESS.value());
     }
 
@@ -597,13 +600,13 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<List<Feed>> getAllFeeds() {
-        return new ClientResponse<List<Feed>>(Feed.class, restApi().getAllFeeds(),
+        return new ClientResponseOld<List<Feed>>(Feed.class, restApi().getAllFeeds(),
                 RESPONSE_CODE.GET_SUCCESS.value(), getTenantId(), true);
     }
 
     @Override
     public ClientResponse<Feed> getFeed(String feedId) {
-        return new ClientResponse<Feed>(Feed.class, restApi().getFeed(feedId),
+        return new ClientResponseOld<Feed>(Feed.class, restApi().getFeed(feedId),
                 RESPONSE_CODE.GET_SUCCESS.value(), getTenantId());
     }
 
@@ -614,7 +617,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> updateFeed(String feedId, Feed.Update update) {
-        return new ClientResponse<String>(String.class, restApi().updateFeed(feedId, update),
+        return new ClientResponseOld<String>(String.class, restApi().updateFeed(feedId, update),
                 RESPONSE_CODE.UPDATE_SUCCESS.value());
     }
 
@@ -625,7 +628,7 @@ public class InventoryClientImpl extends BaseClient<InventoryRestApi>
 
     @Override
     public ClientResponse<String> deleteFeed(String feedId) {
-        return new ClientResponse<String>(String.class, restApi().deleteFeed(feedId),
+        return new ClientResponseOld<String>(String.class, restApi().deleteFeed(feedId),
                 RESPONSE_CODE.DELETE_SUCCESS.value());
     }
 

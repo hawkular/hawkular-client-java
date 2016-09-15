@@ -1,5 +1,15 @@
-test-output/
-target/
-.settings/
+# IntelliJ IDEA #
+.idea/
+*.iml
+
+# Eclipse Files #
+.metadata
+.settings
 .project
 .classpath
+
+# General Java Folders/Files #
+bin/
+target/
+*.jar
+*.class
