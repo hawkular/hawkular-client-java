@@ -16,16 +16,12 @@
  */
 package org.hawkular.client.core;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
-import java.net.URI;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.hawkular.client.core.jaxrs.RestFactory;
 import org.hawkular.client.core.typeresolvers.CollectionJavaTypeResolver;
 import org.hawkular.client.core.typeresolvers.MapJavaTypeResolver;
 import org.hawkular.client.core.typeresolvers.SimpleJavaTypeResolver;
-
-import com.google.common.base.Strings;
 
 public abstract class BaseClient<T> {
 
@@ -34,14 +30,9 @@ public abstract class BaseClient<T> {
     private CollectionJavaTypeResolver collectionJavaTypeResolver = new CollectionJavaTypeResolver();
     private MapJavaTypeResolver mapJavaTypeResolver = new MapJavaTypeResolver();
 
-    public BaseClient(URI endpointUri, String username, String password, RestFactory<T> restFactory) {
-        checkArgument(endpointUri != null, "EndpointUri is null");
-
-        if (Strings.isNullOrEmpty(username) || Strings.isNullOrEmpty(password)) {
-            restAPI = (T)restFactory.createAPI(endpointUri);
-        } else {
-            restAPI = (T)restFactory.createAPI(endpointUri, username, password);
-        }
+    public BaseClient(ClientInfo clientInfo, RestFactory<T> restFactory) {
+        checkNotNull(clientInfo);
+        restAPI = restFactory.createAPI(clientInfo);
     }
 
     public T restApi() {

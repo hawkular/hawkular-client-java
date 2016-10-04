@@ -16,13 +16,12 @@
  */
 package org.hawkular.client.alert.clients;
 
-import java.net.URI;
-
 import javax.ws.rs.core.Response;
 
 import org.hawkular.alerts.api.model.export.Definitions;
 import org.hawkular.client.alert.jaxrs.handlers.ImportHandler;
 import org.hawkular.client.core.BaseClient;
+import org.hawkular.client.core.ClientInfo;
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.DefaultClientResponse;
 import org.hawkular.client.core.jaxrs.ResponseCodes;
@@ -32,12 +31,8 @@ import com.fasterxml.jackson.databind.JavaType;
 
 public class DefaultImportClient extends BaseClient<ImportHandler> implements ImportClient {
 
-    public DefaultImportClient(URI endpointUri) {
-        this(endpointUri, null, null);
-    }
-
-    public DefaultImportClient(URI endpointUri, String username, String password) {
-        super(endpointUri, username, password, new RestFactory<ImportHandler>(ImportHandler.class));
+    public DefaultImportClient(ClientInfo clientInfo) {
+        super(clientInfo, new RestFactory<>(ImportHandler.class));
     }
 
     public ClientResponse<Definitions> importDefinitions(final String strategy, final Definitions definitions) {
@@ -47,7 +42,7 @@ public class DefaultImportClient extends BaseClient<ImportHandler> implements Im
             serverResponse = restApi().importDefinitions(strategy, definitions);
             JavaType javaType = simpleResolver().get(Definitions.class);
 
-            return new DefaultClientResponse<Definitions>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();

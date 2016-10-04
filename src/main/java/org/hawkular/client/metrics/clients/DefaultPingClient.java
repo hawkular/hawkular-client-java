@@ -16,12 +16,12 @@
  */
 package org.hawkular.client.metrics.clients;
 
-import java.net.URI;
 import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
 import org.hawkular.client.core.BaseClient;
+import org.hawkular.client.core.ClientInfo;
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.DefaultClientResponse;
 import org.hawkular.client.core.jaxrs.ResponseCodes;
@@ -32,12 +32,8 @@ import com.fasterxml.jackson.databind.JavaType;
 
 public class DefaultPingClient extends BaseClient<PingHandler> implements PingClient {
 
-    public DefaultPingClient(URI endpointUri) {
-        this(endpointUri, null, null);
-    }
-
-    public DefaultPingClient(URI endpointUri, String username, String password) {
-        super(endpointUri, username, password, new RestFactory<PingHandler>(PingHandler.class));
+    public DefaultPingClient(ClientInfo clientInfo) {
+        super(clientInfo, new RestFactory<>(PingHandler.class));
     }
 
     @Override
@@ -48,7 +44,7 @@ public class DefaultPingClient extends BaseClient<PingHandler> implements PingCl
             serverResponse = restApi().ping();
             JavaType javaType = mapResolver().get(Map.class, String.class, String.class);
 
-            return new DefaultClientResponse<Map<String, String>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();

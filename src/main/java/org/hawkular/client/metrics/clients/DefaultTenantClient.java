@@ -16,12 +16,12 @@
  */
 package org.hawkular.client.metrics.clients;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
 
 import org.hawkular.client.core.BaseClient;
+import org.hawkular.client.core.ClientInfo;
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.DefaultClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
@@ -34,12 +34,8 @@ import com.fasterxml.jackson.databind.JavaType;
 
 public class DefaultTenantClient extends BaseClient<TenantHandler> implements TenantClient {
 
-    public DefaultTenantClient(URI endpointUri) {
-        this(endpointUri, null, null);
-    }
-
-    public DefaultTenantClient(URI endpointUri, String username, String password) {
-        super(endpointUri, username, password, new RestFactory<TenantHandler>(TenantHandler.class));
+    public DefaultTenantClient(ClientInfo clientInfo) {
+        super(clientInfo, new RestFactory<>(TenantHandler.class));
     }
 
     @Override
@@ -50,7 +46,7 @@ public class DefaultTenantClient extends BaseClient<TenantHandler> implements Te
             serverResponse = restApi().getTenants();
             JavaType javaType = collectionResolver().get(List.class, Tenant.class);
 
-            return new DefaultClientResponse<List<Tenant>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -66,7 +62,7 @@ public class DefaultTenantClient extends BaseClient<TenantHandler> implements Te
             serverResponse = restApi().createTenant(overwrite, tenant);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_201);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_201);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();

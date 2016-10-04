@@ -16,10 +16,8 @@
  */
 package org.hawkular.client.test.metrics;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -135,9 +133,9 @@ public class MetricTest extends BaseTest {
     @Test(dependsOnMethods = "findMetrics")
     public void findMetricsAfterOtherClientCreated() throws URISyntaxException {
         // Make sure there's no breaking static config
-        HashMap<String, Object> headers = new HashMap<>();
-        headers.put(HawkularClient.KEY_HEADER_TENANT, "other tenant");
-        HawkularClient otherClient = new HawkularClient(new URI("fake"), null, null, headers);
+        HawkularClient otherClient = HawkularClient.builder("other tenant")
+                .uri("http://localhost:8080/fake")
+                .build();
 
         ClientResponse<List<Metric<?>>> response = client()
                 .metrics()

@@ -16,13 +16,13 @@
  */
 package org.hawkular.client.metrics.clients;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
 import org.hawkular.client.core.BaseClient;
+import org.hawkular.client.core.ClientInfo;
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.DefaultClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
@@ -41,12 +41,8 @@ import com.fasterxml.jackson.databind.JavaType;
 
 public class DefaultAvailabilityClient extends BaseClient<AvailabilityHandler> implements AvailabilityClient {
 
-    public DefaultAvailabilityClient(URI endpointUri) {
-        this(endpointUri, null, null);
-    }
-
-    public DefaultAvailabilityClient(URI endpointUri, String username, String password) {
-        super(endpointUri, username, password, new RestFactory<AvailabilityHandler>(AvailabilityHandler.class));
+    public DefaultAvailabilityClient(ClientInfo clientInfo) {
+        super(clientInfo, new RestFactory<>(AvailabilityHandler.class));
     }
 
     @Override
@@ -57,7 +53,7 @@ public class DefaultAvailabilityClient extends BaseClient<AvailabilityHandler> i
             serverResponse = restApi().findAvailabilityMetrics(tags);
             JavaType javaType = collectionResolver().get(List.class, Metric.class, AvailabilityType.class);
 
-            return new DefaultClientResponse<List<Metric<AvailabilityType>>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -73,7 +69,7 @@ public class DefaultAvailabilityClient extends BaseClient<AvailabilityHandler> i
             serverResponse = restApi().createAvailabilityMetric(overwrite, metric);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_201);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_201);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -89,7 +85,7 @@ public class DefaultAvailabilityClient extends BaseClient<AvailabilityHandler> i
             serverResponse = restApi().addAvailabilityData(data);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -105,7 +101,7 @@ public class DefaultAvailabilityClient extends BaseClient<AvailabilityHandler> i
             serverResponse = restApi().getGaugeTags(tags);
             JavaType javaType = mapResolver().get(Map.class, String.class, List.class, String.class);
 
-            return new DefaultClientResponse<Map<String, List<String>>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -121,7 +117,7 @@ public class DefaultAvailabilityClient extends BaseClient<AvailabilityHandler> i
             serverResponse = restApi().getAvailabilityMetric(id);
             JavaType javaType = simpleResolver().get(Metric.class, AvailabilityType.class);
 
-            return new DefaultClientResponse<Metric<AvailabilityType>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -138,7 +134,7 @@ public class DefaultAvailabilityClient extends BaseClient<AvailabilityHandler> i
             serverResponse = restApi().findAvailabilityData(id, start, end, distinct, limit, order);
             JavaType javaType = collectionResolver().get(List.class, DataPoint.class, AvailabilityType.class);
 
-            return new DefaultClientResponse<List<DataPoint<AvailabilityType>>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -154,7 +150,7 @@ public class DefaultAvailabilityClient extends BaseClient<AvailabilityHandler> i
             serverResponse = restApi().addAvailabilityDataForMetric(id, data);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -171,7 +167,7 @@ public class DefaultAvailabilityClient extends BaseClient<AvailabilityHandler> i
             serverResponse = restApi().findAvailabilityStats(id, start, end, buckets, bucketDuration);
             JavaType javaType = collectionResolver().get(List.class, AvailabilityBucketPoint.class);
 
-            return new DefaultClientResponse<List<AvailabilityBucketPoint>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -187,7 +183,7 @@ public class DefaultAvailabilityClient extends BaseClient<AvailabilityHandler> i
             serverResponse = restApi().getAvailabilityMetricTags(id);
             JavaType javaType = mapResolver().get(Map.class, String.class, String.class);
 
-            return new DefaultClientResponse<Map<String, String>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -203,7 +199,7 @@ public class DefaultAvailabilityClient extends BaseClient<AvailabilityHandler> i
             serverResponse = restApi().updateAvailabilityMetricTags(id, tags);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -219,7 +215,7 @@ public class DefaultAvailabilityClient extends BaseClient<AvailabilityHandler> i
             serverResponse = restApi().deleteAvailabilityMetricTags(id, tags);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();

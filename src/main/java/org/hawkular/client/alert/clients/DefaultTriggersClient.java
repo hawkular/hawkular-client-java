@@ -16,7 +16,6 @@
  */
 package org.hawkular.client.alert.clients;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -36,6 +35,7 @@ import org.hawkular.alerts.api.model.trigger.Mode;
 import org.hawkular.alerts.api.model.trigger.Trigger;
 import org.hawkular.client.alert.jaxrs.handlers.TriggersHandler;
 import org.hawkular.client.core.BaseClient;
+import org.hawkular.client.core.ClientInfo;
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.DefaultClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
@@ -46,12 +46,8 @@ import com.fasterxml.jackson.databind.JavaType;
 
 public class DefaultTriggersClient extends BaseClient<TriggersHandler> implements TriggersClient {
 
-    public DefaultTriggersClient(URI endpointUri) {
-        this(endpointUri, null, null);
-    }
-
-    public DefaultTriggersClient(URI endpointUri, String username, String password) {
-        super(endpointUri, username, password, new RestFactory<TriggersHandler>(TriggersHandler.class));
+    public DefaultTriggersClient(ClientInfo clientInfo) {
+        super(clientInfo, new RestFactory<>(TriggersHandler.class));
     }
 
     @Override
@@ -62,7 +58,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().findTriggers(triggerIds, tags, thin);
             JavaType javaType = collectionResolver().get(List.class, Trigger.class);
 
-            return new DefaultClientResponse<List<Trigger>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -78,7 +74,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().createTrigger(trigger);
             JavaType javaType = simpleResolver().get(Trigger.class);
 
-            return new DefaultClientResponse<Trigger>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -94,7 +90,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().createGroupTrigger(groupTrigger);
             JavaType javaType = simpleResolver().get(Trigger.class);
 
-            return new DefaultClientResponse<Trigger>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -110,7 +106,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().createGroupMember(groupMember);
             JavaType javaType = simpleResolver().get(Trigger.class);
 
-            return new DefaultClientResponse<Trigger>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -126,7 +122,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().orphanMemberTrigger(memberId);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -142,7 +138,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().unorphanMemberTrigger(memberId, unorphanMemberInfo);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -158,7 +154,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().deleteGroupTrigger(groupId, keepNonOrphans, keepOrphans);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -174,7 +170,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().updateGroupTrigger(groupId, groupTrigger);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -190,7 +186,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().setGroupConditions(groupId, triggerMode, groupConditionsInfo);
             JavaType javaType = collectionResolver().get(List.class, Condition.class);
 
-            return new DefaultClientResponse<List<Condition>>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -206,7 +202,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().createGroupDampening(groupId, dampening);
             JavaType javaType = simpleResolver().get(Dampening.class);
 
-            return new DefaultClientResponse<Dampening>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -222,7 +218,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().deleteGroupDampening(groupId, dampeningId);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -238,7 +234,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().updateGroupDampening(groupId, dampeningId, dampening);
             JavaType javaType = simpleResolver().get(Dampening.class);
 
-            return new DefaultClientResponse<Dampening>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -254,7 +250,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().findGroupMembers(groupId, includeOrphans);
             JavaType javaType = collectionResolver().get(List.class, Trigger.class);
 
-            return new DefaultClientResponse<List<Trigger>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -270,7 +266,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().createFullTrigger(fullTrigger);
             JavaType javaType = simpleResolver().get(FullTrigger.class);
 
-            return new DefaultClientResponse<FullTrigger>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -286,7 +282,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().getFullTriggerById(triggerId);
             JavaType javaType = simpleResolver().get(FullTrigger.class);
 
-            return new DefaultClientResponse<FullTrigger>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -302,7 +298,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().deleteTrigger(triggerId);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -318,7 +314,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().getTrigger(triggerId);
             JavaType javaType = simpleResolver().get(Trigger.class);
 
-            return new DefaultClientResponse<Trigger>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -334,7 +330,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().updateTrigger(triggerId, trigger);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -350,7 +346,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().getTriggerConditions(triggerId);
             JavaType javaType = collectionResolver().get(List.class, Condition.class);
 
-            return new DefaultClientResponse<List<Condition>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -367,7 +363,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().setAvailabilityCondition(triggerId, triggerMode, conditions);
             JavaType javaType = collectionResolver().get(List.class, AvailabilityCondition.class);
 
-            return new DefaultClientResponse<List<AvailabilityCondition>>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -384,7 +380,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().setCompareCondition(triggerId, triggerMode, conditions);
             JavaType javaType = collectionResolver().get(List.class, CompareCondition.class);
 
-            return new DefaultClientResponse<List<CompareCondition>>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -401,7 +397,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().setStringCondition(triggerId, triggerMode, conditions);
             JavaType javaType = collectionResolver().get(List.class, CompareCondition.class);
 
-            return new DefaultClientResponse<List<StringCondition>>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -418,7 +414,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().setThresholdCondition(triggerId, triggerMode, conditions);
             JavaType javaType = collectionResolver().get(List.class, ThresholdCondition.class);
 
-            return new DefaultClientResponse<List<ThresholdCondition>>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -435,7 +431,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().setThresholdRangeCondition(triggerId, triggerMode, conditions);
             JavaType javaType = collectionResolver().get(List.class, ThresholdRangeCondition.class);
 
-            return new DefaultClientResponse<List<ThresholdRangeCondition>>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -451,7 +447,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().getTriggerDampenings(triggerId);
             JavaType javaType = collectionResolver().get(List.class, Dampening.class);
 
-            return new DefaultClientResponse<List<Dampening>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -467,7 +463,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().createDampening(triggerId, dampening);
             JavaType javaType = simpleResolver().get(Dampening.class);
 
-            return new DefaultClientResponse<Dampening>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -483,7 +479,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().getTriggerModeDampenings(triggerId, triggerMode);
             JavaType javaType = collectionResolver().get(List.class, Dampening.class);
 
-            return new DefaultClientResponse<List<Dampening>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -499,7 +495,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().deleteDampening(triggerId, dampeningId);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -515,7 +511,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().getDampening(triggerId, dampeningId);
             JavaType javaType = simpleResolver().get(Dampening.class);
 
-            return new DefaultClientResponse<Dampening>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -531,7 +527,7 @@ public class DefaultTriggersClient extends BaseClient<TriggersHandler> implement
             serverResponse = restApi().updateDampening(triggerId, dampeningId, dampening);
             JavaType javaType = simpleResolver().get(Dampening.class);
 
-            return new DefaultClientResponse<Dampening>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();

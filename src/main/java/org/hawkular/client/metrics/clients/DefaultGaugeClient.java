@@ -16,13 +16,13 @@
  */
 package org.hawkular.client.metrics.clients;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
 import org.hawkular.client.core.BaseClient;
+import org.hawkular.client.core.ClientInfo;
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.DefaultClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
@@ -42,12 +42,8 @@ import com.fasterxml.jackson.databind.JavaType;
 
 public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements GaugeClient {
 
-    public DefaultGaugeClient(URI endpointUri) {
-        this(endpointUri, null, null);
-    }
-
-    public DefaultGaugeClient(URI endpointUri, String username, String password) {
-        super(endpointUri, username, password, new RestFactory<GaugeHandler>(GaugeHandler.class));
+    public DefaultGaugeClient(ClientInfo clientInfo) {
+        super(clientInfo, new RestFactory<>(GaugeHandler.class));
     }
 
     @Override
@@ -58,7 +54,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
             serverResponse = restApi().findGaugeMetrics(tags);
             JavaType javaType = collectionResolver().get(List.class, Metric.class, Double.class);
 
-            return new DefaultClientResponse<List<Metric<Double>>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -74,7 +70,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
             serverResponse = restApi().createGaugeMetric(overwrite, metric);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_201);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_201);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -91,7 +87,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
             serverResponse = restApi().findGaugeRateStats(start, end, bucketsCount, bucketDuration, percentiles, tags, metricNames, stacked);
             JavaType javaType = collectionResolver().get(List.class, NumericBucketPoint.class);
 
-            return new DefaultClientResponse<List<NumericBucketPoint>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -107,7 +103,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
             serverResponse = restApi().addGaugeData(gauges);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -124,7 +120,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
             serverResponse = restApi().findGaugeStats(start, end, bucketsCount, bucketDuration, percentiles, tags, metricNames, stacked);
             JavaType javaType = collectionResolver().get(List.class, NumericBucketPoint.class);
 
-            return new DefaultClientResponse<List<NumericBucketPoint>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -140,7 +136,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
             serverResponse = restApi().getGaugeMetricTagValues(tags);
             JavaType javaType = mapResolver().get(Map.class, String.class, List.class, String.class);
 
-            return new DefaultClientResponse<Map<String, List<String>>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -156,7 +152,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
             serverResponse = restApi().getGaugeMetric(id);
             JavaType javaType = simpleResolver().get(Metric.class, Double.class);
 
-            return new DefaultClientResponse<Metric<Double>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -172,7 +168,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
             serverResponse = restApi().findGaugeDataPeriods(id, start, end, threshold, operator);
             JavaType javaType = collectionResolver().get(List.class, Long[].class);
 
-            return new DefaultClientResponse<List<Long[]>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -188,7 +184,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
             serverResponse = restApi().getGaugeRate(id, start, end, limit, order);
             JavaType javaType = collectionResolver().get(List.class, DataPoint.class, Double.class);
 
-            return new DefaultClientResponse<List<DataPoint<Double>>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -205,7 +201,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
             serverResponse = restApi().getGaugeRateStats(id, start, end, bucketsCount, bucketDuration, percentiles);
             JavaType javaType = collectionResolver().get(List.class, NumericBucketPoint.class);
 
-            return new DefaultClientResponse<List<NumericBucketPoint>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -222,7 +218,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
             serverResponse = restApi().findGaugeDataWithId(id, start, end, fromEarliest, limit, order);
             JavaType javaType = collectionResolver().get(List.class, DataPoint.class, Double.class);
 
-            return new DefaultClientResponse<List<DataPoint<Double>>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -238,7 +234,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
             serverResponse = restApi().addGaugeDataForMetric(id, data);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -255,7 +251,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
             serverResponse = restApi().getGaugeStats(id, start, end, fromEarliest, bucketsCount, bucketDuration, percentiles);
             JavaType javaType = collectionResolver().get(List.class, NumericBucketPoint.class);
 
-            return new DefaultClientResponse<List<NumericBucketPoint>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -271,7 +267,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
             serverResponse = restApi().getGaugeStatsTags(id, tags, start, end, percentiles);
             JavaType javaType = mapResolver().get(Map.class, String.class, TaggedBucketPoint.class);
 
-            return new DefaultClientResponse<Map<String, TaggedBucketPoint>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -287,7 +283,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
             serverResponse = restApi().getGaugeMetricTags(id);
             JavaType javaType = mapResolver().get(Map.class, String.class, String.class);
 
-            return new DefaultClientResponse<Map<String, String>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -303,7 +299,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
             serverResponse = restApi().updateGaugeMetricTags(id, tags);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -319,7 +315,7 @@ public class DefaultGaugeClient extends BaseClient<GaugeHandler> implements Gaug
             serverResponse = restApi().deleteGaugeMetricTags(id, tags);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();

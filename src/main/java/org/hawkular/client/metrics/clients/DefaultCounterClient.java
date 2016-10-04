@@ -16,13 +16,13 @@
  */
 package org.hawkular.client.metrics.clients;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
 import org.hawkular.client.core.BaseClient;
+import org.hawkular.client.core.ClientInfo;
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.DefaultClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
@@ -42,12 +42,8 @@ import com.fasterxml.jackson.databind.JavaType;
 
 public class DefaultCounterClient extends BaseClient<CounterHandler> implements CounterClient {
 
-    public DefaultCounterClient(URI endpointUri) {
-        this(endpointUri, null, null);
-    }
-
-    public DefaultCounterClient(URI endpointUri, String username, String password) {
-        super(endpointUri, username, password, new RestFactory<CounterHandler>(CounterHandler.class));
+    public DefaultCounterClient(ClientInfo clientInfo) {
+        super(clientInfo, new RestFactory<>(CounterHandler.class));
     }
 
     @Override
@@ -58,7 +54,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
             serverResponse = restApi().getCounters(tags);
             JavaType javaType = collectionResolver().get(List.class, Metric.class, Long.class);
 
-            return new DefaultClientResponse<List<Metric<Long>>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -74,7 +70,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
             serverResponse = restApi().createCounter(overwrite, metric);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_201);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_201);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -91,7 +87,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
             serverResponse = restApi().findCounterRateDataStats(start, end, bucketsCount, bucketDuration, percentiles, tags, metricNames, stacked);
             JavaType javaType = collectionResolver().get(List.class, NumericBucketPoint.class);
 
-            return new DefaultClientResponse<List<NumericBucketPoint>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -107,7 +103,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
             serverResponse = restApi().addCounterData(counters);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -124,7 +120,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
             serverResponse = restApi().findCounterStats(start, end, bucketsCount, bucketDuration, percentiles, tags, metricNames, stacked);
             JavaType javaType = collectionResolver().get(List.class, NumericBucketPoint.class);
 
-            return new DefaultClientResponse<List<NumericBucketPoint>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -140,7 +136,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
             serverResponse = restApi().findCounterMetrics(tags);
             JavaType javaType = mapResolver().get(Map.class, String.class, List.class, String.class);
 
-            return new DefaultClientResponse<Map<String, List<String>>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -156,7 +152,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
             serverResponse = restApi().getCounter(id);
             JavaType javaType = simpleResolver().get(Metric.class, Long.class);
 
-            return new DefaultClientResponse<Metric<Long>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -173,7 +169,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
             serverResponse = restApi().findCounterRate(id, start, end, limit, order, bucketsCount, bucketDuration, percentiles);
             JavaType javaType = collectionResolver().get(List.class, NumericBucketPoint.class);
 
-            return new DefaultClientResponse<List<NumericBucketPoint>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -190,7 +186,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
             serverResponse = restApi().findCounterRateStats(id, start, end, bucketsCount, bucketDuration, percentiles);
             JavaType javaType = collectionResolver().get(List.class, NumericBucketPoint.class);
 
-            return new DefaultClientResponse<List<NumericBucketPoint>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -206,7 +202,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
             serverResponse = restApi().findCounterData(id, start, end, limit, order);
             JavaType javaType = collectionResolver().get(List.class, DataPoint.class, Long.class);
 
-            return new DefaultClientResponse<List<DataPoint<Long>>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -222,7 +218,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
             serverResponse = restApi().createCounterData(id, data);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -239,7 +235,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
             serverResponse = restApi().findCounterMetricStats(id, start, end, fromEarliest, bucketsCount, bucketDuration, percentiles, limit, order);
             JavaType javaType = collectionResolver().get(List.class, NumericBucketPoint.class);
 
-            return new DefaultClientResponse<List<NumericBucketPoint>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -255,7 +251,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
             serverResponse = restApi().getCounterMetricStatsTags(id, tags, start, end, percentiles);
             JavaType javaType = mapResolver().get(Map.class, String.class, TaggedBucketPoint.class);
 
-            return new DefaultClientResponse<Map<String, TaggedBucketPoint>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -271,7 +267,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
             serverResponse = restApi().getCounterMetricTags(id);
             JavaType javaType = mapResolver().get(Map.class, String.class, String.class);
 
-            return new DefaultClientResponse<Map<String, String>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -287,7 +283,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
             serverResponse = restApi().updateCountersMetricTags(id, tags);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -303,7 +299,7 @@ public class DefaultCounterClient extends BaseClient<CounterHandler> implements 
             serverResponse = restApi().deleteCounterMetricTags(id, tags);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();

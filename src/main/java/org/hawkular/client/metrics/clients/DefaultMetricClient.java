@@ -16,13 +16,13 @@
  */
 package org.hawkular.client.metrics.clients;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
 import org.hawkular.client.core.BaseClient;
+import org.hawkular.client.core.ClientInfo;
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.DefaultClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
@@ -38,12 +38,8 @@ import com.fasterxml.jackson.databind.JavaType;
 
 public class DefaultMetricClient extends BaseClient<MetricHandler> implements MetricClient {
 
-    public DefaultMetricClient(URI endpointUri) {
-        this(endpointUri, null, null);
-    }
-
-    public DefaultMetricClient(URI endpointUri, String username, String password) {
-        super(endpointUri, username, password, new RestFactory<MetricHandler>(MetricHandler.class));
+    public DefaultMetricClient(ClientInfo clientInfo) {
+        super(clientInfo, new RestFactory<>(MetricHandler.class));
     }
 
     @Override
@@ -54,7 +50,7 @@ public class DefaultMetricClient extends BaseClient<MetricHandler> implements Me
             serverResponse = restApi().findMetrics(metricType, tags, id);
             JavaType javaType = collectionResolver().get(List.class, Metric.class);
 
-            return new DefaultClientResponse<List<Metric<?>>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -71,7 +67,7 @@ public class DefaultMetricClient extends BaseClient<MetricHandler> implements Me
             serverResponse = restApi().createMetric(overwrite, metric);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_201);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_201);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -87,7 +83,7 @@ public class DefaultMetricClient extends BaseClient<MetricHandler> implements Me
             serverResponse = restApi().addMetricsData(metricsRequest);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -103,7 +99,7 @@ public class DefaultMetricClient extends BaseClient<MetricHandler> implements Me
             serverResponse = restApi().findMetricsTags(tags, metricType);
             JavaType javaType = mapResolver().get(Map.class, String.class, List.class, String.class);
 
-            return new DefaultClientResponse<Map<String, List<String>>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();

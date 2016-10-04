@@ -16,11 +16,9 @@
  */
 package org.hawkular.client.metrics;
 
-import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.net.URI;
-
+import org.hawkular.client.core.ClientInfo;
 import org.hawkular.client.metrics.clients.AvailabilityClient;
 import org.hawkular.client.metrics.clients.CounterClient;
 import org.hawkular.client.metrics.clients.DefaultAvailabilityClient;
@@ -49,68 +47,55 @@ public class MetricsClientImpl implements MetricsClient {
     private final DefaultPingClient ping;
     private final DefaultStatusClient status;
 
-    public MetricsClientImpl(URI endpointUri) throws Exception {
-        this(endpointUri, null, null);
-    }
-
-    public MetricsClientImpl(URI endpointUri, String username, String password) {
-        checkArgument(endpointUri != null, "EndpointUri is null");
-
-        availability = new DefaultAvailabilityClient(endpointUri, username, password);
-        counter = new DefaultCounterClient(endpointUri, username, password);
-        gauge = new DefaultGaugeClient(endpointUri, username, password);
-        metric = new DefaultMetricClient(endpointUri, username, password);
-        string = new DefaultStringClient(endpointUri, username, password);
-        tenant = new DefaultTenantClient(endpointUri, username, password);
-        ping = new DefaultPingClient(endpointUri, username, password);
-        status = new DefaultStatusClient(endpointUri, username, password);
+    public MetricsClientImpl(ClientInfo clientInfo) {
+        checkNotNull(clientInfo);
+        availability = new DefaultAvailabilityClient(clientInfo);
+        counter = new DefaultCounterClient(clientInfo);
+        gauge = new DefaultGaugeClient(clientInfo);
+        metric = new DefaultMetricClient(clientInfo);
+        string = new DefaultStringClient(clientInfo);
+        tenant = new DefaultTenantClient(clientInfo);
+        ping = new DefaultPingClient(clientInfo);
+        status = new DefaultStatusClient(clientInfo);
     }
 
     @Override
     public AvailabilityClient availability() {
-        checkNotNull(availability != null, "AvailabilityClient is null");
         return availability;
     }
 
     @Override
     public CounterClient counter() {
-        checkNotNull(counter != null, "CounterClient is null");
         return counter;
     }
 
     @Override
     public GaugeClient gauge() {
-        checkNotNull(gauge != null, "GaugeClient is null");
         return gauge;
     }
 
     @Override
     public MetricClient metric() {
-        checkNotNull(metric != null, "MetricClient is null");
         return metric;
     }
 
     @Override
     public StringClient string() {
-        checkNotNull(string != null, "StringClient is null");
         return string;
     }
 
     @Override
     public TenantClient tenant() {
-        checkNotNull(tenant != null, "TenantClient is null");
         return tenant;
     }
 
     @Override
     public PingClient ping() {
-        checkNotNull(ping != null, "PingClient is null");
         return ping;
     }
 
     @Override
     public StatusClient status() {
-        checkNotNull(status != null, "StatusClient is null");
         return status;
     }
 

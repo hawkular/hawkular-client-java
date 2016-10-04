@@ -16,7 +16,6 @@
  */
 package org.hawkular.client.alert.clients;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -24,6 +23,7 @@ import javax.ws.rs.core.Response;
 import org.hawkular.alerts.api.model.event.Event;
 import org.hawkular.client.alert.jaxrs.handlers.EventsHandler;
 import org.hawkular.client.core.BaseClient;
+import org.hawkular.client.core.ClientInfo;
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.DefaultClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
@@ -34,12 +34,8 @@ import com.fasterxml.jackson.databind.JavaType;
 
 public class DefaultEventsClient extends BaseClient<EventsHandler> implements EventsClient {
 
-    public DefaultEventsClient(URI endpointUri) {
-        this(endpointUri, null, null);
-    }
-
-    public DefaultEventsClient(URI endpointUri, String username, String password) {
-        super(endpointUri, username, password, new RestFactory<EventsHandler>(EventsHandler.class));
+    public DefaultEventsClient(ClientInfo clientInfo) {
+        super(clientInfo, new RestFactory<>(EventsHandler.class));
     }
 
     @Override
@@ -51,7 +47,7 @@ public class DefaultEventsClient extends BaseClient<EventsHandler> implements Ev
             serverResponse = restApi().findEvents(startTime, endTime, eventIds, triggerIds, categories, tags, thin);
             JavaType javaType = collectionResolver().get(List.class, Event.class);
 
-            return new DefaultClientResponse<List<Event>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -67,7 +63,7 @@ public class DefaultEventsClient extends BaseClient<EventsHandler> implements Ev
             serverResponse = restApi().createEvent(event);
             JavaType javaType = simpleResolver().get(Event.class);
 
-            return new DefaultClientResponse<Event>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -84,7 +80,7 @@ public class DefaultEventsClient extends BaseClient<EventsHandler> implements Ev
             serverResponse = restApi().deleteEvents(startTime, endTime, eventIds, triggerIds, categories, tags);
             JavaType javaType = simpleResolver().get(Integer.class);
 
-            return new DefaultClientResponse<Integer>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -100,7 +96,7 @@ public class DefaultEventsClient extends BaseClient<EventsHandler> implements Ev
             serverResponse = restApi().getEvent(eventId, thin);
             JavaType javaType = simpleResolver().get(Event.class);
 
-            return new DefaultClientResponse<Event>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -116,7 +112,7 @@ public class DefaultEventsClient extends BaseClient<EventsHandler> implements Ev
             serverResponse = restApi().deleteTags(eventIds, tagNames);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -132,7 +128,7 @@ public class DefaultEventsClient extends BaseClient<EventsHandler> implements Ev
             serverResponse = restApi().createTags(eventIds, tagNames);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -148,7 +144,7 @@ public class DefaultEventsClient extends BaseClient<EventsHandler> implements Ev
             serverResponse = restApi().deleteEvent(eventId);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
