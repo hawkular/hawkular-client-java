@@ -16,7 +16,10 @@
  */
 package org.hawkular.client.test.metrics;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -24,6 +27,7 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.hawkular.client.core.ClientResponse;
+import org.hawkular.client.core.HawkularClient;
 import org.hawkular.client.core.jaxrs.Empty;
 import org.hawkular.client.core.jaxrs.ResponseCodes;
 import org.hawkular.client.test.BaseTest;
@@ -126,6 +130,28 @@ public class MetricTest extends BaseTest {
             .addMetricsData(request);
 
         Assert.assertTrue(response.isSuccess());
+    }
+
+    @Test(dependsOnMethods = "findMetrics")
+    public void findMetricsAfterOtherClientCreated() throws URISyntaxException {
+        // Make sure there's no breaking static config
+        HashMap<String, Object> headers = new HashMap<>();
+        headers.put(HawkularClient.KEY_HEADER_TENANT, "other tenant");
+        HawkularClient otherClient = new HawkularClient(new URI("fake"), null, null, headers);
+
+        ClientResponse<List<Metric<?>>> response = client()
+                .metrics()
+                .metric()
+                .findMetrics(MetricType.AVAILABILITY, tags, metricName);
+
+        Assert.assertTrue(response.isSuccess());
+
+        response = otherClient
+                .metrics()
+                .metric()
+                .findMetrics(MetricType.AVAILABILITY, tags, metricName);
+
+        Assert.assertFalse(response.isSuccess());
     }
 
     @Test(dependsOnMethods = "findMetrics")
