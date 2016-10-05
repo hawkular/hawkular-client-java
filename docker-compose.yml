@@ -1,0 +1,14 @@
+hawkular:
+  image: "pilhuhn/hawkular-services:latest"
+  ports:
+    - "8080:8080"
+    - "8443:8443"
+    - "9990:9990"
+  links:
+    - myCassandra
+  environment:
+    - CASSANDRA_NODES=myCassandra
+myCassandra:
+  image: cassandra:3.7
+  environment:
+    - CASSANDRA_START_RPC=true
