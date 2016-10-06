@@ -17,8 +17,6 @@
 package org.hawkular.client.core.jaxrs;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
@@ -36,13 +34,9 @@ public class RestRequestFilter implements ClientRequestFilter {
 
     private static final Logger _logger = LoggerFactory.getLogger(RestRequestFilter.class);
     private static ObjectMapper OBJECT_MAPPER = new ClientObjectMapper();
-    private static HashMap<String, Object> additionalHeaders = new HashMap<String, Object>();
 
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
-        for (Map.Entry<String, Object> current : additionalHeaders.entrySet()) {
-            requestContext.getHeaders().add(current.getKey(), current.getValue());
-        }
         logRequests(requestContext);
     }
 
@@ -55,13 +49,4 @@ public class RestRequestFilter implements ClientRequestFilter {
                     .writeValueAsString(requestContext.getEntity()));
         }
     }
-
-    public static void updateHeader(String key, Object value) {
-        additionalHeaders.put(key, value);
-    }
-
-    public static void removeHeader(String key) {
-        additionalHeaders.remove(key);
-    }
-
 }

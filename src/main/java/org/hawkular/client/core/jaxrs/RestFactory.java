@@ -16,14 +16,10 @@
  */
 package org.hawkular.client.core.jaxrs;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -41,6 +37,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.hawkular.client.core.ClientInfo;
 import org.hawkular.client.core.jaxrs.fasterxml.jackson.HCJacksonJson2Provider;
 import org.hawkular.client.core.jaxrs.fasterxml.jackson.JacksonObjectMapperProvider;
 import org.hawkular.client.core.jaxrs.param.ConvertersProvider;
@@ -68,24 +65,20 @@ public class RestFactory<T> {
         this.classLoader = classLoader;
     }
 
-    public T createAPI(URI uri) {
-        return this.createAPI(uri, null, null);
-    }
-
-    public T createAPI(URI uri, String userName, String password) {
-        HttpClient httpclient = null;
-        if (uri.toString().startsWith("https")) {
+    public T createAPI(ClientInfo clientInfo) {
+        final HttpClient httpclient;
+        if (clientInfo.getEndpointUri().toString().startsWith("https")) {
             httpclient = getHttpClient();
         } else {
             httpclient = HttpClientBuilder.create().build();
         }
-        ResteasyClient client = null;
-        if (userName != null) {
-            HttpHost targetHost = new HttpHost(uri.getHost(), uri.getPort());
+        final ResteasyClient client;
+        if (clientInfo.getUsername().isPresent() && clientInfo.getPassword().isPresent()) {
+            HttpHost targetHost = new HttpHost(clientInfo.getEndpointUri().getHost(), clientInfo.getEndpointUri().getPort());
             CredentialsProvider credsProvider = new BasicCredentialsProvider();
             credsProvider.setCredentials(
                 new AuthScope(targetHost.getHostName(), targetHost.getPort()),
-                new UsernamePasswordCredentials(userName, password));
+                new UsernamePasswordCredentials(clientInfo.getUsername().get(), clientInfo.getPassword().get()));
             // Create AuthCache instance
             AuthCache authCache = new BasicAuthCache();
             // Generate BASIC scheme object and add it to the local auth cache
@@ -106,44 +99,30 @@ public class RestFactory<T> {
         client.register(JacksonJaxbJsonProvider.class);
         client.register(JacksonObjectMapperProvider.class);
         client.register(RestRequestFilter.class);
+        client.register(new RequestHeadersFilter(clientInfo.getHeaders()));
         client.register(RestResponseFilter.class);
         client.register(HCJacksonJson2Provider.class);
         client.register(ConvertersProvider.class);
 
-        ProxyBuilder<T> proxyBuilder = client.target(uri).proxyBuilder(apiClassType);
+        ProxyBuilder<T> proxyBuilder = client.target(clientInfo.getEndpointUri()).proxyBuilder(apiClassType);
         if (classLoader != null) {
             proxyBuilder = proxyBuilder.classloader(classLoader);
         }
         return proxyBuilder.build();
     }
 
-    public T createAPI(String url, String userName, String password) throws URISyntaxException {
-        URI uri = new URI(url);
-        return createAPI(uri, userName, password);
-    }
-
     //trust any host
-    public HttpClient getHttpClient() {
+    private HttpClient getHttpClient() {
         CloseableHttpClient httpclient = null;
 
         try {
             KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
             SSLContextBuilder builder = new SSLContextBuilder();
-            builder.loadTrustMaterial(keyStore, new TrustStrategy() {
-                @Override
-                public boolean isTrusted(X509Certificate[] trustedCert, String nameConstraints)
-                    throws CertificateException {
-                    return true;
-                }
-            });
+            builder.loadTrustMaterial(keyStore, (TrustStrategy) (trustedCert, nameConstraints) -> true);
 
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(builder.build());
             httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
-        } catch (NoSuchAlgorithmException e) {
-            _logger.error("Failed to create HTTPClient: {}", e);
-        } catch (KeyStoreException e) {
-            _logger.error("Failed to create HTTPClient: {}", e);
-        } catch (KeyManagementException e) {
+        } catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
             _logger.error("Failed to create HTTPClient: {}", e);
         }
 

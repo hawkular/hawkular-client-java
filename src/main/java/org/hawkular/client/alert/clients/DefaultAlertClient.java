@@ -16,7 +16,6 @@
  */
 package org.hawkular.client.alert.clients;
 
-import java.net.URI;
 import java.util.List;
 
 import javax.ws.rs.core.Response;
@@ -25,6 +24,7 @@ import org.hawkular.alerts.api.model.data.Data;
 import org.hawkular.alerts.api.model.event.Alert;
 import org.hawkular.client.alert.jaxrs.handlers.AlertHandler;
 import org.hawkular.client.core.BaseClient;
+import org.hawkular.client.core.ClientInfo;
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.DefaultClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
@@ -35,12 +35,8 @@ import com.fasterxml.jackson.databind.JavaType;
 
 public class DefaultAlertClient extends BaseClient<AlertHandler> implements AlertClient {
 
-    public DefaultAlertClient(URI endpointUri) {
-        this(endpointUri, null, null);
-    }
-
-    public DefaultAlertClient(URI endpointUri, String username, String password) {
-        super(endpointUri, username, password, new RestFactory<AlertHandler>(AlertHandler.class));
+    public DefaultAlertClient(ClientInfo clientInfo) {
+        super(clientInfo, new RestFactory<>(AlertHandler.class));
     }
 
     @Override
@@ -52,7 +48,7 @@ public class DefaultAlertClient extends BaseClient<AlertHandler> implements Aler
             serverResponse = restApi().findAlerts(startTime, endTime, alertIds, triggerIds, statuses, severities, tags, thin);
             JavaType javaType = collectionResolver().get(List.class, Alert.class);
 
-            return new DefaultClientResponse<List<Alert>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -68,7 +64,7 @@ public class DefaultAlertClient extends BaseClient<AlertHandler> implements Aler
             serverResponse = restApi().ackAlerts(alertIds, ackBy, ackNotes);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -84,7 +80,7 @@ public class DefaultAlertClient extends BaseClient<AlertHandler> implements Aler
             serverResponse = restApi().ackAlert(alertId, ackBy, ackNotes);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -100,7 +96,7 @@ public class DefaultAlertClient extends BaseClient<AlertHandler> implements Aler
             serverResponse = restApi().getAlert(alertId, thin);
             JavaType javaType = simpleResolver().get(Alert.class);
 
-            return new DefaultClientResponse<Alert>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -116,7 +112,7 @@ public class DefaultAlertClient extends BaseClient<AlertHandler> implements Aler
             serverResponse = restApi().sendData(datums);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -133,7 +129,7 @@ public class DefaultAlertClient extends BaseClient<AlertHandler> implements Aler
             serverResponse = restApi().deleteAlerts(startTime, endTime, alertIds, triggerIds, statuses, severities, tags);
             JavaType javaType = simpleResolver().get(Integer.class);
 
-            return new DefaultClientResponse<Integer>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -149,7 +145,7 @@ public class DefaultAlertClient extends BaseClient<AlertHandler> implements Aler
             serverResponse = restApi().addNoteToAlert(alertId, user, text);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -165,7 +161,7 @@ public class DefaultAlertClient extends BaseClient<AlertHandler> implements Aler
             serverResponse = restApi().resolveAlerts(alertIds, resolvedBy, resolvedNotes);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -181,7 +177,7 @@ public class DefaultAlertClient extends BaseClient<AlertHandler> implements Aler
             serverResponse = restApi().resolveAlert(alertId, resolvedBy, resolvedNotes);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -197,7 +193,7 @@ public class DefaultAlertClient extends BaseClient<AlertHandler> implements Aler
             serverResponse = restApi().deleteTags(alertIds, tagNames);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -213,7 +209,7 @@ public class DefaultAlertClient extends BaseClient<AlertHandler> implements Aler
             serverResponse = restApi().addTag(alertIds, tagNames);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -229,7 +225,7 @@ public class DefaultAlertClient extends BaseClient<AlertHandler> implements Aler
             serverResponse = restApi().deleteAlert(alertId);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();

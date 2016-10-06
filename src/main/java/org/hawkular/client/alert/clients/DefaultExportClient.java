@@ -16,13 +16,12 @@
  */
 package org.hawkular.client.alert.clients;
 
-import java.net.URI;
-
 import javax.ws.rs.core.Response;
 
 import org.hawkular.alerts.api.model.export.Definitions;
 import org.hawkular.client.alert.jaxrs.handlers.ExportHandler;
 import org.hawkular.client.core.BaseClient;
+import org.hawkular.client.core.ClientInfo;
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.DefaultClientResponse;
 import org.hawkular.client.core.jaxrs.ResponseCodes;
@@ -32,12 +31,8 @@ import com.fasterxml.jackson.databind.JavaType;
 
 public class DefaultExportClient extends BaseClient<ExportHandler> implements ExportClient {
 
-    public DefaultExportClient(URI endpointUri) {
-        this(endpointUri, null, null);
-    }
-
-    public DefaultExportClient(URI endpointUri, String username, String password) {
-        super(endpointUri, username, password, new RestFactory<ExportHandler>(ExportHandler.class));
+    public DefaultExportClient(ClientInfo clientInfo) {
+        super(clientInfo, new RestFactory<>(ExportHandler.class));
     }
 
     public ClientResponse<Definitions> export() {
@@ -47,7 +42,7 @@ public class DefaultExportClient extends BaseClient<ExportHandler> implements Ex
             serverResponse = restApi().export();
             JavaType javaType = simpleResolver().get(Definitions.class);
 
-            return new DefaultClientResponse<Definitions>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();

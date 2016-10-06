@@ -16,7 +16,7 @@
  */
 package org.hawkular.client.alert;
 
-import java.net.URI;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 import org.hawkular.client.alert.clients.ActionsClient;
 import org.hawkular.client.alert.clients.AlertClient;
@@ -34,9 +34,7 @@ import org.hawkular.client.alert.clients.ImportClient;
 import org.hawkular.client.alert.clients.PluginsClient;
 import org.hawkular.client.alert.clients.StatusClient;
 import org.hawkular.client.alert.clients.TriggersClient;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.hawkular.client.core.ClientInfo;
 
 public class AlertsClientImpl implements AlertsClient {
 
@@ -49,68 +47,55 @@ public class AlertsClientImpl implements AlertsClient {
     private final StatusClient status;
     private final TriggersClient triggers;
 
-    public AlertsClientImpl(URI endpointUri) throws Exception {
-        this(endpointUri, null, null);
-    }
-
-    public AlertsClientImpl(URI endpointUri, String username, String password) {
-        checkArgument(endpointUri != null, "EndpointUri is null");
-
-        alert = new DefaultAlertClient(endpointUri, username, password);
-        actions = new DefaultActionsClient(endpointUri, username, password);
-        events = new DefaultEventsClient(endpointUri, username, password);
-        export = new DefaultExportClient(endpointUri, username, password);
-        imports = new DefaultImportClient(endpointUri, username, password);
-        plugins = new DefaultPluginsClient(endpointUri, username, password);
-        status = new DefaultStatusClient(endpointUri, username, password);
-        triggers = new DefaultTriggersClient(endpointUri, username, password);
+    public AlertsClientImpl(ClientInfo clientInfo) {
+        checkNotNull(clientInfo);
+        alert = new DefaultAlertClient(clientInfo);
+        actions = new DefaultActionsClient(clientInfo);
+        events = new DefaultEventsClient(clientInfo);
+        export = new DefaultExportClient(clientInfo);
+        imports = new DefaultImportClient(clientInfo);
+        plugins = new DefaultPluginsClient(clientInfo);
+        status = new DefaultStatusClient(clientInfo);
+        triggers = new DefaultTriggersClient(clientInfo);
     }
 
     @Override
     public AlertClient alert() {
-        checkNotNull(alert != null, "AlertClient is null");
         return alert;
     }
 
     @Override
     public ActionsClient actions() {
-        checkNotNull(actions != null, "ActionsClient is null");
         return actions;
     }
 
     @Override
     public EventsClient events() {
-        checkNotNull(events != null, "EventsClient is null");
         return events;
     }
 
     @Override
     public ExportClient export() {
-        checkNotNull(export != null, "ExportClient is null");
         return export;
     }
 
     @Override
     public ImportClient imports() {
-        checkNotNull(imports != null, "ImportClient is null");
         return imports;
     }
 
     @Override
     public PluginsClient plugins() {
-        checkNotNull(plugins != null, "PluginsClient is null");
         return plugins;
     }
 
     @Override
     public StatusClient status() {
-        checkNotNull(status != null, "StatusClient is null");
         return status;
     }
 
     @Override
     public TriggersClient triggers() {
-        checkNotNull(triggers != null, "TriggersClient is null");
         return triggers;
     }
 }

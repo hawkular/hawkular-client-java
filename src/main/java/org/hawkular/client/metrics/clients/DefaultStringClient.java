@@ -16,13 +16,13 @@
  */
 package org.hawkular.client.metrics.clients;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
 import org.hawkular.client.core.BaseClient;
+import org.hawkular.client.core.ClientInfo;
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.DefaultClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
@@ -38,12 +38,8 @@ import com.fasterxml.jackson.databind.JavaType;
 
 public class DefaultStringClient extends BaseClient<StringHandler> implements StringClient {
 
-    public DefaultStringClient(URI endpointUri) {
-        this(endpointUri, null, null);
-    }
-
-    public DefaultStringClient(URI endpointUri, String username, String password) {
-        super(endpointUri, username, password, new RestFactory<StringHandler>(StringHandler.class));
+    public DefaultStringClient(ClientInfo clientInfo) {
+        super(clientInfo, new RestFactory<>(StringHandler.class));
     }
 
     @Override
@@ -54,7 +50,7 @@ public class DefaultStringClient extends BaseClient<StringHandler> implements St
             serverResponse = restApi().findMetricsDefinitions(tags);
             JavaType javaType = collectionResolver().get(List.class, Metric.class);
 
-            return new DefaultClientResponse<List<Metric>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -70,7 +66,7 @@ public class DefaultStringClient extends BaseClient<StringHandler> implements St
             serverResponse = restApi().createStringMetric(overwrite, metric);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_201);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_201);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -86,7 +82,7 @@ public class DefaultStringClient extends BaseClient<StringHandler> implements St
             serverResponse = restApi().createStringMetric(metrics);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -102,7 +98,7 @@ public class DefaultStringClient extends BaseClient<StringHandler> implements St
             serverResponse = restApi().findMetricTags(tags);
             JavaType javaType = mapResolver().get(Map.class, String.class, List.class, String.class);
 
-            return new DefaultClientResponse<Map<String, List<String>>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -118,7 +114,7 @@ public class DefaultStringClient extends BaseClient<StringHandler> implements St
             serverResponse = restApi().getMetricDefinitions(id);
             JavaType javaType = simpleResolver().get(Metric.class);
 
-            return new DefaultClientResponse<Metric>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -135,7 +131,7 @@ public class DefaultStringClient extends BaseClient<StringHandler> implements St
             serverResponse = restApi().getMetricDefinitionsData(id, start, end, distinct, limit, order);
             JavaType javaType = collectionResolver().get(List.class, DataPoint.class);
 
-            return new DefaultClientResponse<List<DataPoint>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -151,7 +147,7 @@ public class DefaultStringClient extends BaseClient<StringHandler> implements St
             serverResponse = restApi().createMetricDefinitionsData(id, dataPoints);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -167,7 +163,7 @@ public class DefaultStringClient extends BaseClient<StringHandler> implements St
             serverResponse = restApi().findMetricDefinitionsTags(id);
             JavaType javaType = mapResolver().get(Map.class, String.class, String.class);
 
-            return new DefaultClientResponse<Map<String, String>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -183,7 +179,7 @@ public class DefaultStringClient extends BaseClient<StringHandler> implements St
             serverResponse = restApi().updateMetricDefinitionsTags(id, tags);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -199,7 +195,7 @@ public class DefaultStringClient extends BaseClient<StringHandler> implements St
             serverResponse = restApi().deleteMetricDefinitionsTags(id, tags);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();

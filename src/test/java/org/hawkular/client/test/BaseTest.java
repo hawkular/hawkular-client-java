@@ -18,7 +18,6 @@ package org.hawkular.client.test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hawkular.client.core.HawkularClient;
@@ -27,7 +26,7 @@ import org.testng.annotations.BeforeClass;
 
 public class BaseTest {
 
-    public static final long MINUTE = 1000 * 60;
+    protected static final long MINUTE = 1000 * 60;
     public static final String HEADER_TENANT = "unit-testing";
 
     private HawkularClient client;
@@ -37,10 +36,10 @@ public class BaseTest {
         URI endpoint = getEndpointFromEnv();
         Reporter.log(endpoint.toString());
 
-        HashMap<String, Object> headers = new HashMap<String, Object>();
-        headers.put(HawkularClient.KEY_HEADER_TENANT, HEADER_TENANT);
-
-        client = new HawkularClient(endpoint, getUsername(), getPassword(), headers);
+        client = HawkularClient.builder(HEADER_TENANT)
+                .uri(endpoint)
+                .basicAuthentication(getUsername(), getPassword())
+                .build();
     }
 
     private URI getEndpointFromEnv() throws URISyntaxException {

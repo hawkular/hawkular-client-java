@@ -16,7 +16,6 @@
  */
 package org.hawkular.client.alert.clients;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +25,7 @@ import org.hawkular.alerts.api.model.action.Action;
 import org.hawkular.alerts.api.model.action.ActionDefinition;
 import org.hawkular.client.alert.jaxrs.handlers.ActionsHandler;
 import org.hawkular.client.core.BaseClient;
+import org.hawkular.client.core.ClientInfo;
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.DefaultClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
@@ -36,12 +36,8 @@ import com.fasterxml.jackson.databind.JavaType;
 
 public class DefaultActionsClient extends BaseClient<ActionsHandler> implements ActionsClient {
 
-    public DefaultActionsClient(URI endpointUri) {
-        this(endpointUri, null, null);
-    }
-
-    public DefaultActionsClient(URI endpointUri, String username, String password) {
-        super(endpointUri, username, password, new RestFactory<ActionsHandler>(ActionsHandler.class));
+    public DefaultActionsClient(ClientInfo clientInfo) {
+        super(clientInfo, new RestFactory<>(ActionsHandler.class));
     }
 
     @Override
@@ -52,7 +48,7 @@ public class DefaultActionsClient extends BaseClient<ActionsHandler> implements 
             serverResponse = restApi().findActions();
             JavaType javaType = mapResolver().get(Map.class, String.class, List.class, String.class);
 
-            return new DefaultClientResponse<Map<String, List<String>>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -68,7 +64,7 @@ public class DefaultActionsClient extends BaseClient<ActionsHandler> implements 
             serverResponse = restApi().createAction(definition);
             JavaType javaType = simpleResolver().get(ActionDefinition.class);
 
-            return new DefaultClientResponse<ActionDefinition>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -84,7 +80,7 @@ public class DefaultActionsClient extends BaseClient<ActionsHandler> implements 
             serverResponse = restApi().updateAction(definition);
             JavaType javaType = simpleResolver().get(ActionDefinition.class);
 
-            return new DefaultClientResponse<ActionDefinition>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -101,7 +97,7 @@ public class DefaultActionsClient extends BaseClient<ActionsHandler> implements 
             serverResponse = restApi().getActionHistory(startTime, endTime, actionPlugins, actionIds, alertIds, results, thin);
             JavaType javaType = collectionResolver().get(List.class, Action.class);
 
-            return new DefaultClientResponse<List<Action>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -118,7 +114,7 @@ public class DefaultActionsClient extends BaseClient<ActionsHandler> implements 
             serverResponse = restApi().deleteActionHistory(startTime, endTime, actionPlugins, actionIds, alertIds, results);
             JavaType javaType = simpleResolver().get(Integer.class);
 
-            return new DefaultClientResponse<Integer>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -134,7 +130,7 @@ public class DefaultActionsClient extends BaseClient<ActionsHandler> implements 
             serverResponse = restApi().findActionsByPlugin(actionPlugin);
             JavaType javaType = collectionResolver().get(List.class, String.class);
 
-            return new DefaultClientResponse<List<String>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -150,7 +146,7 @@ public class DefaultActionsClient extends BaseClient<ActionsHandler> implements 
             serverResponse = restApi().deleteAction(actionPlugin, actionId);
             JavaType javaType = simpleResolver().get(Empty.class);
 
-            return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
@@ -166,7 +162,7 @@ public class DefaultActionsClient extends BaseClient<ActionsHandler> implements 
             serverResponse = restApi().getAction(actionPlugin, actionId);
             JavaType javaType = simpleResolver().get(ActionDefinition.class);
 
-            return new DefaultClientResponse<ActionDefinition>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();

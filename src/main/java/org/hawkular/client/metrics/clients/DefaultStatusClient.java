@@ -16,12 +16,12 @@
  */
 package org.hawkular.client.metrics.clients;
 
-import java.net.URI;
 import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
 import org.hawkular.client.core.BaseClient;
+import org.hawkular.client.core.ClientInfo;
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.DefaultClientResponse;
 import org.hawkular.client.core.jaxrs.ResponseCodes;
@@ -32,12 +32,8 @@ import com.fasterxml.jackson.databind.JavaType;
 
 public class DefaultStatusClient extends BaseClient<StatusHandler> implements StatusClient {
 
-    public DefaultStatusClient(URI endpointUri) {
-        this(endpointUri, null, null);
-    }
-
-    public DefaultStatusClient(URI endpointUri, String username, String password) {
-        super(endpointUri, username, password, new RestFactory<StatusHandler>(StatusHandler.class));
+    public DefaultStatusClient(ClientInfo clientInfo) {
+        super(clientInfo, new RestFactory<>(StatusHandler.class));
     }
 
     @Override
@@ -48,7 +44,7 @@ public class DefaultStatusClient extends BaseClient<StatusHandler> implements St
             serverResponse = restApi().status();
             JavaType javaType = mapResolver().get(Map.class, String.class, String.class);
 
-            return new DefaultClientResponse<Map<String, String>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();
