@@ -20,6 +20,9 @@ services:
 before_install:
 - docker-compose up -d && ./.travis/wait_for_services.rb
 install:
+- bash .travis.install.maven.sh "3.3.9" "${HOME}/mvn-home"
+- export M2_HOME=${HOME}/mvn-home
+- export PATH=${HOME}/mvn-home/bin:${PATH}
 - mvn -version -B
 script:
 - mvn -s .travis.maven.settings.xml verify -Dwildfly.logging.console.level=DEBUG -B -Pci
