@@ -23,7 +23,8 @@ import org.hawkular.client.test.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class StatusTest extends BaseTest {
+@Test(groups = {"metrics"})
+public class MetricsStatusTest extends BaseTest {
 
     @Test
     public void status() {

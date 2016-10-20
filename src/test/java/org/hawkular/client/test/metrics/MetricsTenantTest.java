@@ -17,6 +17,7 @@
 package org.hawkular.client.test.metrics;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.hawkular.client.core.ClientResponse;
@@ -30,9 +31,10 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class TenantTest extends BaseTest {
+@Test(groups = {"metrics"})
+public class MetricsTenantTest extends BaseTest {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TenantTest.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MetricsTenantTest.class);
 
     private Integer originalTenantCount = 0;
     private Tenant expectedTenant = new Tenant(RandomStringGenerator.getRandomId());
@@ -77,12 +79,23 @@ public class TenantTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
         Assert.assertTrue(response.getEntity().size() > 0);
-        Assert.assertTrue(originalTenantCount == (response.getEntity().size() - 1));
 
         Optional<Tenant> value = response.getEntity().stream()
             .filter(a -> a.equals(expectedTenant))
             .findFirst();
 
         Assert.assertTrue(value.isPresent());
+    }
+
+    @Test(dependsOnMethods = "getTentant")
+    public void deleteTenant() throws Exception {
+        ClientResponse<Map<String, String>> response = client()
+            .metrics()
+            .tenant()
+            .deleteTenant(expectedTenant.getId());
+
+        Assert.assertTrue(response.isSuccess());
+        Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() == 1);
     }
 }
