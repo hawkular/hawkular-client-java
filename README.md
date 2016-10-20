@@ -1,4 +1,7 @@
 [![Build Status](https://travis-ci.org/hawkular/hawkular-client-java.svg?branch=master)](https://travis-ci.org/hawkular/hawkular-client-java)
+[![Release Version](https://img.shields.io/maven-central/v/org.hawkular.client/hawkular-java-client.svg?maxAge=2592000)](https://mvnrepository.com/artifact/org.hawkular.client/hawkular-java-client)
+[![License](https://img.shields.io/hexpm/l/plug.svg?maxAge=2592000)]()
+
 # Java client for [Hawkular](https://github.com/hawkular)
 Example,
 ```java
