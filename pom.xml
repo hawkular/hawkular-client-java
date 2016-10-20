@@ -51,8 +51,8 @@
     <hawkular.inventory.json.helper.version>0.18.0.Final</hawkular.inventory.json.helper.version>
     <hawkular.alerts.version>1.1.2.Final</hawkular.alerts.version>
 
-    <resteasy.version>3.0.12.Final</resteasy.version>
-    <resteasy.jackson2.provider.version>3.0.12.Final</resteasy.jackson2.provider.version>
+    <resteasy.version>3.1.0.CR2</resteasy.version>
+    <resteasy.jackson2.provider.version>3.1.0.CR2</resteasy.jackson2.provider.version>
     <org.jboss.logging.version>3.3.0.Final</org.jboss.logging.version>
     <httpclient.version>4.5.2</httpclient.version>
     <guava.version>19.0</guava.version>
