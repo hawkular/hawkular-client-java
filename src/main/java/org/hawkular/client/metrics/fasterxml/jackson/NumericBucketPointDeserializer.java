@@ -35,6 +35,7 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public class NumericBucketPointDeserializer extends JsonDeserializer<NumericBucketPoint> {
 
+    @SuppressWarnings("unchecked")
     @Override
     public NumericBucketPoint deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         ObjectCodec objectCodec = jp.getCodec();

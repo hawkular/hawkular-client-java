@@ -48,6 +48,7 @@ public class TriggersConditionsTest extends BaseTest {
     public void setAvailabilityCondition() throws IOException {
         String triggerId = "New-Trigger-" + RandomStringGenerator.getRandomId();
 
+        @SuppressWarnings("unchecked")
         SetConitionMethod method = (triggerId1, triggerMode, conditions) -> client()
             .alerts()
             .triggers()
@@ -62,6 +63,7 @@ public class TriggersConditionsTest extends BaseTest {
     public void setCompareCondition() {
         String triggerId = "New-Trigger-" + RandomStringGenerator.getRandomId();
 
+        @SuppressWarnings("unchecked")
         SetConitionMethod method = (triggerId1, triggerMode, conditions) -> client()
             .alerts()
             .triggers()
@@ -77,6 +79,7 @@ public class TriggersConditionsTest extends BaseTest {
     public void setStringCondition() {
         String triggerId = "New-Trigger-" + RandomStringGenerator.getRandomId();
 
+        @SuppressWarnings("unchecked")
         SetConitionMethod method = (triggerId1, triggerMode, conditions) -> client()
             .alerts()
             .triggers()
@@ -92,6 +95,7 @@ public class TriggersConditionsTest extends BaseTest {
     public void setThresholdCondition() {
         String triggerId = "New-Trigger-" + RandomStringGenerator.getRandomId();
 
+        @SuppressWarnings("unchecked")
         SetConitionMethod method = (triggerId1, triggerMode, conditions) -> client()
             .alerts()
             .triggers()
@@ -107,6 +111,7 @@ public class TriggersConditionsTest extends BaseTest {
     public void setThresholdRangeCondition() {
         String triggerId = "New-Trigger-" + RandomStringGenerator.getRandomId();
 
+        @SuppressWarnings("unchecked")
         SetConitionMethod method = (triggerId1, triggerMode, conditions) -> client()
             .alerts()
             .triggers()
@@ -132,6 +137,7 @@ public class TriggersConditionsTest extends BaseTest {
         Assert.assertNotNull(triggerCreateResult.getEntity());
 
         //Create Conditions
+        @SuppressWarnings("unchecked")
         ClientResponse<List<Condition>> setConditionsResult = callback.setConditions(triggerId, mode.name(), conditions);
 
         Assert.assertTrue(setConditionsResult.isSuccess());
@@ -149,6 +155,7 @@ public class TriggersConditionsTest extends BaseTest {
         Assert.assertTrue(getConditionsResult.getEntity().size() > 0);
 
         //Clear Conditions
+        @SuppressWarnings("unchecked")
         ClientResponse<List<Condition>> setConditionsResult2 = callback.setConditions(triggerId, mode.name(), new ArrayList<Condition>());
 
         Assert.assertTrue(setConditionsResult2.isSuccess());
