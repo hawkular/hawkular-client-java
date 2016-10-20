@@ -23,7 +23,7 @@
   <parent>
     <groupId>org.hawkular</groupId>
     <artifactId>hawkular-parent</artifactId>
-    <version>43</version>
+    <version>46</version>
     <relativePath/>
   </parent>
   <groupId>org.hawkular.client</groupId>
