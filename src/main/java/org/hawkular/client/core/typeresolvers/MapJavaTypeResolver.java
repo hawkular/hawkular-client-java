@@ -44,10 +44,25 @@ public class MapJavaTypeResolver {
     /**
      * Map with Generic Key and Genric Value, i.e.: Map<String, List<TaggedBucketPoint>>
      */
-    public JavaType get(Class<? extends Map> mapClazz, Class<?> mapClazzKey, Class<?> mapClazzValue, Class<?> mapClazzParametrizedValue) {
+    public JavaType get(
+        Class<? extends Map> mapClazz, Class<?> mapClazzKey, Class<?> mapClazzValue, Class<?> mapClazzParametrizedValue) {
         JavaType mapClazzKeyType = objectMapper.getTypeFactory().constructType(mapClazzKey);
         JavaType parametrizedClazzType = objectMapper.getTypeFactory().constructParametrizedType(mapClazzValue, mapClazzValue, mapClazzParametrizedValue);
 
         return objectMapper.getTypeFactory().constructMapType(mapClazz, mapClazzKeyType, parametrizedClazzType);
+    }
+
+    /**
+     * Map of a Map with Generic Key and Value, i.e.: Map<ElementType, Map<CanonicalPath, Integer>>
+     */
+    public JavaType get(
+        Class<? extends Map> mapClazz, Class<?> mapClazzKey, Class<? extends Map> mapClazzValue, Class<?> mapClazzParametrizedKey, Class<?> mapClazzParametrizedValue) {
+        JavaType mapClazzKeyType = objectMapper.getTypeFactory().constructType(mapClazzKey);
+
+        JavaType mapClazzParametrizedKeyType = objectMapper.getTypeFactory().constructType(mapClazzParametrizedKey);
+        JavaType mapClazzParametrizedValueType = objectMapper.getTypeFactory().constructType(mapClazzParametrizedValue);
+        JavaType innerMap = objectMapper.getTypeFactory().constructMapType(mapClazzValue, mapClazzParametrizedKeyType, mapClazzParametrizedValueType);
+
+        return objectMapper.getTypeFactory().constructMapType(mapClazz, mapClazzKeyType, innerMap);
     }
 }
