@@ -48,6 +48,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+@Test(groups = {"metrics"})
 public class CounterTest extends BaseTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(CounterTest.class);

@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+@Test(groups = {"metrics"})
 public class AvailabilityTest extends BaseTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(AvailabilityTest.class);

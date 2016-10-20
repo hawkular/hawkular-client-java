@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+@Test(groups = {"metrics"})
 public class StringTest extends BaseTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(StringTest.class);
