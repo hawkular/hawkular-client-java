@@ -28,7 +28,7 @@
   </parent>
   <groupId>org.hawkular.client</groupId>
   <artifactId>hawkular-java-client</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.16-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Hawkular Java Client</name>
