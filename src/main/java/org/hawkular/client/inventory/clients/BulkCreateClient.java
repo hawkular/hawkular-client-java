@@ -14,22 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.test.inventory;
+package org.hawkular.client.inventory.clients;
 
-import org.hawkular.client.test.BaseTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import java.util.List;
+import java.util.Map;
 
-@Test(groups = { "inventory" })
-public class InventoryEndpointsTest extends BaseTest {
+import org.hawkular.client.core.ClientResponse;
+import org.hawkular.client.inventory.model.ElementType;
+import org.hawkular.inventory.paths.CanonicalPath;
 
-    public InventoryEndpointsTest() throws Exception {
-        super();
-    }
+public interface BulkCreateClient {
 
-    @Test(priority = 1)
-    public void pingerTest() throws Exception {
-        Assert.assertEquals(client().inventory().pingHello().getEntity().getDocumentation(),
-                "http://www.hawkular.org/");
-    }
+    /**
+     * Bulk creation of new entities.
+     *
+     * @param entities
+     * @return
+     */
+    ClientResponse<Map<ElementType, Map<CanonicalPath, Integer>>> create(Map<String, Map<ElementType, List<Object>>> entities);
 }

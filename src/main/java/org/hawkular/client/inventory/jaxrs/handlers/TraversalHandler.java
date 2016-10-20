@@ -14,27 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.test.inventory;
+package org.hawkular.client.inventory.jaxrs.handlers;
 
-import org.hawkular.client.core.ClientResponse;
-import org.hawkular.client.test.BaseTest;
-import org.hawkular.inventory.api.model.Tenant;
-import org.testng.Assert;
-import org.testng.Reporter;
-import org.testng.annotations.Test;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Encoded;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-@Test(groups = { "inventory" })
-public class TenantTest extends BaseTest {
+/**
+ * Traversal API
+ * http://www.hawkular.org/docs/rest/rest-inventory.html#_entity_graph_traversal
+ */
+@Path("/hawkular/inventory/traversal")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public interface TraversalHandler {
 
-    public TenantTest() throws Exception {
-        super();
-    }
-
-    @Test
-    public void getTenant() throws Exception {
-        ClientResponse<Tenant> resp = client().inventory().getTenant();
-        Assert.assertTrue(resp.isSuccess());
-        Reporter.log(resp.getEntity().getId(), true);
-    }
-
+    @GET
+    @Path("/{traversal}")
+    Response getTraversal(@Encoded @PathParam("traversal") String traversal);
 }
