@@ -24,7 +24,10 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.ws.rs.ProcessingException;
+
 import org.hawkular.client.core.ClientResponse;
+import org.hawkular.client.core.DefaultClientResponse;
 import org.hawkular.client.core.HawkularClient;
 import org.hawkular.client.core.jaxrs.Empty;
 import org.hawkular.client.core.jaxrs.ResponseCodes;
@@ -145,12 +148,17 @@ public class MetricTest extends BaseTest {
 
         Assert.assertTrue(response.isSuccess());
 
-        response = otherClient
+        ClientResponse<List<Metric<?>>> otherClientReponse = new DefaultClientResponse<>();
+        try {
+            otherClientReponse = otherClient
                 .metrics()
                 .metric()
                 .findMetrics(MetricType.AVAILABILITY, tags, metricName);
+        } catch (ProcessingException ex) {
+            //If nothing is listening, you get a RESTEasy error
+        }
 
-        Assert.assertFalse(response.isSuccess());
+        Assert.assertFalse(otherClientReponse.isSuccess());
     }
 
     @Test(dependsOnMethods = "findMetrics")

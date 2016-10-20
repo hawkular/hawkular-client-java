@@ -43,6 +43,11 @@ public class DefaultClientResponse<T> implements ClientResponse<T>  {
     private final JavaType javaType;
     private final ResponseCodes expectedCode;
 
+    public DefaultClientResponse() {
+        this.javaType = null;
+        this.expectedCode =  ResponseCodes.NO_CONTENT_204;
+    }
+
     public DefaultClientResponse(JavaType javaType, Response serverResponse, ResponseCodes expectedCode) {
         this.javaType = javaType;
         this.expectedCode = expectedCode;
