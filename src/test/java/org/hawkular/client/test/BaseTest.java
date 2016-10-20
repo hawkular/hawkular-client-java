@@ -29,6 +29,8 @@ public class BaseTest {
     protected static final long MINUTE = 1000 * 60;
     public static final String HEADER_TENANT = "unit-testing";
 
+    static final String HEADER_ADMIN_TOKEN = "awesome_secret_sauce";
+
     private HawkularClient client;
 
     @BeforeClass
@@ -39,6 +41,7 @@ public class BaseTest {
         client = HawkularClient.builder(HEADER_TENANT)
                 .uri(endpoint)
                 .basicAuthentication(getUsername(), getPassword())
+                .adminTokenAuthentication(HEADER_ADMIN_TOKEN)
                 .build();
     }
 

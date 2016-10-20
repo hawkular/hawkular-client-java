@@ -67,6 +67,11 @@ public class HawkularClientBuilder {
         return this;
     }
 
+    public HawkularClientBuilder adminTokenAuthentication(String token) {
+        headers.put(HawkularClient.KEY_HEADER_ADMIN_TOKEN, token);
+        return this;
+    }
+
     public HawkularClientBuilder addHeader(String key, Object value) {
         headers.put(key, value);
         return this;

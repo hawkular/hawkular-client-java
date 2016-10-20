@@ -34,6 +34,7 @@ public class HawkularClient {
 
     static final String KEY_HEADER_TENANT = "Hawkular-Tenant";
     static final String KEY_HEADER_AUTHORIZATION = "Authorization";
+    static final String KEY_HEADER_ADMIN_TOKEN ="Hawkular-Admin-Token";
 
     private MetricsClient metricsClient;
     private InventoryClient inventoryClient;
