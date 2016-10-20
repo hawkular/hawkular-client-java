@@ -26,27 +26,22 @@ import org.hawkular.client.core.jaxrs.fasterxml.jackson.ClientObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Provider
-public class RestRequestFilter implements ClientRequestFilter {
+public class RequestLoggingFilter implements ClientRequestFilter {
 
-    private static final Logger _logger = LoggerFactory.getLogger(RestRequestFilter.class);
-    private static ObjectMapper OBJECT_MAPPER = new ClientObjectMapper();
+    private static final Logger LOG = LoggerFactory.getLogger(RequestLoggingFilter.class);
+    private static final ObjectMapper OBJECT_MAPPER = new ClientObjectMapper();
 
     @Override
     public void filter(ClientRequestContext requestContext) throws IOException {
-        logRequests(requestContext);
-    }
-
-    private void logRequests(ClientRequestContext requestContext) throws JsonProcessingException {
-        if (_logger.isDebugEnabled()) {
-            _logger.debug(">> HTTP: {}", requestContext.getMethod());
-            _logger.debug(">> URI: {}", requestContext.getUri());
-            _logger.debug(">> Headers: {}", requestContext.getHeaders());
-            _logger.debug(">> Data: {}", OBJECT_MAPPER.writerWithDefaultPrettyPrinter()
-                    .writeValueAsString(requestContext.getEntity()));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(">> HTTP: {}", requestContext.getMethod());
+            LOG.debug(">> URI: {}", requestContext.getUri());
+            LOG.debug(">> Headers: {}", requestContext.getHeaders());
+            LOG.debug(">> Data: {}", OBJECT_MAPPER.writerWithDefaultPrettyPrinter()
+                .writeValueAsString(requestContext.getEntity()));
         }
     }
 }

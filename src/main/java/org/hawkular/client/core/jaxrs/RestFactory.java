@@ -98,9 +98,9 @@ public class RestFactory<T> {
 
         client.register(JacksonJaxbJsonProvider.class);
         client.register(JacksonObjectMapperProvider.class);
-        client.register(RestRequestFilter.class);
+        client.register(RequestLoggingFilter.class);
         client.register(new RequestHeadersFilter(clientInfo.getHeaders()));
-        client.register(RestResponseFilter.class);
+        client.register(ResponseLoggingFilter.class);
         client.register(HCJacksonJson2Provider.class);
         client.register(ConvertersProvider.class);
 
