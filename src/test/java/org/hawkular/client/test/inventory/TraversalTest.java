@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.test.BaseTest;
+import org.hawkular.inventory.api.paging.Order;
 import org.hawkular.inventory.paths.CanonicalPath;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -37,7 +38,7 @@ public class TraversalTest extends BulkCreateBaseTest {
         ClientResponse<List<Map>> response = client()
             .inventory()
             .traversal()
-            .getTraversal(path, null);
+            .getTraversal(path, null, null, 10, null, Order.Direction.ASCENDING);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
@@ -57,7 +58,7 @@ public class TraversalTest extends BulkCreateBaseTest {
         ClientResponse<List<Map>> response = client()
             .inventory()
             .traversal()
-            .getTraversal(path, null);
+            .getTraversal(path, null, null, 10, null, Order.Direction.ASCENDING);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());

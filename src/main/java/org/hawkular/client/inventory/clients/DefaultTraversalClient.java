@@ -28,6 +28,7 @@ import org.hawkular.client.core.DefaultClientResponse;
 import org.hawkular.client.core.jaxrs.ResponseCodes;
 import org.hawkular.client.core.jaxrs.RestFactory;
 import org.hawkular.client.inventory.jaxrs.handlers.TraversalHandler;
+import org.hawkular.inventory.api.paging.Order;
 import org.hawkular.inventory.paths.CanonicalPath;
 
 import com.fasterxml.jackson.databind.JavaType;
@@ -39,11 +40,13 @@ public class DefaultTraversalClient extends BaseClient<TraversalHandler> impleme
     }
 
     @Override
-    public ClientResponse<List<Map>> getTraversal(CanonicalPath traversal, String at) {
+    public ClientResponse<List<Map>> getTraversal(CanonicalPath traversal, String at, Integer page, Integer per_page,
+                                                  String sort, Order.Direction order) {
         Response serverResponse = null;
 
         try {
-            serverResponse = restApi().getTraversal(traversal.toRelativePath().toString(), at);
+            serverResponse = restApi().getTraversal(traversal.toRelativePath().toString(), at, page, per_page,
+                                                    sort, order.getShortString());
             JavaType javaType = collectionResolver().get(List.class, Map.class);
 
             return new DefaultClientResponse<List<Map>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);

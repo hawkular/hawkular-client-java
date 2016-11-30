@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.hawkular.client.core.ClientResponse;
+import org.hawkular.inventory.api.paging.Order;
 import org.hawkular.inventory.paths.CanonicalPath;
 
 public interface TraversalClient {
@@ -29,7 +30,12 @@ public interface TraversalClient {
      *
      * @param traversal
      * @param at
+     * @param page
+     * @param per_page
+     * @param sort
+     * @param order
      * @return
      */
-    ClientResponse<List<Map>> getTraversal(CanonicalPath traversal, String at);
+    ClientResponse<List<Map>> getTraversal(CanonicalPath traversal, String at, Integer page, Integer per_page,
+                                           String sort, Order.Direction order);
 }

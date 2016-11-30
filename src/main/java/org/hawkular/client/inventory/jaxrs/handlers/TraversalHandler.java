@@ -37,5 +37,7 @@ public interface TraversalHandler {
 
     @GET
     @Path("/{traversal}")
-    Response getTraversal(@Encoded @PathParam("traversal") String traversal, @QueryParam("at") String at);
+    Response getTraversal(@Encoded @PathParam("traversal") String traversal, @QueryParam("at") String at,
+                          @QueryParam("page") Integer page, @QueryParam("per_page") Integer per_page,
+                          @QueryParam("sort") String sort, @QueryParam("order") String order);
 }
