@@ -25,6 +25,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -41,21 +42,26 @@ public interface SingleEntityHandler {
 
     @DELETE
     @Path("/{path}")
-    Response deleteEntity(@Encoded @PathParam("path") String path);
+    Response deleteEntity(@Encoded @PathParam("path") String path, @QueryParam("at") String at);
 
     @GET
     @Path("/{path}")
-    Response getEntity(@Encoded @PathParam("path") String path);
+    Response getEntity(@Encoded @PathParam("path") String path, @QueryParam("at") String at);
 
     @PUT
     @Path("/{path}")
-    Response updateEntity(@Encoded @PathParam("path") String path, AbstractElement.Update update);
+    Response updateEntity(@Encoded @PathParam("path") String path, @QueryParam("at") String at, AbstractElement.Update update);
+
+    @GET
+    @Path("/{path}/history")
+    Response getHistory(@Encoded @PathParam("path") String path, @QueryParam("from") String from, @QueryParam("to") String to);
 
     @GET
     @Path("/{path}/treeHash")
-    Response getEntityHash(@Encoded @PathParam("path") String path);
+    Response getEntityHash(@Encoded @PathParam("path") String path, @QueryParam("at") String at);
 
     @POST
     @Path("/{path}/{type}")
-    Response createEntity(@Encoded @PathParam("path") String path, @PathParam("type") String type, AbstractElement.Blueprint entity);
+    Response createEntity(@Encoded @PathParam("path") String path, @PathParam("type") String type, @QueryParam("at") String at,
+                          AbstractElement.Blueprint entity);
 }

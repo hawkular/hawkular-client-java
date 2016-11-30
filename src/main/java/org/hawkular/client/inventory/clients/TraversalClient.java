@@ -28,7 +28,8 @@ public interface TraversalClient {
      * Retrieves a list of entities
      *
      * @param traversal
+     * @param at
      * @return
      */
-    ClientResponse<List<Map>> getTraversal(CanonicalPath traversal);
+    ClientResponse<List<Map>> getTraversal(CanonicalPath traversal, String at);
 }

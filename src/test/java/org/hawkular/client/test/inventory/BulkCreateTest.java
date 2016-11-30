@@ -65,7 +65,7 @@ public class BulkCreateTest extends BulkCreateBaseTest {
         ClientResponse<Map<ElementType, Map<CanonicalPath, Integer>>> response = client()
             .inventory()
             .bulkCreate()
-            .create(entities);
+            .create(entities, null);
 
         checkResponse(response);
 
@@ -96,7 +96,7 @@ public class BulkCreateTest extends BulkCreateBaseTest {
         ClientResponse<Map<ElementType, Map<CanonicalPath, Integer>>> response = client()
             .inventory()
             .bulkCreate()
-            .create(entities);
+            .create(entities, null);
 
         checkResponse(response);
 
@@ -127,7 +127,7 @@ public class BulkCreateTest extends BulkCreateBaseTest {
         ClientResponse<Map<ElementType, Map<CanonicalPath, Integer>>> response = client()
             .inventory()
             .bulkCreate()
-            .create(entities);
+            .create(entities, null);
 
         checkResponse(response);
 

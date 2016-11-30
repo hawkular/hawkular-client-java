@@ -37,7 +37,7 @@ public class TraversalTest extends BulkCreateBaseTest {
         ClientResponse<List<Map>> response = client()
             .inventory()
             .traversal()
-            .getTraversal(path);
+            .getTraversal(path, null);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
@@ -57,7 +57,7 @@ public class TraversalTest extends BulkCreateBaseTest {
         ClientResponse<List<Map>> response = client()
             .inventory()
             .traversal()
-            .getTraversal(path);
+            .getTraversal(path, null);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());

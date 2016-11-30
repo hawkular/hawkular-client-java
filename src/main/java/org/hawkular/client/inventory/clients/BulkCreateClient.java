@@ -29,7 +29,8 @@ public interface BulkCreateClient {
      * Bulk creation of new entities.
      *
      * @param entities
+     * @param at
      * @return
      */
-    ClientResponse<Map<ElementType, Map<CanonicalPath, Integer>>> create(Map<String, Map<ElementType, List<Object>>> entities);
+    ClientResponse<Map<ElementType, Map<CanonicalPath, Integer>>> create(Map<String, Map<ElementType, List<Object>>> entities, String at);
 }

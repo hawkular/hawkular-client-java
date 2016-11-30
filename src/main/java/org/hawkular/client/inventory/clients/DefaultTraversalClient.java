@@ -39,11 +39,11 @@ public class DefaultTraversalClient extends BaseClient<TraversalHandler> impleme
     }
 
     @Override
-    public ClientResponse<List<Map>> getTraversal(CanonicalPath traversal) {
+    public ClientResponse<List<Map>> getTraversal(CanonicalPath traversal, String at) {
         Response serverResponse = null;
 
         try {
-            serverResponse = restApi().getTraversal(traversal.toRelativePath().toString());
+            serverResponse = restApi().getTraversal(traversal.toRelativePath().toString(), at);
             JavaType javaType = collectionResolver().get(List.class, Map.class);
 
             return new DefaultClientResponse<List<Map>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);

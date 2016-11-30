@@ -40,11 +40,11 @@ public class DefaultBulkCreateClient extends BaseClient<BulkCreateHandler> imple
     }
 
     @Override
-    public ClientResponse<Map<ElementType, Map<CanonicalPath, Integer>>> create(Map<String, Map<ElementType, List<Object>>> entities) {
+    public ClientResponse<Map<ElementType, Map<CanonicalPath, Integer>>> create(Map<String, Map<ElementType, List<Object>>> entities, String at) {
         Response serverResponse = null;
 
         try {
-            serverResponse = restApi().create(entities);
+            serverResponse = restApi().create(entities, at);
             JavaType javaType = mapResolver().get(Map.class, ElementType.class, Map.class, CanonicalPath.class, Integer.class);
 
             return new DefaultClientResponse<Map<ElementType, Map<CanonicalPath, Integer>>>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_201);

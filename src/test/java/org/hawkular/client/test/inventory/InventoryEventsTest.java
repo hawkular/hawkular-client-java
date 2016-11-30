@@ -79,7 +79,7 @@ public class InventoryEventsTest extends BaseTest {
             ClientResponse<Map> responseCreate = client
                 .inventory()
                 .singleEntity()
-                .createEntity(tenantPath, SegmentType.e, createBlueprint);
+                .createEntity(tenantPath, SegmentType.e, null, createBlueprint);
 
             Assert.assertTrue(responseCreate.isSuccess());
 
@@ -96,7 +96,7 @@ public class InventoryEventsTest extends BaseTest {
             ClientResponse<Empty> responseUpdate = client
                 .inventory()
                 .singleEntity()
-                .updateEntity(enviromentPath, updateBlueprint);
+                .updateEntity(enviromentPath, null, updateBlueprint);
 
             Assert.assertTrue(responseUpdate.isSuccess());
 

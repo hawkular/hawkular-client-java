@@ -56,7 +56,7 @@ public class SingleEntityTest extends BaseTest {
         ClientResponse<Map> response = client()
             .inventory()
             .singleEntity()
-            .createEntity(path, SegmentType.f, blueprint);
+            .createEntity(path, SegmentType.f, null, blueprint);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
@@ -73,7 +73,7 @@ public class SingleEntityTest extends BaseTest {
         ClientResponse<Map> response = client()
             .inventory()
             .singleEntity()
-            .getEntity(path);
+            .getEntity(path, null);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
@@ -90,7 +90,7 @@ public class SingleEntityTest extends BaseTest {
         ClientResponse<IdentityHash.Tree> response = client()
             .inventory()
             .singleEntity()
-            .getEntityHash(path);
+            .getEntityHash(path, null);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
@@ -112,7 +112,7 @@ public class SingleEntityTest extends BaseTest {
         ClientResponse<Empty> response = client()
             .inventory()
             .singleEntity()
-            .updateEntity(path, blueprint);
+            .updateEntity(path, null, blueprint);
 
         Assert.assertTrue(response.isSuccess());
     }
@@ -127,7 +127,7 @@ public class SingleEntityTest extends BaseTest {
         ClientResponse<Empty> response = client()
             .inventory()
             .singleEntity()
-            .deleteEntity(path);
+            .deleteEntity(path, null);
 
         Assert.assertTrue(response.isSuccess());
     }

@@ -16,11 +16,13 @@
  */
 package org.hawkular.client.inventory.clients;
 
+import java.util.List;
 import java.util.Map;
 
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
 import org.hawkular.inventory.api.model.AbstractElement;
+import org.hawkular.inventory.api.model.Change;
 import org.hawkular.inventory.api.model.IdentityHash;
 import org.hawkular.inventory.paths.CanonicalPath;
 import org.hawkular.inventory.paths.SegmentType;
@@ -33,7 +35,7 @@ public interface SingleEntityClient {
      * @param path
      * @return
      */
-    ClientResponse<Empty> deleteEntity(CanonicalPath path);
+    ClientResponse<Empty> deleteEntity(CanonicalPath path, String at);
 
     /**
      * Reads an inventory entity on the given location.
@@ -42,7 +44,7 @@ public interface SingleEntityClient {
      * @param path
      * @return
      */
-    ClientResponse<Map> getEntity(CanonicalPath path);
+    ClientResponse<Map> getEntity(CanonicalPath path, String at);
 
     /**
      * Updates an entity. The path is actually a canonical path.
@@ -53,7 +55,17 @@ public interface SingleEntityClient {
      * @param update
      * @return
      */
-    ClientResponse<Empty> updateEntity(CanonicalPath path, AbstractElement.Update update);
+    ClientResponse<Empty> updateEntity(CanonicalPath path, String at, AbstractElement.Update update);
+
+    /**
+     * Obtains the history of the entity.
+     *
+     * @param path
+     * @param from
+     * @param to
+     * @return
+     */
+    ClientResponse<List<Change<?>>> getHistory(CanonicalPath path, String from, String to);
 
     /**
      * Obtains the identity tree hash of the entity.
@@ -61,7 +73,7 @@ public interface SingleEntityClient {
      * @param path
      * @return
      */
-    ClientResponse<IdentityHash.Tree> getEntityHash(CanonicalPath path);
+    ClientResponse<IdentityHash.Tree> getEntityHash(CanonicalPath path, String at);
 
     /**
      * Creates a new entity
@@ -72,5 +84,5 @@ public interface SingleEntityClient {
      * @param entity
      * @return
      */
-    ClientResponse<Map> createEntity(CanonicalPath path, SegmentType type, AbstractElement.Blueprint entity);
+    ClientResponse<Map> createEntity(CanonicalPath path, SegmentType type, String at, AbstractElement.Blueprint entity);
 }
