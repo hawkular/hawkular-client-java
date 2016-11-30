@@ -38,11 +38,11 @@ public class DefaultSyncClient extends BaseClient<SyncHandler> implements SyncCl
     }
 
     @Override
-    public ClientResponse<Empty> synchronize(CanonicalPath path, SyncRequest request) {
+    public ClientResponse<Empty> synchronize(CanonicalPath path, String at, SyncRequest request) {
         Response serverResponse = null;
 
         try {
-            serverResponse = restApi().synchronize(path.toRelativePath().toString(), request);
+            serverResponse = restApi().synchronize(path.toRelativePath().toString(), at, request);
             JavaType javaType = simpleResolver().get(Empty.class);
 
             return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_204);

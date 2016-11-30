@@ -26,10 +26,10 @@ public interface SyncClient {
     /**
      * Make the inventory under given path match the provided inventory structure.
      * Note that the relationships specified in the provided entities will be ignored and will not be applied.
-     *
      * @param path
+     * @param at
      * @param request
      * @return
      */
-    ClientResponse<Empty> synchronize(CanonicalPath path, SyncRequest request);
+    ClientResponse<Empty> synchronize(CanonicalPath path, String at, SyncRequest request);
 }

@@ -30,6 +30,7 @@ import org.hawkular.client.core.jaxrs.RestFactory;
 import org.hawkular.client.inventory.jaxrs.handlers.TenantHandler;
 import org.hawkular.inventory.api.model.Relationship;
 import org.hawkular.inventory.api.model.Tenant;
+import org.hawkular.inventory.paths.CanonicalPath;
 
 import com.fasterxml.jackson.databind.JavaType;
 
@@ -40,11 +41,11 @@ public class DefaultTenantClient extends BaseClient<TenantHandler> implements Te
     }
 
     @Override
-    public ClientResponse<Tenant> getTenant() {
+    public ClientResponse<Tenant> getTenant(String at) {
         Response serverResponse = null;
 
         try {
-            serverResponse = restApi().getTenant();
+            serverResponse = restApi().getTenant(at);
             JavaType javaType = simpleResolver().get(Tenant.class);
 
             return new DefaultClientResponse<Tenant>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
@@ -56,11 +57,11 @@ public class DefaultTenantClient extends BaseClient<TenantHandler> implements Te
     }
 
     @Override
-    public ClientResponse<Empty> createTenant(Tenant.Update update) {
+    public ClientResponse<Empty> createTenant(String at, Tenant.Update update) {
         Response serverResponse = null;
 
         try {
-            serverResponse = restApi().createTenant(update);
+            serverResponse = restApi().createTenant(at, update);
             JavaType javaType = simpleResolver().get(Empty.class);
 
             return new DefaultClientResponse<Empty>(javaType, serverResponse, ResponseCodes.UPDATE_SUCCESS_204);

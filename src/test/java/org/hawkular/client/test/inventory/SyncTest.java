@@ -77,7 +77,7 @@ public class SyncTest extends BulkCreateBaseTest {
         ClientResponse<Empty> response = client()
             .inventory()
             .sync()
-            .synchronize(path, request);
+            .synchronize(path, null, request);
 
         Assert.assertTrue(response.isSuccess());
     }

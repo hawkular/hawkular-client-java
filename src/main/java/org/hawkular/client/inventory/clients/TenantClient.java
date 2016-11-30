@@ -22,36 +22,42 @@ import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
 import org.hawkular.inventory.api.model.Relationship;
 import org.hawkular.inventory.api.model.Tenant;
+import org.hawkular.inventory.paths.CanonicalPath;
 
 public interface TenantClient {
 
     /**
      * Retrieves the details of the current tenant.
      *
+     * @param at
      * @return
      */
-    ClientResponse<Tenant> getTenant();
+    ClientResponse<Tenant> getTenant(String at);
 
     /**
      * Updates the properties of the tenant
      *
+     * @param at
      * @param update
      * @return
      */
-    ClientResponse<Empty> createTenant(Tenant.Update update);
+    ClientResponse<Empty> createTenant(String at, Tenant.Update update);
 
     /**
      * Creates new relationship(s) on a tenant
      *
+     * @param at
      * @param blueprints
      * @return
      */
-    ClientResponse<Relationship> createRelationship(List<Relationship.Blueprint> blueprints);
+    ClientResponse<List<Relationship>> createRelationship(String at, List<Relationship.Blueprint> blueprints);
 
     /**
      * Retrieves tenant’s relationships
      *
+     * @param path
+     * @param at
      * @return
      */
-    ClientResponse<List<Relationship>> getRelationships();
+    ClientResponse<List<Relationship>> getRelationships(CanonicalPath path, String at);
 }

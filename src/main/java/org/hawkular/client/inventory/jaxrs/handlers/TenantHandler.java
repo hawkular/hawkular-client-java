@@ -26,6 +26,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -43,17 +44,17 @@ public interface TenantHandler {
 
     @GET
     @Path("/")
-    Response getTenant();
+    Response getTenant(@QueryParam("at") String at);
 
     @PUT
     @Path("/")
-    Response createTenant(Tenant.Update update);
+    Response createTenant(@QueryParam("at") String at, Tenant.Update update);
 
     @POST
     @Path("/relationship")
-    Response createRelationship(List<Relationship.Blueprint> blueprints);
+    Response createRelationship(@QueryParam("at") String at, List<Relationship.Blueprint> blueprints);
 
     @GET
-    @Path("/relationships.{path}")
-    Response getRelationships(@Encoded @PathParam("path") String path);
+    @Path("/relationships/{path}")
+    Response getRelationships(@Encoded @PathParam("path") String path, @QueryParam("at") String at);
 }

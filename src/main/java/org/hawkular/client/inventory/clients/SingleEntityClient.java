@@ -33,6 +33,7 @@ public interface SingleEntityClient {
      * Deletes an inventory entity on the given location.
      *
      * @param path
+     * @param at
      * @return
      */
     ClientResponse<Empty> deleteEntity(CanonicalPath path, String at);
@@ -42,6 +43,7 @@ public interface SingleEntityClient {
      * TODO: Response should be a: http://www.hawkular.org/docs/rest/rest-inventory.html#AbstractElement
      *
      * @param path
+     * @param at
      * @return
      */
     ClientResponse<Map> getEntity(CanonicalPath path, String at);
@@ -52,6 +54,7 @@ public interface SingleEntityClient {
      * look for EnvironmentUpdate type, etc.
      *
      * @param path
+     * @param at
      * @param update
      * @return
      */
@@ -71,6 +74,7 @@ public interface SingleEntityClient {
      * Obtains the identity tree hash of the entity.
      *
      * @param path
+     * @param at
      * @return
      */
     ClientResponse<IdentityHash.Tree> getEntityHash(CanonicalPath path, String at);
@@ -81,6 +85,7 @@ public interface SingleEntityClient {
      *
      * @param path
      * @param type
+     * @param at
      * @param entity
      * @return
      */
