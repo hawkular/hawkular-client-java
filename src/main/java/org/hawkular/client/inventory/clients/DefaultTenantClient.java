@@ -73,14 +73,34 @@ public class DefaultTenantClient extends BaseClient<TenantHandler> implements Te
     }
 
     @Override
-    public ClientResponse<Relationship> createRelationship(List<Relationship.Blueprint> blueprints) {
-        //TODO
-        return null;
+    public ClientResponse<List<Relationship>> createRelationship(String at, List<Relationship.Blueprint> blueprints) {
+        Response serverResponse = null;
+
+        try {
+            serverResponse = restApi().createRelationship(at, blueprints);
+            JavaType javaType = collectionResolver().get(List.class, Relationship.class);
+
+            return new DefaultClientResponse<List<Relationship>>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_201);
+        } finally {
+            if (serverResponse != null) {
+                serverResponse.close();
+            }
+        }
     }
 
     @Override
-    public ClientResponse<List<Relationship>> getRelationships() {
-        //TODO
-        return null;
+    public ClientResponse<List<Relationship>> getRelationships(CanonicalPath path, String at) {
+        Response serverResponse = null;
+
+        try {
+            serverResponse = restApi().getRelationships(path.toRelativePath().toString(), at);
+            JavaType javaType = collectionResolver().get(List.class, Relationship.class);
+
+            return new DefaultClientResponse<List<Relationship>>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_200);
+        } finally {
+            if (serverResponse != null) {
+                serverResponse.close();
+            }
+        }
     }
 }
