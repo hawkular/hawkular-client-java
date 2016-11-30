@@ -19,6 +19,7 @@ package org.hawkular.client.test.inventory;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +27,7 @@ import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
 import org.hawkular.client.test.BaseTest;
 import org.hawkular.client.test.utils.RandomStringGenerator;
+import org.hawkular.inventory.api.model.Change;
 import org.hawkular.inventory.api.model.Feed;
 import org.hawkular.inventory.api.model.IdentityHash;
 import org.hawkular.inventory.paths.CanonicalPath;
@@ -118,6 +120,23 @@ public class SingleEntityTest extends BaseTest {
     }
 
     @Test(dependsOnMethods = "updateEntity")
+    public void getHistory() {
+        CanonicalPath path = CanonicalPath.of()
+            .tenant(BaseTest.HEADER_TENANT)
+            .feed(entityId)
+            .get();
+
+        ClientResponse<List<Change<?>>> response = client()
+            .inventory()
+            .singleEntity()
+            .getHistory(path, null, null);
+
+        Assert.assertTrue(response.isSuccess());
+        Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
+    }
+
+    @Test(dependsOnMethods = "getHistory")
     public void deleteEntity() {
         CanonicalPath path = CanonicalPath.of()
             .tenant(BaseTest.HEADER_TENANT)
