@@ -36,8 +36,9 @@ import javax.ws.rs.core.Response;
 public interface TraversalHandler {
 
     @GET
-    @Path("/{traversal}")
+    @Path("/{traversal}/{filter}")
     Response getTraversal(@Encoded @PathParam("traversal") String traversal, @QueryParam("at") String at,
                           @QueryParam("page") Integer page, @QueryParam("per_page") Integer per_page,
-                          @QueryParam("sort") String sort, @QueryParam("order") String order);
+                          @QueryParam("sort") String sort, @QueryParam("order") String order,
+                          @PathParam("filter") String filter);
 }

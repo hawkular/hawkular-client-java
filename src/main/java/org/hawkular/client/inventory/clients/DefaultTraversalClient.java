@@ -28,10 +28,13 @@ import org.hawkular.client.core.DefaultClientResponse;
 import org.hawkular.client.core.jaxrs.ResponseCodes;
 import org.hawkular.client.core.jaxrs.RestFactory;
 import org.hawkular.client.inventory.jaxrs.handlers.TraversalHandler;
+import org.hawkular.inventory.api.Relationships;
 import org.hawkular.inventory.api.paging.Order;
 import org.hawkular.inventory.paths.CanonicalPath;
+import org.hawkular.inventory.paths.SegmentType;
 
 import com.fasterxml.jackson.databind.JavaType;
+import com.google.common.base.Strings;
 
 public class DefaultTraversalClient extends BaseClient<TraversalHandler> implements TraversalClient {
 
@@ -40,13 +43,17 @@ public class DefaultTraversalClient extends BaseClient<TraversalHandler> impleme
     }
 
     @Override
-    public ClientResponse<List<Map>> getTraversal(CanonicalPath traversal, String at, Integer page, Integer per_page,
-                                                  String sort, Order.Direction order) {
+    public ClientResponse<List<Map>> getTraversal(CanonicalPath traversal, String at,
+                                                  Integer page, Integer per_page, String sort, Order.Direction order,
+                                                  SegmentType type, String id, String name, CanonicalPath cp, String propertyName,
+                                                  String propertyValue, Relationships.WellKnown relatedBy, CanonicalPath relatedTo,
+                                                  CanonicalPath relatedWith, String definedBy) {
         Response serverResponse = null;
 
         try {
-            serverResponse = restApi().getTraversal(traversal.toRelativePath().toString(), at, page, per_page,
-                                                    sort, order.getShortString());
+            String filter = getFilter(type, id, name, cp, propertyName, propertyValue, relatedBy, relatedTo, relatedWith, definedBy);
+            serverResponse = restApi().getTraversal(traversal.toRelativePath().toString(), at,
+                                                    page, per_page, sort, order.getShortString(), filter);
             JavaType javaType = collectionResolver().get(List.class, Map.class);
 
             return new DefaultClientResponse<List<Map>>(javaType, serverResponse, ResponseCodes.GET_SUCCESS_200);
@@ -55,5 +62,57 @@ public class DefaultTraversalClient extends BaseClient<TraversalHandler> impleme
                 serverResponse.close();
             }
         }
+    }
+
+    private String getFilter(SegmentType type, String id, String name, CanonicalPath cp, String propertyName,
+                             String propertyValue, Relationships.WellKnown relatedBy, CanonicalPath relatedTo,
+                             CanonicalPath relatedWith, String definedBy) {
+        StringBuilder filter = new StringBuilder();
+        if (type != null) {
+            filter.append("type=" + type.getSerialized() + ";");
+        }
+
+        if (!Strings.isNullOrEmpty(id)) {
+            filter.append("id=" + id + ";");
+        }
+
+        if (!Strings.isNullOrEmpty(name)) {
+            filter.append("name=" + name + ";");
+        }
+
+        if (cp != null) {
+            filter.append("cp=" + cp.toString() + ";");
+        }
+
+        if (!Strings.isNullOrEmpty(propertyName)) {
+            filter.append("propertyName=" + propertyName + ";");
+        }
+
+        if (!Strings.isNullOrEmpty(propertyValue)) {
+            filter.append("propertyValue=" + propertyValue + ";");
+        }
+
+        if (relatedBy != null) {
+            filter.append("relatedBy=" + relatedBy.name() + ";");
+        }
+
+        if (relatedTo != null) {
+            filter.append("relatedTo=" + relatedTo.toString() + ";");
+        }
+
+        if (relatedWith != null) {
+            filter.append("relatedWith=" + relatedWith.toString() + ";");
+        }
+
+        if (definedBy != null) {
+            filter.append("definedBy=" + definedBy + ";");
+        }
+
+        //Remove last ;
+        if (filter.length() > 0) {
+            filter.setLength(filter.length() - 1);
+        }
+
+        return filter.toString();
     }
 }

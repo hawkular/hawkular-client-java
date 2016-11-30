@@ -38,7 +38,8 @@ public class TraversalTest extends BulkCreateBaseTest {
         ClientResponse<List<Map>> response = client()
             .inventory()
             .traversal()
-            .getTraversal(path, null, null, 10, null, Order.Direction.ASCENDING);
+            .getTraversal(path, null, null, 10, null, Order.Direction.ASCENDING,
+                          null, null, null, null, null, null, null, null, null, null);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
@@ -58,7 +59,27 @@ public class TraversalTest extends BulkCreateBaseTest {
         ClientResponse<List<Map>> response = client()
             .inventory()
             .traversal()
-            .getTraversal(path, null, null, 10, null, Order.Direction.ASCENDING);
+            .getTraversal(path, null, null, 10, null, Order.Direction.ASCENDING,
+                          null, null, null, null, null, null, null, null, null, null);
+
+        Assert.assertTrue(response.isSuccess());
+        Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
+        Assert.assertNotNull(response.getEntity().get(0));
+        Assert.assertTrue(response.getEntity().get(0).size() > 0);
+    }
+
+    @Test
+    public void getTraversalForPropertyByFilter() {
+        CanonicalPath path = CanonicalPath.of()
+            .tenant(BaseTest.HEADER_TENANT)
+            .get();
+
+        ClientResponse<List<Map>> response = client()
+            .inventory()
+            .traversal()
+            .getTraversal(path, null, null, 10, null, Order.Direction.ASCENDING,
+                          null, null, null, null, "rand", null, null, null, null, null);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
