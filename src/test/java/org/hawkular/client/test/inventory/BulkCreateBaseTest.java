@@ -17,19 +17,12 @@
 package org.hawkular.client.test.inventory;
 
 import org.hawkular.client.test.BaseTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.hawkular.client.test.utils.RandomStringGenerator;
 
-@Test(groups = { "inventory" })
-public class InventoryEndpointsTest extends BaseTest {
+public abstract class BulkCreateBaseTest extends BaseTest {
 
-    public InventoryEndpointsTest() throws Exception {
-        super();
-    }
-
-    @Test(priority = 1)
-    public void pingerTest() throws Exception {
-        Assert.assertEquals(client().inventory().pingHello().getEntity().getDocumentation(),
-                "http://www.hawkular.org/");
-    }
+    protected static String environmentId = "environment-id-" + RandomStringGenerator.getRandomId();
+    protected static String feedId = "feed-id-" + RandomStringGenerator.getRandomId();
+    protected static String resourceTypeId = "resource-type-id-" + RandomStringGenerator.getRandomId();
+    protected static String resourceId = "resource-id-" + RandomStringGenerator.getRandomId();
 }

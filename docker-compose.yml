@@ -25,6 +25,7 @@ hawkular:
     - myCassandra
   environment:
     - CASSANDRA_NODES=myCassandra
+    - ADMIN_TOKEN=awesome_secret_sauce
 myCassandra:
   image: cassandra:3.7
   environment:

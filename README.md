@@ -1,10 +1,18 @@
 [![Build Status](https://travis-ci.org/hawkular/hawkular-client-java.svg?branch=master)](https://travis-ci.org/hawkular/hawkular-client-java)
+[![Release Version](https://img.shields.io/maven-central/v/org.hawkular.client/hawkular-java-client.svg?maxAge=2592000)](https://mvnrepository.com/artifact/org.hawkular.client/hawkular-java-client)
+[![License](https://img.shields.io/hexpm/l/plug.svg?maxAge=2592000)]()
+
 # Java client for [Hawkular](https://github.com/hawkular)
 Example,
 ```java
-HawkularClient hawkular = new HawkularClient("http://209.132.178.218:18080/", "", "");
-System.out.println(hawkular.metrics().findTenants()); // show all tenants
-System.out.println(hawkular.inventory().pinger()); // 'Hello World'
+HawkularClient client = HawkularClient.builder("my-tenant")
+    .uri("http://localhost:8080")
+    .basicAuthentication("jdoe", "password")
+    .build();
+
+System.out.println(client.metrics().tenant().getTenants()); // show all tenants
+System.out.println(client.alerts().plugins().findActionPlugins()) // show all plugins
+System.out.println(client.inventory().tenant.getTenant()); // get current tenant
 ```
 See [unit tests](src/test/java/org/hawkular/client/test) for more examples.
 

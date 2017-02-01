@@ -33,5 +33,4 @@ public interface ClientResponse<T> {
     String getErrorMsg();
 
     void setErrorMsg(String errorMsg);
-
 }

@@ -22,6 +22,7 @@ import org.hawkular.client.metrics.fasterxml.jackson.MetricTypeMixin;
 import org.hawkular.client.metrics.fasterxml.jackson.NumericBucketPointMixin;
 import org.hawkular.client.metrics.fasterxml.jackson.TaggedBucketPointMixin;
 import org.hawkular.client.metrics.fasterxml.jackson.TenantMixin;
+import org.hawkular.inventory.json.InventoryJacksonConfig;
 import org.hawkular.metrics.model.AvailabilityBucketPoint;
 import org.hawkular.metrics.model.AvailabilityType;
 import org.hawkular.metrics.model.MetricType;
@@ -46,14 +47,24 @@ public class ClientObjectMapper extends ObjectMapper {
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true)
             .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-            .setSerializationInclusion(JsonInclude.Include.NON_NULL)
-            .addMixIn(Tenant.class, TenantMixin.class)
+            .setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        addMetricMixins(mapper);
+        addInventoryMixins(mapper);
+
+        return mapper;
+    }
+
+    private static void addMetricMixins(ObjectMapper mapper) {
+        mapper.addMixIn(Tenant.class, TenantMixin.class)
             .addMixIn(MetricType.class, MetricTypeMixin.class)
             .addMixIn(AvailabilityType.class, AvailabilityTypeMixin.class)
             .addMixIn(TaggedBucketPoint.class, TaggedBucketPointMixin.class)
             .addMixIn(NumericBucketPoint.class, NumericBucketPointMixin.class)
             .addMixIn(AvailabilityBucketPoint.class, AvailabilityBucketPointMixin.class);
+    }
 
-        return mapper;
+    private static void addInventoryMixins(ObjectMapper mapper) {
+        InventoryJacksonConfig.configure(mapper);
     }
 }

@@ -17,6 +17,7 @@
 package org.hawkular.client.metrics.clients;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.ws.rs.core.Response;
 
@@ -63,6 +64,22 @@ public class DefaultTenantClient extends BaseClient<TenantHandler> implements Te
             JavaType javaType = simpleResolver().get(Empty.class);
 
             return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.CREATE_SUCCESS_201);
+        } finally {
+            if (serverResponse != null) {
+                serverResponse.close();
+            }
+        }
+    }
+
+    @Override
+    public ClientResponse<Map<String, String>> deleteTenant(String id) {
+        Response serverResponse = null;
+
+        try {
+            serverResponse = restApi().deleteTenant(id);
+            JavaType javaType = mapResolver().get(Map.class, String.class, String.class);
+
+            return new DefaultClientResponse<>(javaType, serverResponse, ResponseCodes.DELETE_SUCCESS_200);
         } finally {
             if (serverResponse != null) {
                 serverResponse.close();

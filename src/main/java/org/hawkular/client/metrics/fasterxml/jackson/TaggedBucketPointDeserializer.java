@@ -33,6 +33,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class TaggedBucketPointDeserializer extends JsonDeserializer<TaggedBucketPoint> {
 
+    @SuppressWarnings("unchecked")
     @Override
     public TaggedBucketPoint deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         ObjectCodec objectCodec = jp.getCodec();

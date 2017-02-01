@@ -17,6 +17,9 @@
 package org.hawkular.client.metrics.clients;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.ws.rs.PathParam;
 
 import org.hawkular.client.core.ClientResponse;
 import org.hawkular.client.core.jaxrs.Empty;
@@ -26,15 +29,25 @@ public interface TenantClient {
 
     /**
      * Returns a list of tenants.
+     *
      * @return
      */
     ClientResponse<List<Tenant>> getTenants();
 
     /**
      * Create a new tenant.
+     *
      * @param overwrite
      * @param tenant
      * @return
      */
     ClientResponse<Empty> createTenant(Boolean overwrite, Tenant tenant);
+
+    /**
+     * Delete a tenant.
+     *
+     * @param id
+     * @return
+     */
+    ClientResponse<Map<String, String>> deleteTenant(@PathParam("id") String id);
 }

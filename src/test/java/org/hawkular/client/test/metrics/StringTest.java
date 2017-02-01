@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+@Test(groups = {"metrics"})
 public class StringTest extends BaseTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(StringTest.class);
@@ -146,10 +147,7 @@ public class StringTest extends BaseTest {
         Assert.assertNotNull(response.getEntity().getTags());
     }
 
-    /**
-     * TODO: On hawkular server, throws a cast exception on first send, sent email to dev-list
-     */
-    @Test(dependsOnMethods = "createMultipleStringMetric")
+    @Test(dependsOnMethods = "createStringMetric")
     public void createMetricDefinitionsData() {
         ClientResponse<Empty> response = client()
             .metrics()
@@ -159,22 +157,19 @@ public class StringTest extends BaseTest {
         Assert.assertTrue(response.isSuccess());
     }
 
-    /**
-     * TODO: Think this fails due to "createMetricDefinitionsData" failing on the CastException
-     * ...as always get back 204 - no content
-     */
-    @Test(dependsOnMethods = "createMetricDefinitionsData", enabled = false)
+    @Test(dependsOnMethods = "createMetricDefinitionsData")
     public void getMetricDefinitionsData() {
         ClientResponse<List<DataPoint>> response = client()
             .metrics()
             .string()
-            .getMetricDefinitionsData(metricName, null, null, false, 1, Order.ASC);
+            .getMetricDefinitionsData(metricName, null, null, false, null, Order.ASC);
 
         Assert.assertTrue(response.isSuccess());
         Assert.assertNotNull(response.getEntity());
+        Assert.assertTrue(response.getEntity().size() > 0);
     }
 
-    @Test(dependsOnMethods = "createMetricDefinitionsData")
+    @Test(dependsOnMethods = "getMetricDefinitionsData")
     public void findMetricDefinitionsTags() {
         ClientResponse<Map<String, String>> response = client()
             .metrics()

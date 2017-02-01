@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class AvailabilityBucketPointDeserializer extends JsonDeserializer<AvailabilityBucketPoint> {
 
+    @SuppressWarnings("unchecked")
     @Override
     public AvailabilityBucketPoint deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         ObjectCodec objectCodec = jp.getCodec();

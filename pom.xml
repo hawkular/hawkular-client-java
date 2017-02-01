@@ -23,12 +23,12 @@
   <parent>
     <groupId>org.hawkular</groupId>
     <artifactId>hawkular-parent</artifactId>
-    <version>43</version>
+    <version>46</version>
     <relativePath/>
   </parent>
   <groupId>org.hawkular.client</groupId>
   <artifactId>hawkular-java-client</artifactId>
-  <version>0.0.2-SNAPSHOT</version>
+  <version>0.0.16-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>Hawkular Java Client</name>
@@ -46,18 +46,29 @@
   </licenses>
 
   <properties>
-    <hawkular.metrics.version>0.18.3.Final</hawkular.metrics.version>
-    <hawkular.inventory.version>0.18.0.Final</hawkular.inventory.version>
-    <hawkular.inventory.json.helper.version>0.18.0.Final</hawkular.inventory.json.helper.version>
-    <hawkular.alerts.version>1.1.2.Final</hawkular.alerts.version>
+    <hawkular.metrics.version>0.20.1.Final</hawkular.metrics.version>
+    <hawkular.inventory.version>0.20.0.Final</hawkular.inventory.version>
+    <hawkular.inventory.json.helper.version>0.20.0.Final</hawkular.inventory.json.helper.version>
+    <hawkular.alerts.version>1.2.2.Final</hawkular.alerts.version>
 
-    <resteasy.version>3.0.12.Final</resteasy.version>
-    <resteasy.jackson2.provider.version>3.0.12.Final</resteasy.jackson2.provider.version>
+    <resteasy.version>3.1.0.CR2</resteasy.version>
+    <resteasy.jackson2.provider.version>3.1.0.CR2</resteasy.jackson2.provider.version>
     <org.jboss.logging.version>3.3.0.Final</org.jboss.logging.version>
+    <httpclient.version>4.5.2</httpclient.version>
+    <guava.version>19.0</guava.version>
+    <commons.lang3.version>3.4</commons.lang3.version>
+    <commons.math3.version>3.6.1</commons.math3.version>
+    <commons.io.version>2.5</commons.io.version>
+    <slf4j.simple.version>1.7.21</slf4j.simple.version>
+    <mockito.core.version>2.1.0-RC.1</mockito.core.version>
 
     <excluded.tests>nothing-to-exclude</excluded.tests>
     <excluded.groups>none</excluded.groups>
   </properties>
+
+  <prerequisites>
+    <maven>3.3.0</maven>
+  </prerequisites>
 
   <dependencies>
     <dependency>
@@ -121,25 +132,25 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>18.0</version>
+      <version>${guava.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.3.2</version>
+      <version>${commons.lang3.version}</version>
     </dependency>
 
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>2.4</version>
+      <version>${commons.io.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
-      <version>1.7.12</version>
+      <version>${slf4j.simple.version}</version>
     </dependency>
 
     <!-- test -->
@@ -152,19 +163,19 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>2.0.5-beta</version>
+      <version>${mockito.core.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-math3</artifactId>
-      <version>3.2</version>
+      <version>${commons.math3.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
       <artifactId>httpclient</artifactId>
-      <version>4.4.1</version>
+      <version>${httpclient.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jboss.logging</groupId>
@@ -193,6 +204,9 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <compilerArgument>-Xlint:unchecked</compilerArgument>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

@@ -14,26 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hawkular.client.test.metrics;
+package org.hawkular.client.inventory.jaxrs.handlers;
 
-import java.util.Map;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
-import org.hawkular.client.core.ClientResponse;
-import org.hawkular.client.test.BaseTest;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+/**
+ * Events API
+ * http://www.hawkular.org/docs/rest/rest-inventory.html#_events
+ */
+@Path("/hawkular/inventory/events")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public interface EventsHandler {
 
-public class StatusTest extends BaseTest {
-
-    @Test
-    public void status() {
-        ClientResponse<Map<String, String>> response = client()
-            .metrics()
-            .status()
-            .status();
-
-        Assert.assertTrue(response.isSuccess());
-        Assert.assertNotNull(response.getEntity());
-        Assert.assertTrue(response.getEntity().size() > 0);
-    }
+    @GET
+    @Path("/")
+    Response getEvents(@QueryParam("type") String type, @QueryParam("action") String action);
 }

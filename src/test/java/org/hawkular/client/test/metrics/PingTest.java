@@ -23,6 +23,7 @@ import org.hawkular.client.test.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+@Test(groups = {"metrics"})
 public class PingTest extends BaseTest {
 
     @Test
