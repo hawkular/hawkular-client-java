@@ -189,7 +189,7 @@
     <profile>
       <id>ci</id>
       <properties>
-        <excluded.groups>openshift,known-failure,alerts,inventory</excluded.groups>
+        <excluded.groups>known-failure,alerts,inventory</excluded.groups>
       </properties>
     </profile>
     <profile>
