@@ -51,7 +51,7 @@
     <url>https://github.com/hawkular-client-java</url>
     <tag>HEAD</tag>
   </scm>
-    
+
   <properties>
     <hawkular.metrics.version>0.20.1.Final</hawkular.metrics.version>
     <hawkular.inventory.version>0.20.0.Final</hawkular.inventory.version>
